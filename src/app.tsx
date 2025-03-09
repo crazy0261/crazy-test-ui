@@ -1,12 +1,11 @@
-import { AvatarDropdown, AvatarName, Footer } from '@/components';
+import { AvatarDropdown, AvatarName } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-const isDev = process.env.NODE_ENV === 'development';
+// const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /**
@@ -46,7 +45,7 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     // actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -59,7 +58,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-    footerRender: () => <Footer />,
+    // footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
@@ -101,24 +100,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-          {isDev && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
-        </>
-      );
+      return <>{children}</>;
     },
     ...initialState?.settings,
   };

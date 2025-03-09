@@ -160,25 +160,42 @@ export default [
     icon: 'LineChartOutlined',
   },
   {
+    path: '/userAccount',
+    name: '用户管理',
+    icon: 'UserOutlined',
+    routes: [
+      {
+        path: '/userAccount',
+        component: './UserAccount',
+      },
+    ],
+  },
+  {
     path: '/userSetting',
     name: '用户设置',
     icon: 'UserOutlined',
     routes: [
       {
+        path: '/userSetting',
+        // name: '注册用户',
+        // component: './Welcome',
+        component: './UserSetting',
+      },
+      {
         path: '/userSetting/registAccount',
-        name: '注册用户',
+        // name: '注册用户',
         // component: './Welcome',
         // component: './UserSetting/RegistAccount',
       },
       {
         path: '/userSetting/modifyPassword',
-        name: '修改密码',
+        // name: '修改密码',
         // component: './Welcome',
         // component: './UserSetting/ModifyPassword',
       },
       {
         path: '/userSetting/resetPwd',
-        name: '重置密码',
+        // name: '重置密码',
         // component: './Welcome',
         // component: './UserSetting/ResetPwd',
       },
@@ -200,12 +217,6 @@ export default [
         component: './Admin',
       },
     ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
   },
   {
     path: '/',

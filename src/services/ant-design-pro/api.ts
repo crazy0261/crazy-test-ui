@@ -64,10 +64,10 @@ export async function rule(
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'update',
       ...(options || {}),
-    }
+    },
   });
 }
 
@@ -75,10 +75,10 @@ export async function updateRule(options?: { [key: string]: any }) {
 export async function addRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'post',
       ...(options || {}),
-    }
+    },
   });
 }
 
@@ -86,9 +86,89 @@ export async function addRule(options?: { [key: string]: any }) {
 export async function removeRule(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'delete',
       ...(options || {}),
-    }
+    },
+  });
+}
+
+const domain = '';
+
+/** 注册账号接口 */
+export async function register(options: any) {
+  return request(domain + '/api/user/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 更新选择的项目id */
+export async function updateSelectProjectId(options: any) {
+  return request(domain + '/api/user/updateSelectProjectId', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 更新选择的环境id */
+export async function updateSelectEnvId(options: any) {
+  return request(domain + '/api/user/updateSelectEnvId', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 查询当前租户下的所有用户 */
+export async function listAll(options: any) {
+  return request(domain + '/api/user/listAll', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 修改用户信息 */
+export async function modify(body: any, options: any) {
+  return request('/api/user/modify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改密码 */
+export async function modifyPassword(options: any) {
+  return request(domain + '/api/user/modifyPassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 重置密码：将密码重置为123456 */
+export async function resetPassword(options: any) {
+  return request(domain + '/api/user/resetPassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
   });
 }
