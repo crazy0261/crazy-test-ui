@@ -1,6 +1,6 @@
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button, Dropdown, Space, Tag } from 'antd';
+import { Button, Dropdown } from 'antd';
 import { useRef } from 'react';
 import request from 'umi-request';
 
@@ -14,11 +14,53 @@ const UserAccountInfo = () => {
       width: 48,
     },
     {
-      title: '标题',
-      dataIndex: 'title',
+      title: '账号',
+      dataIndex: 'account',
       copyable: true,
       ellipsis: true,
-      tooltip: '标题过长会自动收缩',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '姓名',
+      dataIndex: 'name',
+      copyable: true,
+      ellipsis: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '手机号',
+      dataIndex: 'phone',
+      copyable: true,
+      ellipsis: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'email',
+      copyable: true,
+      ellipsis: true,
+      search: false,
       formItemProps: {
         rules: [
           {
@@ -37,61 +79,63 @@ const UserAccountInfo = () => {
       ellipsis: true,
       valueType: 'select',
       valueEnum: {
-        all: { text: '超长'.repeat(50) },
-        open: {
-          text: '未解决',
+        1: {
+          text: '停用',
           status: 'Error',
         },
-        closed: {
-          text: '已解决',
+        2: {
+          text: '启用',
           status: 'Success',
-          disabled: true,
-        },
-        processing: {
-          text: '解决中',
-          status: 'Processing',
         },
       },
     },
     {
-      disable: true,
-      title: '标签',
-      dataIndex: 'labels',
+      title: '创建人',
+      dataIndex: 'createByName',
+      copyable: true,
+      ellipsis: true,
       search: false,
-      renderFormItem: (_, { defaultRender }) => {
-        return defaultRender(_);
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
       },
-      render: (_, record) => (
-        <Space>
-          {record.labels.map(({ name, color }) => (
-            <Tag color={color} key={name}>
-              {name}
-            </Tag>
-          ))}
-        </Space>
-      ),
     },
     {
       title: '创建时间',
       key: 'showTime',
-      dataIndex: 'created_at',
+      dataIndex: 'createTime',
       valueType: 'date',
       sorter: true,
+      search: false,
       hideInSearch: true,
     },
     {
-      title: '创建时间',
-      dataIndex: 'created_at',
-      valueType: 'dateRange',
-      hideInTable: true,
-      search: {
-        transform: (value) => {
-          return {
-            startTime: value[0],
-            endTime: value[1],
-          };
-        },
+      title: '修改人',
+      dataIndex: 'updateByName',
+      copyable: true,
+      ellipsis: true,
+      search: false,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
       },
+    },
+    {
+      title: '修改时间',
+      key: 'showTime',
+      dataIndex: 'updateTime',
+      valueType: 'date',
+      sorter: true,
+      search: false,
+      hideInSearch: true,
     },
     {
       title: '操作',
@@ -177,7 +221,7 @@ const UserAccountInfo = () => {
         onChange: (page) => console.log(page),
       }}
       dateFormatter="string"
-      headerTitle="高级表格"
+      headerTitle="用户列表"
       toolBarRender={() => [
         <Button
           key="button"
