@@ -89,7 +89,7 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
+      const url = config?.url;
       return { ...config, url };
     },
   ],
@@ -102,6 +102,8 @@ export const errorConfig: RequestConfig = {
 
       if (data?.success === false) {
         message.error('请求失败！');
+      } else if (data?.success === true && data?.code === 400) {
+        message.error(data.message);
       }
       return response;
     },
