@@ -89,8 +89,16 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
+      let headers = config?.headers;
+      if (localStorage.getItem('Authorization') !== null) {
+        headers = {
+          ...headers,
+          Authorization: localStorage.getItem('Authorization') as string,
+        };
+      }
+
       const url = config?.url;
-      return { ...config, url };
+      return { ...config, url, headers };
     },
   ],
 
