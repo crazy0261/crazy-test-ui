@@ -87,8 +87,7 @@ export default [
       {
         path: '/application/apimanage',
         name: '接口管理',
-        // component: './Welcome',
-        // component: './ApiManage',
+        component: './ApiManage',
       },
     ],
   },

@@ -1,7 +1,7 @@
-import { priorityEnum, priorityList } from '@/pages/Common/utils';
+// import { priorityEnum, priorityList } from '@/pages/Common/utils';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { cancelClaim, claim, list, setPriority, setProdExec } from '@/services/apiManage';
-import { listAll as listAllApp } from '@/services/application';
+// import { listAll as listAllApp } from '@/services/application';
 import {
   CopyTwoTone,
   DeleteTwoTone,
@@ -14,15 +14,6 @@ import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import AddApi from './AddApi';
-import BatchDeleteApi from './BatchDeleteApi';
-import DeleteApi from './DeleteApi';
-import DisableApi from './DisableApi';
-import EnableApi from './EnableApi';
-import ImportApi from './ImportApi';
-import ModApiType from './ModApiType';
-import MoveApi from './MoveApi';
-import RelateCaseList from './RelateCaseList';
 
 /**
  * 接口列表页
@@ -318,15 +309,15 @@ const ApimanageList = () => {
       },
       render: (text, record) => <div>{record.invokeTimes}</div>,
     },
-    {
-      title: '优先级',
-      dataIndex: 'priority',
-      ellipsis: true,
-      width: 60,
-      search: true,
-      valueType: 'select',
-      valueEnum: priorityEnum,
-    },
+    // {
+    //   title: '优先级',
+    //   dataIndex: 'priority',
+    //   ellipsis: true,
+    //   width: 60,
+    //   search: true,
+    //   valueType: 'select',
+    //   valueEnum: priorityEnum,
+    // },
     {
       title: '生产执行',
       dataIndex: 'canProdExec',
@@ -458,11 +449,11 @@ const ApimanageList = () => {
   const actionRef = useRef();
 
   const requestAppEnum = () => {
-    listAllApp().then((result) => {
-      if (result.code === 200) {
-        setAppEnum(result.data.map((item) => ({ value: item.id, label: item.name })));
-      }
-    });
+    // listAllApp().then((result) => {
+    //   if (result.code === 200) {
+    //     setAppEnum(result.data.map((item) => ({ value: item.id, label: item.name })));
+    //   }
+    // });
   };
   const requestOwnerEnum = () => {
     listAllUser().then((result) => {
@@ -603,7 +594,7 @@ const ApimanageList = () => {
             key="priority"
             style={{ width: 120 }}
             value={null}
-            options={priorityList}
+            // options={priorityList}
             placeholder="设置优先级"
             onChange={(e) => {
               if (selectedCaseIds.length > 0) {
@@ -630,7 +621,7 @@ const ApimanageList = () => {
           />,
         ]}
       />
-      <AddApi
+      {/* <AddApi
         isModalOpen={isAddModalOpen}
         setIsModalOpen={setIsAddModalOpen}
         actionRef={actionRef}
@@ -693,7 +684,7 @@ const ApimanageList = () => {
         apiIds={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
+      /> */}
     </div>
   );
 };
