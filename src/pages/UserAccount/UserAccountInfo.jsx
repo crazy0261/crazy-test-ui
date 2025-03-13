@@ -1,8 +1,8 @@
-import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
+import { userListApi } from '@/services/user/index';
+import { PlusOutlined } from '@ant-design/icons';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button, Dropdown } from 'antd';
+import { Button } from 'antd';
 import { useRef } from 'react';
-import request from 'umi-request';
 
 const UserAccountInfo = () => {
   const actionRef = useRef();
@@ -73,17 +73,17 @@ const UserAccountInfo = () => {
     {
       disable: true,
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'status',
       filters: true,
       onFilter: true,
       ellipsis: true,
       valueType: 'select',
       valueEnum: {
-        1: {
+        true: {
           text: '停用',
           status: 'Error',
         },
-        2: {
+        false: {
           text: '启用',
           status: 'Success',
         },
@@ -92,7 +92,7 @@ const UserAccountInfo = () => {
     {
       title: '创建人',
       dataIndex: 'createByName',
-      copyable: true,
+      copyable: false,
       ellipsis: true,
       search: false,
       formItemProps: {
@@ -108,7 +108,7 @@ const UserAccountInfo = () => {
       title: '创建时间',
       key: 'showTime',
       dataIndex: 'createTime',
-      valueType: 'date',
+      valueType: 'dateTime',
       sorter: true,
       search: false,
       hideInSearch: true,
@@ -116,7 +116,7 @@ const UserAccountInfo = () => {
     {
       title: '修改人',
       dataIndex: 'updateByName',
-      copyable: true,
+      copyable: false,
       ellipsis: true,
       search: false,
       formItemProps: {
@@ -132,7 +132,7 @@ const UserAccountInfo = () => {
       title: '修改时间',
       key: 'showTime',
       dataIndex: 'updateTime',
-      valueType: 'date',
+      valueType: 'dateTime',
       sorter: true,
       search: false,
       hideInSearch: true,
@@ -171,16 +171,18 @@ const UserAccountInfo = () => {
       actionRef={actionRef}
       cardBordered
       request={async (params, sort, filter) => {
-        console.log(sort, filter);
-        await waitTime(2000);
-        return (
-          request <
-          {} >
-          ('https://proapi.azurewebsites.net/github/issues',
-          {
-            params,
-          })
-        );
+        return await userListApi({
+          account: params.account,
+          name: params.name,
+          phone: params.phone,
+          status: params.status,
+        }).then((res) => {
+          return {
+            data: res.data,
+            success: true,
+            total: res.data.length,
+          };
+        });
       }}
       editable={{
         type: 'multiple',
@@ -233,29 +235,6 @@ const UserAccountInfo = () => {
         >
           新建
         </Button>,
-        <Dropdown
-          key="menu"
-          menu={{
-            items: [
-              {
-                label: '1st item',
-                key: '1',
-              },
-              {
-                label: '2nd item',
-                key: '2',
-              },
-              {
-                label: '3rd item',
-                key: '3',
-              },
-            ],
-          }}
-        >
-          <Button>
-            <EllipsisOutlined />
-          </Button>
-        </Dropdown>,
       ]}
     />
   );
