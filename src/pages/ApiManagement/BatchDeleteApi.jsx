@@ -1,15 +1,16 @@
-import { batchModApiType } from '@/services/apiManage';
-import { Button, Form, message, Modal, Radio } from 'antd';
+import { batchDelete } from '@/services/apiManagement';
+import { Button, Form, Input, message, Modal } from 'antd';
 import { useState } from 'react';
 
-const ModApiType = (props) => {
+const BatchDeleteApi = (props) => {
   const [form] = Form.useForm();
   const [isloading, setIsloading] = useState(false);
+  const { TextArea } = Input;
 
   const onFinish = () => {
     form.validateFields().then((value) => {
       setIsloading(true);
-      batchModApiType({ apiIds: props.apiIds, apiType: value.apiType }).then((result) => {
+      batchDelete({ apiIds: props.apiIds, remark: value.remark }).then((result) => {
         setIsloading(false);
         if (result.code === 200) {
           message.success(result.data);
@@ -30,7 +31,7 @@ const ModApiType = (props) => {
   return (
     <>
       <Modal
-        title={'修改接口类型'}
+        title={'批量删除'}
         width="500px"
         open={props.isModalOpen}
         onCancel={handleCancel}
@@ -46,16 +47,13 @@ const ModApiType = (props) => {
           </>,
         ]}
       >
-        <Form form={form}>
-          <Form.Item name="apiType" label="接口类型" rules={[{ required: true }]}>
-            <Radio.Group>
-              <Radio value={'OUTER'}>外部接口</Radio>
-              <Radio value={'INNER'}>内部接口</Radio>
-            </Radio.Group>
+        <Form form={form} layout="vertical">
+          <Form.Item name="remark" label="删除原因" rules={[{ required: true }]}>
+            <TextArea rows={4} />
           </Form.Item>
         </Form>
       </Modal>
     </>
   );
 };
-export default ModApiType;
+export default BatchDeleteApi;

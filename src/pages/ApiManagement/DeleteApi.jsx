@@ -1,18 +1,21 @@
-import { disable } from '@/services/apiManage';
+import { deleteApi } from '@/services/apiManagement';
 import { Form, Input, message, Modal } from 'antd';
+import { useState } from 'react';
 
-const DisableApi = (props) => {
+const DeleteApi = (props) => {
   const [form] = Form.useForm();
   const { TextArea } = Input;
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOk = (values) => {
     form.validateFields().then((values) => {
-      // form.resetFields();
-      disable({ apiIds: props.apiIds, remark: values.remark }).then((res) => {
+      setIsLoading(true);
+      deleteApi({ id: props.curApiId, remark: values.remark }).then((res) => {
+        setIsLoading(false);
         if (res.code === 200) {
-          message.success('下架成功');
+          message.success('删除成功');
           props.setOpen(false);
           props.actionRef.current.reload();
-          props.clearSelectedCaseIds();
         }
       });
     });
@@ -23,18 +26,19 @@ const DisableApi = (props) => {
   return (
     <Modal
       open={props.open}
-      title="下架接口"
+      title="删除接口"
       okText="确定"
       cancelText="取消"
       onCancel={handleCancel}
       onOk={(values) => handleOk(values)}
+      okButtonProps={{ loading: isLoading }}
     >
       <Form form={form} layout="vertical">
-        <Form.Item name="remark" label="下架原因" rules={[{ required: true }]}>
+        <Form.Item name="remark" label="删除原因" rules={[{ required: true }]}>
           <TextArea rows={4} />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
-export default DisableApi;
+export default DeleteApi;

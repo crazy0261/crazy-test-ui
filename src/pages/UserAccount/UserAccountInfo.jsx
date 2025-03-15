@@ -176,7 +176,7 @@ const UserAccountInfo = () => {
           name: params.name,
           phone: params.phone,
           status: params.status,
-          page: params.current,
+          current: params.current,
           pageSize: params.pageSize,
         }).then((res) => {
           return {

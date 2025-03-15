@@ -4,7 +4,9 @@ import { request } from '@umijs/max';
 
 /** 分页查询接口列表 */
 export async function list(body, options) {
-  return request('/api/apimanage/list', {
+  console.log('list', body);
+  console.log(options);
+  return request('/crazy/api/management/listAll', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ export async function userListApi(params) {
 }
 
 export async function userListApi1(options) {
-  return request('user/list', {
+  return request('/user/list', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

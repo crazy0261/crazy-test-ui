@@ -1,4 +1,4 @@
-import { queryRelateCase } from '@/services/apiManage';
+import { queryRelateCase } from '@/services/apiManagement';
 import { ProTable } from '@ant-design/pro-components';
 import { Modal } from 'antd';
 import { useEffect, useRef } from 'react';

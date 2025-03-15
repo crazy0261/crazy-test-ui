@@ -1,6 +1,6 @@
 // import { priorityEnum, priorityList } from '@/pages/Common/utils';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { cancelClaim, claim, list, setPriority, setProdExec } from '@/services/apiManage';
+import { cancelClaim, claim, list, setPriority, setProdExec } from '@/services/apiManagement';
 // import { listAll as listAllApp } from '@/services/application';
 import {
   CopyTwoTone,
