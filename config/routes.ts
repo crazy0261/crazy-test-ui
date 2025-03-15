@@ -32,8 +32,7 @@ export default [
     path: '/apiTest',
     name: '接口用例',
     icon: 'ProfileOutlined',
-    // component: './Welcome',
-    // component: './ApiTestCase',
+    component: './ApiCase',
   },
   {
     path: '/apiTestCase/bathExec',
@@ -43,7 +42,6 @@ export default [
     path: '/mulTestCase',
     name: '场景用例',
     icon: 'ClusterOutlined',
-    // component: './Welcome',
     // component: './MulTestCase',
   },
   {
@@ -51,17 +49,9 @@ export default [
     // component: './MulTestCaseDetail',
   },
   {
-    path: '/riskManage',
-    name: '风险管理',
-    icon: 'AlertOutlined',
-    // component: './Welcome',
-    // component: './RiskManage',
-  },
-  {
     path: '/schedule',
     name: '任务管理',
     icon: 'FieldTimeOutlined',
-    // component: './Welcome',
     // component: './Schedule',
   },
   {
@@ -81,7 +71,6 @@ export default [
       {
         path: '/application/list',
         name: '应用列表',
-        // component: './Welcome',
         // component: './Application',
       },
       {
@@ -99,37 +88,31 @@ export default [
       {
         path: '/config/datasource',
         name: '数据源设置',
-        // component: './Welcome',
         // component: './Config/Datasource',
       },
       {
         path: '/config/envinfo',
         name: '环境设置',
-        // component: './Welcome',
         // component: './Config/EnvInfo',
       },
       {
         path: '/config/domain',
         name: '域名设置',
-        // component: './Welcome',
         // component: './Config/DomainInfo',
       },
       {
         path: '/config/testAccount',
         name: '账号设置',
-        // component: './Welcome',
         // component: './Config/TestAccount',
       },
       {
         path: '/config/secret',
         name: '加密设置',
-        // component: './Welcome',
         // component: './Config/Secret',
       },
       {
         path: '/config/project',
         name: '项目设置',
-        // component: './Welcome',
         // component: './Config/Project',
       },
     ],
@@ -142,13 +125,11 @@ export default [
       {
         path: '/dataPool/rule',
         name: '数据库池',
-        // component: './Welcome',
         // component: './DataPool/Rule',
       },
       {
         path: '/dataPool/myData',
         name: '我的数据',
-        // component: './Welcome',
         // component: './DataPool/MyData',
       },
     ],
@@ -177,25 +158,21 @@ export default [
       {
         path: '/userSetting',
         // name: '注册用户',
-        // component: './Welcome',
         component: './UserSetting',
       },
       {
         path: '/userSetting/registAccount',
         // name: '注册用户',
-        // component: './Welcome',
         // component: './UserSetting/RegistAccount',
       },
       {
         path: '/userSetting/modifyPassword',
         // name: '修改密码',
-        // component: './Welcome',
         // component: './UserSetting/ModifyPassword',
       },
       {
         path: '/userSetting/resetPwd',
         // name: '重置密码',
-        // component: './Welcome',
         // component: './UserSetting/ResetPwd',
       },
     ],
