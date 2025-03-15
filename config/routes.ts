@@ -113,7 +113,7 @@ export default [
       {
         path: '/config/project',
         name: '项目设置',
-        // component: './Config/Project',
+        component: './ProjectManagement',
       },
     ],
   },
