@@ -176,11 +176,13 @@ const UserAccountInfo = () => {
           name: params.name,
           phone: params.phone,
           status: params.status,
+          page: params.current,
+          pageSize: params.pageSize,
         }).then((res) => {
           return {
             data: res.data,
             success: true,
-            total: res.data.length,
+            total: res.total,
           };
         });
       }}
