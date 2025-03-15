@@ -1,18 +1,9 @@
-import { request } from '@umijs/max';
+import { get, post } from '../utils/requestUtil';
 
 export async function userListApi(params) {
-  return request('/crazy/user/list', {
-    method: 'GET',
-    params: params,
-  });
+  return get('/crazy/user/list', params);
 }
 
-export async function userListApi1(options) {
-  return request('/user/list', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: options,
-  });
+export async function userListApi1(body) {
+  return post('/user/list', body);
 }

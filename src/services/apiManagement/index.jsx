@@ -1,19 +1,9 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from '@umijs/max';
+import { post } from '../utils/requestUtil';
 
 /** 分页查询接口列表 */
-export async function list(body, options) {
-  console.log('list', body);
-  console.log(options);
-  return request('/crazy/api/management/listAll', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function list(body) {
+  return post('/crazy/api/management/listAll', body);
 }
 
 /** 查询应用下所有接口 */
