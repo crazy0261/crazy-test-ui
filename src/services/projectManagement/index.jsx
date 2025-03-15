@@ -17,5 +17,5 @@ export async function save(body) {
 
 /** 删除 */
 export async function deleteById(body) {
-  return post('/api/project/delete', body);
+  return post('/crazy/project/management/delete', body);
 }

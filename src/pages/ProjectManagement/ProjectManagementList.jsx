@@ -1,5 +1,10 @@
 import { deleteById, listPage } from '@/services/projectManagement';
-import { EditTwoTone, ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteTwoTone,
+  EditTwoTone,
+  ExclamationCircleFilled,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Modal as model } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -57,13 +62,13 @@ const ProjectManagementList = () => {
             size={'small'}
           ></Button>
         </div>,
-        // <div key="delete">
-        //   <Button
-        //     icon={<DeleteTwoTone />}
-        //     onClick={() => showDeleteConfirm(record.id)}
-        //     size={'small'}
-        //   />
-        // </div>,
+        <div key="delete">
+          <Button
+            icon={<DeleteTwoTone />}
+            onClick={() => showDeleteConfirm(record.id)}
+            size={'small'}
+          />
+        </div>,
       ],
     },
   ];
