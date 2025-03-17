@@ -23,12 +23,6 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: '首页',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
     path: '/apiTest',
     name: '接口用例',
     icon: 'ProfileOutlined',
@@ -196,7 +190,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/apiTest',
   },
   {
     path: '*',
