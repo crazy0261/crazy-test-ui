@@ -1,10 +1,17 @@
-import { AvatarDropdown, AvatarName, Footer } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
+import {
+  listAll as listAllUser,
+  currentUser as queryCurrentUser,
+} from '@/services/ant-design-pro/api';
+import { listAll as listAllApp } from '@/services/applicationManagement';
+import { getProjectList, listAllEnvName } from '@/services/projectManagement';
+
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
+
 // const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -14,10 +21,30 @@ const loginPath = '/user/login';
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  projectList?: { value: number; label: string }[];
+  appList?: { value: string | number; label: string }[];
+  userList?: { value: number; label: string }[];
+  envList?: { value: number; label: string }[];
+
   loading?: boolean;
-  x;
+  x: any;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+  const fetchEnvList = async (): Promise<{ value: number; label: string }[] | undefined> => {
+    try {
+      const envList: { value: number; label: string }[] = [];
+      await listAllEnvName().then((result: any) => {
+        if (result.code === 200) {
+          result.data.map((item: any) => envList.push({ value: item.id, label: item.name }));
+        }
+      });
+      return envList;
+    } catch (error) {
+      // history.push(loginPath);
+    }
+    return undefined;
+  };
+
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser(localStorage.getItem('account'));
@@ -27,18 +54,71 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+
+  const fetchUserList = async (): Promise<{ value: number; label: string }[] | undefined> => {
+    try {
+      const userList: { value: number; label: string }[] = [];
+      await listAllUser({}).then((result) => {
+        if (result.code === 200) {
+          result.data.map((item: any) => userList.push({ value: item.id, label: item.name }));
+        }
+      });
+      return userList;
+    } catch (error) {
+      // history.push(loginPath);
+    }
+    return undefined;
+  };
+
+  const fetchProjectList = async () => {
+    try {
+      const projectList = await getProjectList({
+        skipErrorHandler: true,
+      });
+      return projectList.data;
+    } catch (error) {
+      // history.push(loginPath);
+    }
+    return undefined;
+  };
+
+  const fetchAppList = async (): Promise<{ value: number; label: string }[] | undefined> => {
+    try {
+      const appList: { value: number; label: string }[] = [];
+      const result = await listAllApp();
+      if (result.code === 200) {
+        result.data.map((item: any) => appList.push({ value: item.id, label: item.name }));
+      }
+      return appList;
+    } catch (error) {
+      // history.push(loginPath);
+    }
+    return undefined;
+  };
+
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    const userList = await fetchUserList();
+    const projectList = await fetchProjectList();
+    const appList = await fetchAppList();
+    const envList = await fetchEnvList();
     return {
       fetchUserInfo,
       currentUser,
+      projectList,
+      userList,
+      appList,
+      envList,
+      x: null,
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
   return {
     fetchUserInfo,
+    projectList: [] as { value: number; label: string }[],
+    x: null,
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
@@ -46,7 +126,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    // actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [<Question key="Question" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,

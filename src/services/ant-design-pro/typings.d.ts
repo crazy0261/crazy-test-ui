@@ -21,6 +21,8 @@ declare namespace API {
     };
     address?: string;
     phone?: string;
+    selectProjectId?: number;
+    selectEnvId?: number;
   };
 
   type LoginResult = {

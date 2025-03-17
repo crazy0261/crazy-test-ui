@@ -1,31 +1,30 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { SelectLang as UmiSelectLang } from '@umijs/max';
-import React from 'react';
+import { updateSelectProjectId } from '@/services/ant-design-pro/api';
+import { Select } from 'antd';
+import { useModel } from 'umi';
 
 export type SiderTheme = 'light' | 'dark';
 
-export const SelectLang = () => {
-  return (
-    <UmiSelectLang
-      style={{
-        padding: 4,
-      }}
-    />
-  );
-};
-
 export const Question = () => {
+  const { initialState } = useModel('@@initialState');
+  const defaultProject = initialState?.currentUser?.selectProjectId;
+  const projectList = initialState?.projectList?.map((item: any) => ({
+    value: item.id,
+    label: item.name,
+  }));
+  const handleOnChange = (e: any) => {
+    updateSelectProjectId({ id: e });
+    location.reload();
+  };
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: 26,
-      }}
-      onClick={() => {
-        window.open('https://pro.ant.design/docs/getting-started');
-      }}
-    >
-      <QuestionCircleOutlined />
+    <div>
+      项目：
+      <Select
+        defaultValue={defaultProject}
+        style={{ width: 125 }}
+        options={projectList}
+        onChange={(e) => handleOnChange(e)}
+      />
     </div>
   );
 };

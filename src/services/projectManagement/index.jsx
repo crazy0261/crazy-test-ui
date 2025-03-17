@@ -19,3 +19,7 @@ export async function save(body) {
 export async function deleteById(body) {
   return post('/crazy/project/management/delete', body);
 }
+
+export async function listAllEnvName() {
+  return get('/api/envname/listAll');
+}

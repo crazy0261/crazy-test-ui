@@ -65,7 +65,7 @@ export default [
       {
         path: '/application/list',
         name: '应用列表',
-        // component: './Application',
+        component: './ApplicationManagement',
       },
       {
         path: '/application/apimanagement',
