@@ -1,5 +1,5 @@
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { add, modify } from '@/services/applicationManagement';
+import { save } from '@/services/applicationManagement';
 import { Button, Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -21,8 +21,8 @@ const AddApplication = (props) => {
     form.validateFields().then((value) => {
       setIsloading(true);
       props.record === null
-        ? add(value).then((result) => showResult(result))
-        : modify({ ...value, id: props.record.id }).then((result) => showResult(result));
+        ? save(value).then((result) => showResult(result))
+        : save({ ...value, id: props.record.id }).then((result) => showResult(result));
     });
   };
 
@@ -102,7 +102,7 @@ const AddApplication = (props) => {
             />
           </Form.Item>
           <Form.Item name="remark" label="应用描述">
-            <TextArea rows={4} />
+            <TextArea rows={4} showCount maxLength={255} />
           </Form.Item>
         </Form>
       </Modal>

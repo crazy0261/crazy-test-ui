@@ -2,16 +2,11 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+import { get, post } from '@/services/utils/requestUtil';
+
 /** 分页查询应用列表 */
-export async function list(body, options) {
-  return request('/api/application/list', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function list(body) {
+  return get('/crazy/application/management/list', body);
 }
 
 /** 查询项目下所有应用 */
@@ -25,28 +20,9 @@ export async function listAll(options) {
   });
 }
 
-/** 新增应用 */
-export async function add(body, options) {
-  return request('/api/application/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-/** 编辑 */
-export async function modify(body, options) {
-  return request('/api/application/modify', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+/** 新增编辑 */
+export async function save(body) {
+  return post('/crazy/application/management/save', body);
 }
 
 /** 删除应用 */

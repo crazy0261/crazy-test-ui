@@ -137,7 +137,7 @@ const ApplicationList = () => {
     },
     {
       title: '创建者',
-      dataIndex: 'creatorName',
+      dataIndex: 'createByName',
       search: false,
       copyable: false,
       ellipsis: true,
@@ -146,6 +146,23 @@ const ApplicationList = () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
+      search: false, // 是否作为查询条件
+      copyable: false,
+      ellipsis: true,
+      width: 180,
+      valueType: 'dateTime',
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateByName',
+      search: false,
+      copyable: false,
+      ellipsis: true,
+      width: 80,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
       search: false, // 是否作为查询条件
       copyable: false,
       ellipsis: true,
@@ -179,7 +196,7 @@ const ApplicationList = () => {
       dataIndex: 'creator',
       ellipsis: true,
       width: 60,
-      search: true,
+      search: false,
       hideInTable: true,
       renderFormItem: () => {
         return (

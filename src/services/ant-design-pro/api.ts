@@ -130,13 +130,10 @@ export async function updateSelectEnvId(options: any) {
 }
 
 /** 查询当前租户下的所有用户 */
-export async function listAll(options: any) {
-  return request(domain + '/api/user/listAll', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
+export async function listAll() {
+  return request('/crazy/user/list', {
+    method: 'GET',
+    params: { current: 1, pageSize: 1000 },
   });
 }
 
