@@ -87,7 +87,7 @@ export default [
       {
         path: '/config/envinfo',
         name: '环境设置',
-        // component: './Config/EnvInfo',
+        component: './EnvConfig',
       },
       {
         path: '/config/domain',
