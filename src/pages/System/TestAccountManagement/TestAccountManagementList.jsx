@@ -41,19 +41,11 @@ const TestAccountList = () => {
       ellipsis: true,
       width: 200,
     },
-    // {
-    //   title: '密码',
-    //   dataIndex: 'password',
-    //   copyable: false,
-    //   ellipsis: true,
-    //   search: false,
-    //   width: 100,
-    // },
     {
-      title: '登录地址',
-      dataIndex: 'loginPath',
+      title: '用例名称',
+      dataIndex: 'apiCaseName',
       ellipsis: true,
-      search: true,
+      search: false,
       width: 200,
     },
     {
@@ -217,7 +209,7 @@ const TestAccountList = () => {
           onShowSizeChange: (current, pageSize) => setPageSize(pageSize),
         }}
         dateFormatter="string"
-        headerTitle="测试账号列表"
+        headerTitle="账号列表"
         toolBarRender={() => [
           <Button
             onClick={() => {
