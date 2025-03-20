@@ -43,17 +43,17 @@ export default [
     // component: './MulTestCaseDetail',
   },
   {
-    path: '/schedule',
+    path: '/taskManagement',
     name: '任务管理',
     icon: 'FieldTimeOutlined',
-    // component: './Schedule',
+    component: './TaskManagement',
   },
   {
-    path: '/schedule/detail/*',
+    path: '/taskManagement/detail/*',
     // component: './Schedule/ScheduleDetail',
   },
   {
-    path: '/schedule/result/*',
+    path: '/taskManagement/result/*',
     // component: './Schedule/ScheduleResult',
   },
 

@@ -1,0 +1,56 @@
+import { post } from '../utils/requestUtil';
+
+export async function add(body) {
+  return post('/api/schedule/add', body);
+}
+
+export async function modify(body) {
+  return post('/api/schedule/modify', body);
+}
+
+export async function deleteSchedule(body) {
+  return post('/api/schedule/delete', body);
+}
+
+export async function listAll(body) {
+  return post('/api/schedule/listAll', body);
+}
+
+export async function queryById(body) {
+  return post('/api/schedule/queryById', body);
+}
+
+export async function stop(body) {
+  return post('/api/schedule/stop', body);
+}
+
+export async function execOnce(body) {
+  return post('/api/schedule/execOnce', body);
+}
+
+export async function queryRecord(body) {
+  return post('/api/schedule/queryRecord', body);
+}
+
+export async function queryRecordDetail(body) {
+  return post('/api/schedule/queryRecordDetail', body);
+}
+
+export async function queryRecordStatistics(body) {
+  return post('/api/schedule/queryRecordStatistics', body);
+}
+
+// 重跑失败用例
+export async function execRetry(body) {
+  return post('/api/schedule/execRetry', body);
+}
+
+/** 中断执行中的批次 */
+export async function interrupt(body) {
+  return post('/api/schedule/interrupt', body);
+}
+
+/** 更新场景用例定时任务执行记录状态 */
+export async function updateScheduleStatus(body) {
+  return post('/api/schedule/updateScheduleStatus', body);
+}
