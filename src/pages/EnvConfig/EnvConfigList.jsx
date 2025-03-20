@@ -77,33 +77,14 @@ const EnvConfigList = () => {
     },
     {
       title: '域名',
-      dataIndex: 'domainId',
-      hideInTable: true,
-      renderFormItem: () => {
-        return (
-          <Select
-            key="searchSelcet"
-            showSearch
-            allowClear
-            placeholder="请输入关键字搜索"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={domainList}
-          ></Select>
-        );
-      },
-    },
-    {
-      title: '域名',
       dataIndex: 'domainName',
       copyable: false,
       ellipsis: true,
-      search: false,
+      search: true,
     },
     {
-      title: '修改者',
-      dataIndex: 'menderName',
+      title: '创建者',
+      dataIndex: 'createByName',
       copyable: false,
       ellipsis: true,
       search: false,
@@ -118,8 +99,16 @@ const EnvConfigList = () => {
       valueType: 'dateTime',
     },
     {
+      title: '修改者',
+      dataIndex: 'updateByName',
+      copyable: false,
+      ellipsis: true,
+      search: false,
+      width: 100,
+    },
+    {
       title: '修改时间',
-      dataIndex: 'modifyTime',
+      dataIndex: 'updateTime',
       copyable: false,
       ellipsis: true,
       search: false,

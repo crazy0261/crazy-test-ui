@@ -7,7 +7,7 @@ export async function listAllEnvName() {
 
 /** 分页查询环境列表 */
 export async function list(body) {
-  return post('/api/envinfo/list', body);
+  return get('/crazy//env/config/list', body);
 }
 
 /** 编辑 */
