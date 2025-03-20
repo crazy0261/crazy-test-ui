@@ -1,4 +1,4 @@
-import SetReqHeader from '@/pages/ApiCaseDetail/SetReqHeader';
+import SetReqHeader from '@/components/ApiCaseDetail/SetReqHeader';
 import { modify } from '@/services/envConfig';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Button, Form, message, Modal } from 'antd';
