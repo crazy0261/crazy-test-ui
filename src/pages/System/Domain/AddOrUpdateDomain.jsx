@@ -1,4 +1,4 @@
-import { add, modify } from '@/services/domain';
+import { save } from '@/services/domain';
 import { Button, Form, Input, message, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -17,8 +17,8 @@ const AddOrUpdateDomain = (props) => {
     form.validateFields().then((value) => {
       setIsloading(true);
       props.record === null
-        ? add(value).then((result) => showResult(result, '新建'))
-        : modify({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
+        ? save(value).then((result) => showResult(result, '新建'))
+        : save({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
     });
   };
 
@@ -36,7 +36,7 @@ const AddOrUpdateDomain = (props) => {
     props.isModalOpen &&
       form.setFieldsValue({
         name: props.record?.name,
-        domain: props.record?.domain,
+        urlPath: props.record?.urlPath,
       });
   }, [props.isModalOpen]);
 
@@ -69,7 +69,7 @@ const AddOrUpdateDomain = (props) => {
           <Form.Item name="name" label="名称" rules={[{ required: true }]}>
             <Input placeholder="请输入域名名称" />
           </Form.Item>
-          <Form.Item name="domain" label="域名" rules={[{ required: true }]}>
+          <Form.Item name="urlPath" label="域名地址" rules={[{ required: true }]}>
             <Input placeholder="例如：http://hd-test-admin.com，或者http://127.0.0.1:8090" />
           </Form.Item>
         </Form>

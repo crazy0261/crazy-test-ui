@@ -80,32 +80,32 @@ export default [
     icon: 'ToolOutlined',
     routes: [
       {
-        path: '/system/datasource/config',
+        path: '/system/datasource',
         name: '数据源设置',
         // component: './Config/Datasource',
       },
       {
-        path: '/system/envinfo/config',
+        path: '/system/envinfo',
         name: '环境设置',
         component: './System/EnvConfig',
       },
       {
-        path: '/system/domain/config',
+        path: '/system/domain',
         name: '域名设置',
         component: './System/Domain',
       },
       {
-        path: '/system/testAccountManagement/config',
+        path: '/system/testAccountManagement',
         name: '账号设置',
         component: './System/TestAccountManagement',
       },
       {
-        path: '/system/secret/config',
+        path: '/system/secret',
         name: '加密设置',
         // component: './Config/Secret',
       },
       {
-        path: '/system/project/config',
+        path: '/system/project',
         name: '项目设置',
         component: './System/ProjectManagement',
       },

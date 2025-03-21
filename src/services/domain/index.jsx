@@ -1,13 +1,8 @@
-import { post } from '../utils/requestUtil';
+import { get, post } from '../utils/requestUtil';
 
-/** 新增 */
-export async function add(body) {
-  return post('/api/domain/add', body);
-}
-
-/** 修改 */
-export async function modify(body) {
-  return post('/api/domain/modify', body);
+/** 新增 修改*/
+export async function save(body) {
+  return post('/crazy/domain/save', body);
 }
 
 /** 删除 */
@@ -21,8 +16,9 @@ export async function listAll() {
 }
 
 /** 分页查询 */
-export async function listPage(body) {
-  return post('/api/domain/listPage', body);
+export async function listPage(params) {
+  console.log(params);
+  return get('/crazy/domain/list', params);
 }
 
 /** 根据id查询 */
