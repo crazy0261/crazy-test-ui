@@ -1,6 +1,6 @@
 import { listAll as listAllApp } from '@/services/applicationManagement';
 // import { listAll as listAllDomain } from '@/services/config/domainInfo';
-import { list, listAllEnvName } from '@/services/envConfig';
+import { list } from '@/services/envConfig';
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select } from 'antd';
@@ -19,15 +19,15 @@ const EnvConfigList = () => {
   const [pageSize, setPageSize] = useState(10);
   const [envList, setEnvList] = useState([]);
 
-  useEffect(() => {
-    listAllEnvName().then((result) => {
-      if (result.code === 200) {
-        setEnvList(result.data.map((item) => ({ value: item.id, label: item.name })));
-      } else {
-        message.error('查询环境名称列表失败');
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   listAllEnvName().then((result) => {
+  //     if (result.code === 200) {
+  //       setEnvList(result.data.map((item) => ({ value: item.id, label: item.name })));
+  //     } else {
+  //       message.error('查询环境名称列表失败');
+  //     }
+  //   });
+  // }, []);
   const columns = [
     {
       dataIndex: 'index',
@@ -61,18 +61,10 @@ const EnvConfigList = () => {
       search: false,
     },
     {
-      title: '环境',
-      dataIndex: 'envNameId',
-      hideInTable: true,
-      renderFormItem: () => {
-        return <Select allowClear key="envNameId" options={envList}></Select>;
-      },
-    },
-    {
       title: '环境名',
       dataIndex: 'name',
       ellipsis: true,
-      search: false,
+      search: true,
       // width: 150,
     },
     {
@@ -155,6 +147,7 @@ const EnvConfigList = () => {
   };
 
   useEffect(() => {
+    // 应用
     // requestDomain();
     requestAppEnum();
   }, []);
