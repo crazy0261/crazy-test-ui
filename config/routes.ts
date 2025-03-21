@@ -23,14 +23,23 @@ export default [
     ],
   },
   {
-    path: '/apiTest',
+    path: '/apiCase',
     name: '接口用例',
     icon: 'ProfileOutlined',
-    component: './ApiCase',
-  },
-  {
-    path: '/apiTestCase/bathExec',
-    // component: './ApiTestCase/BathExecTestCase.jsx',
+    routes: [
+      {
+        path: '/apiCase',
+        component: './ApiCase',
+      },
+      {
+        path: '/apiCase/bathExec',
+        // component: './ApiTestCase/BathExecTestCase.jsx',
+      },
+      {
+        path: '/apiCase/detail',
+        component: './ApiCase/ApiCaseDetail',
+      },
+    ],
   },
   {
     path: '/mulTestCase',
@@ -190,7 +199,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/apiTest',
+    redirect: '/apiCase',
   },
   {
     path: '*',

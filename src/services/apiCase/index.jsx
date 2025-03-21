@@ -1,206 +1,91 @@
-import { request } from '@umijs/max';
+import { post } from '../utils/requestUtil';
 
 /** 查询当前项目下所有接口用例 */
-export async function listAll(options) {
-  return request('/api/apiTestcase/listAll', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function listAll(body) {
+  return post('/api/apiTestcase/listAll', body);
 }
 
 /** 分页查询接口列表 */
-export async function list(body, options) {
-  return request('/api/apiTestcase/list', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function list(body) {
+  return post('/crazy/api/case/list', body);
 }
 
 /** 根据用例id查询用例 */
-export async function queryById(options) {
-  return request('/api/apiTestcase/queryById', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function queryById(body) {
+  return post('/api/apiTestcase/queryById', body);
 }
 
 /** 根据用例名模糊查询用例 */
-export async function queryByLikeName(options) {
-  return request('/api/apiTestcase/queryByLikeName', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function queryByLikeName(body) {
+  return post('/api/apiTestcase/queryByLikeName', body);
 }
 
 /** 新增接口 */
-export async function add(body, options) {
-  return request('/api/apiTestcase/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function add(body) {
+  return post('/api/apiTestcase/add', body);
 }
 
 /** 编辑接口 */
-export async function modify(body, options) {
-  return request('/api/apiTestcase/modify', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function modify(body) {
+  return post('/api/apiTestcase/modify', body);
 }
 
 /** 删除接口用例 */
-export async function deleteApi(options) {
-  return request('/api/apiTestcase/delete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function deleteApi(body) {
+  return post('/api/apiTestcase/delete', body);
 }
 
 /** 调试接口 */
 export async function debug(body, options) {
-  return request('/api/apiTestcase/debug', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+  return post('/api/apiTestcase/debug', body);
 }
 
 /** 根据用例id和环境名id获取domian */
-export async function getDomainByEnv(body, options) {
-  return request('/api/apiTestcase/getDomainByEnv', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function getDomainByEnv(body) {
+  return post('/api/apiTestcase/getDomainByEnv', body);
 }
 
 /** 批量查询用例信息 */
-export async function batchQueryTestcase(options) {
-  return request('/api/apiTestcase/batchQueryTestcase', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function batchQueryTestcase(body) {
+  return post('/api/apiTestcase/batchQueryTestcase', body);
 }
 
 /** 批量执行测试用例 */
-export async function batchExec(body, options) {
-  return request('/api/apiTestcase/batchExec', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function batchExec(body) {
+  return post('/api/apiTestcase/batchExec', body);
 }
 
 /** 复制用例 */
-export async function copy(options) {
-  return request('/api/apiTestcase/copy', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function copy(body) {
+  return post('/api/apiTestcase/copy', body);
 }
 
 /** 下架用例 */
-export async function disable(options) {
-  return request('/api/apiTestcase/disable', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function disable(body) {
+  return post('/api/apiTestcase/disable', body);
 }
 
 /** 上架用例 */
-export async function enable(options) {
-  return request('/api/apiTestcase/enable', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function enable(body) {
+  return post('/api/apiTestcase/enable', body);
 }
 
 /** 批量修改负责人 */
-export async function modifyOwner(options) {
-  return request('/api/apiTestcase/modify/owner', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function modifyOwner(body) {
+  return post('/api/apiTestcase/modify/owner', body);
 }
 
 /** 生成断言 */
-export async function genAsserts(options) {
-  return request('/api/apiTestcase/genAsserts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function genAsserts(body) {
+  return post('/api/apiTestcase/genAsserts', body);
 }
 
 /** 查询接口用例执行记录 */
-export async function queryApiCaseExecLog(body, options) {
-  return request('/api/apiTestcase/queryExecLog', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+export async function queryApiCaseExecLog(body) {
+  return post('/api/apiTestcase/queryExecLog', body);
 }
 
 /** 执行应用下的所有接口用例 */
-export async function debugByApp(options) {
-  return request('/api/apiTestcase/debugByApp', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function debugByApp(body) {
+  return post('/api/apiTestcase/debugByApp', body);
 }

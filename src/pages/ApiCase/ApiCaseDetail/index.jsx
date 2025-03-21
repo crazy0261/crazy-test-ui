@@ -2,7 +2,7 @@ import { ClockCircleTwoTone } from '@ant-design/icons';
 import { Button, Layout, Space } from 'antd';
 import { useState } from 'react';
 // import ExecLog from '../MulTestCase/ExecLog';
-// import CaseDetail from './CaseDetail';
+import CaseDetail from './CaseDetail';
 // import CaseResult from './CaseResult';
 // import Debug from './Debug';
 
@@ -39,14 +39,14 @@ const App = () => {
         <Layout>
           <Layout>
             <Content style={contentStyle}>
-              {/* <CaseDetail
+              <CaseDetail
                 isEdit={isEdit}
                 setIsEdit={setIsEdit}
                 testcaseId={testcaseId}
                 setTestcaseId={setTestcaseId}
                 setTestcaseName={setTestcaseName}
                 domain={domain}
-              /> */}
+              />
             </Content>
             <Sider style={siderStyle} width="40%" theme="light">
               <div style={{ marginTop: 0 }}>

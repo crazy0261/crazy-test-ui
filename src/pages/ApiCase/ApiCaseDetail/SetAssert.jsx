@@ -1,4 +1,4 @@
-import { genAsserts as genApiCaseAsserts } from '@/services/apiCcase';
+import { genAsserts as genApiCaseAsserts } from '@/services/apiCase';
 // import { genAsserts as genMulcaseAsserts } from '@/services/mulTestcaseResultNode';
 import { EditableProTable } from '@ant-design/pro-components';
 import { Button } from 'antd';

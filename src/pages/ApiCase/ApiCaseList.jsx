@@ -12,6 +12,8 @@ import {
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { history } from 'umi';
+
 // import ExecLog from '../MulTestCase/ExecLog';
 // import DeleteCase from './DeleteCase';
 // import DisableCase from './DisableCase';
@@ -376,7 +378,8 @@ const ApiCaseList = () => {
         }}
         toolBarRender={() => [
           <Button
-            onClick={() => window.open('/apiTestCase/detail')}
+            // onClick={() => window.open('/apiTestCase/detail')}
+            onClick={() => history.push('/apiCase/detail')}
             key="button"
             icon={<PlusOutlined />}
             type="primary"
