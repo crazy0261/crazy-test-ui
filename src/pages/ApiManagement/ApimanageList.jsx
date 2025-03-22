@@ -1,4 +1,4 @@
-// import { priorityEnum, priorityList } from '@/pages/Common/utils';
+import { priorityEnum } from '@/common';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { cancelClaim, claim, list, setPriority, setProdExec } from '@/services/apiManagement';
 // import { listAll as listAllApp } from '@/services/application';
@@ -309,15 +309,15 @@ const ApimanageList = () => {
       },
       render: (text, record) => <div>{record.invokeTimes}</div>,
     },
-    // {
-    //   title: '优先级',
-    //   dataIndex: 'priority',
-    //   ellipsis: true,
-    //   width: 60,
-    //   search: true,
-    //   valueType: 'select',
-    //   valueEnum: priorityEnum,
-    // },
+    {
+      title: '优先级',
+      dataIndex: 'priority',
+      ellipsis: true,
+      width: 60,
+      search: true,
+      valueType: 'select',
+      valueEnum: priorityEnum,
+    },
     {
       title: '生产执行',
       dataIndex: 'canProdExec',
@@ -340,36 +340,29 @@ const ApimanageList = () => {
     },
     {
       title: '创建者',
-      dataIndex: 'creatorName',
+      dataIndex: 'createByName',
       ellipsis: true,
       width: 60,
       search: false,
     },
     {
-      title: '创建者',
-      dataIndex: 'creatorId',
-      ellipsis: true,
-      width: 60,
-      search: true,
-      hideInTable: true,
-      renderFormItem: () => {
-        return (
-          <Select
-            key="searchSelcet"
-            showSearch
-            allowClear
-            placeholder="请输入关键字搜索"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={ownerEnum}
-          ></Select>
-        );
-      },
-    },
-    {
       title: '创建时间',
       dataIndex: 'createTime',
+      ellipsis: true,
+      width: 170,
+      search: false,
+      valueType: 'dateTime',
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateByName',
+      ellipsis: true,
+      width: 60,
+      search: false,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
       ellipsis: true,
       width: 170,
       search: false,

@@ -24,15 +24,19 @@ export const priorityList = [
 export const priorityEnum = {
   0: {
     text: 'P0',
+    status: 'error',
   },
   1: {
     text: 'P1',
+    status: 'warning',
   },
   2: {
     text: 'P2',
+    status: 'processing',
   },
   3: {
     text: 'P3',
+    status: 'default',
   },
 };
 
