@@ -21,7 +21,7 @@ declare namespace API {
     };
     address?: string;
     phone?: string;
-    selectProjectId?: number;
+    selectProject?: number;
     selectEnvId?: number;
   };
 

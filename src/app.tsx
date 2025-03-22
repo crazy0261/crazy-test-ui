@@ -4,7 +4,7 @@ import {
   currentUser as queryCurrentUser,
 } from '@/services/ant-design-pro/api';
 import { list as listAllApp } from '@/services/applicationManagement';
-import { getProjectList, listAllEnvName } from '@/services/projectManagement';
+import { listAllEnvName, listPage } from '@/services/projectManagement';
 
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -29,6 +29,7 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   x: any;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchProjectList?: () => Promise<{ value: number; label: string }[]>;
 }> {
   const fetchEnvList = async (): Promise<{ value: number; label: string }[] | undefined> => {
     try {
@@ -72,10 +73,11 @@ export async function getInitialState(): Promise<{
 
   const fetchProjectList = async () => {
     try {
-      const projectList = await getProjectList({
-        skipErrorHandler: true,
-      });
-      return projectList.data;
+      const projectList = await listPage({ current: 1, pageSize: 1000 });
+
+      if (projectList?.data?.length > 0) {
+        return projectList.data;
+      }
     } catch (error) {
       // history.push(loginPath);
     }
@@ -107,6 +109,7 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       currentUser,
+      fetchProjectList,
       projectList,
       userList,
       appList,
@@ -117,7 +120,7 @@ export async function getInitialState(): Promise<{
   }
   return {
     fetchUserInfo,
-    projectList: [] as { value: number; label: string }[],
+    fetchProjectList,
     x: null,
     settings: defaultSettings as Partial<LayoutSettings>,
   };

@@ -81,6 +81,20 @@ const Login: React.FC = () => {
     }
   };
 
+  const fetchProjectList = async () => {
+    const msg = await initialState?.fetchProjectList?.();
+    console.log('fetchProjectList--->', msg);
+    if (msg) {
+      flushSync(() => {
+        setInitialState((s) => ({
+          ...s,
+          projectList: msg,
+          x: s?.x,
+        }));
+      });
+    }
+  };
+
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
@@ -90,6 +104,7 @@ const Login: React.FC = () => {
         localStorage.setItem('account', values.account!);
         message.success('登录成功!');
         await fetchUserInfo();
+        await fetchProjectList();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;

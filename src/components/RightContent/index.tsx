@@ -6,13 +6,14 @@ export type SiderTheme = 'light' | 'dark';
 
 export const Question = () => {
   const { initialState } = useModel('@@initialState');
-  const defaultProject = initialState?.currentUser?.selectProjectId;
+  const defaultProject = initialState?.currentUser?.selectProject;
   const projectList = initialState?.projectList?.map((item: any) => ({
     value: item.id,
     label: item.name,
   }));
+
   const handleOnChange = (e: any) => {
-    updateSelectProjectId({ id: e });
+    updateSelectProjectId({ selectProject: e.value });
     location.reload();
   };
 
@@ -20,9 +21,10 @@ export const Question = () => {
     <div>
       项目：
       <Select
-        defaultValue={defaultProject}
+        defaultValue={Number(defaultProject)}
         style={{ width: 125 }}
         options={projectList}
+        labelInValue
         onChange={(e) => handleOnChange(e)}
       />
     </div>

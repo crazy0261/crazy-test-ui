@@ -108,13 +108,11 @@ export async function register(options: any) {
 }
 
 /** 更新选择的项目id */
-export async function updateSelectProjectId(options: any) {
-  return request(domain + '/api/user/updateSelectProjectId', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
+export async function updateSelectProjectId(params: any) {
+  console.log('updateSelectProjectId', params);
+  return request('/crazy/user/update/projectId', {
+    method: 'GET',
+    params: params,
   });
 }
 

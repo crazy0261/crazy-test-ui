@@ -77,6 +77,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
       if (key === 'logout') {
         flushSync(() => {
           setInitialState((s: any) => ({ ...s, currentUser: undefined }));
+          localStorage.setItem('Authorization', '');
         });
         loginOut();
         return;

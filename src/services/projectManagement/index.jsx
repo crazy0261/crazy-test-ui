@@ -1,13 +1,8 @@
 import { get, post } from '../utils/requestUtil';
 
-/** 获取当前的用户 */
-export async function getProjectList() {
-  return get('/crazy/project/list');
-}
-
 /** 分页查询 */
-export async function listPage(body) {
-  return post('/crazy/project/management/list', body);
+export async function listPage(params) {
+  return get('/crazy/project/management/list', params);
 }
 
 /** 新增 编辑 */
