@@ -135,11 +135,11 @@ const ApiCaseList = () => {
       valueType: 'select',
       width: 80,
       valueEnum: {
-        true: {
+        false: {
           text: '正常',
           status: 'Success',
         },
-        false: {
+        true: {
           text: '已下架',
           status: 'Default',
         },
