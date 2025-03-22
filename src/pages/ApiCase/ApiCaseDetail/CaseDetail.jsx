@@ -1,19 +1,13 @@
-// import {
-//   arrayToJson,
-//   genEnvVarArray,
-//   genJsonEnvVar,
-//   getTestAccount,
-//   jsonToArray,
-//   priorityList,
-// } from '@/pages/Common';
+import { priorityList } from '@/common';
 // import {
 //   listAllByAppId as listAllApiByAppId,
 //   queryById as queryApiById,
 // } from '@/services/apiManage';
 import { add as addApiTestcase, modify as modifyApiTestcase, queryById } from '@/services/apiCase';
+import { list } from '@/services/applicationManagement';
 // import { listAll } from '@/services/config/secretManage';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
-import { history, useModel } from '@umijs/max';
+import { history } from '@umijs/max';
 import { message, Radio } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
@@ -24,8 +18,7 @@ import SetReqParam from './SetReqParam';
 import './index.scss';
 
 const CaseDetail = (props) => {
-  const { initialState } = useModel('@@initialState');
-  const { appList } = initialState || {};
+  const [appList, setAppList] = useState([]);
   const urlParams = new URL(window.location.href).searchParams;
   const [id, setId] = useState(urlParams.get('id'));
   props.setTestcaseId(parseInt(id));
@@ -67,9 +60,27 @@ const CaseDetail = (props) => {
   const [activeTab, setActiveTab] = useState(['requestParams']);
   const [secretList, setSecretList] = useState([]);
 
+  useEffect(() => {
+    applicationList();
+  }, []);
+
   const formItemLayout = {
     labelCol: { span: 0 },
     wrapperCol: { span: 0 },
+  };
+
+  const applicationList = () => {
+    list({ current: 1, pageSize: 1000 }).then((res) => {
+      if (res.code === 200 && res.data) {
+        const applicationData = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppList(applicationData);
+      }
+    });
   };
 
   // 查询接口列表
@@ -331,7 +342,7 @@ const CaseDetail = (props) => {
           />
 
           <ProFormSelect
-            // options={priorityList}
+            options={priorityList}
             width="70px"
             name="priority"
             label="优先级"

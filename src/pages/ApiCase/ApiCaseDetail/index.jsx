@@ -3,7 +3,7 @@ import { Button, Layout, Space } from 'antd';
 import { useState } from 'react';
 // import ExecLog from '../MulTestCase/ExecLog';
 import CaseDetail from './CaseDetail';
-// import CaseResult from './CaseResult';
+import CaseResult from './CaseResult';
 // import Debug from './Debug';
 
 const App = () => {
@@ -73,7 +73,7 @@ const App = () => {
                 </Button>
               )}
               <div style={{ marginLeft: 0, marginTop: 40 }}>
-                {/* <CaseResult debugResult={debugResult} envName={envName} /> */}
+                <CaseResult debugResult={debugResult} envName={envName} />
               </div>
             </Sider>
           </Layout>
