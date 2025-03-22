@@ -54,18 +54,18 @@ const EnvConfigList = () => {
       },
     },
     {
-      title: '应用',
-      dataIndex: 'appName',
-      ellipsis: true,
-      // width: 150,
-      search: false,
-    },
-    {
       title: '环境名',
       dataIndex: 'name',
       ellipsis: true,
       search: true,
       // width: 150,
+    },
+    {
+      title: '应用',
+      dataIndex: 'appName',
+      ellipsis: true,
+      // width: 150,
+      search: false,
     },
     {
       title: '域名',
@@ -195,7 +195,7 @@ const EnvConfigList = () => {
           onShowSizeChange: (current, pageSize) => setPageSize(pageSize),
         }}
         dateFormatter="string"
-        headerTitle="应用环境列表"
+        headerTitle="环境列表"
         toolBarRender={() => [
           <Button
             onClick={() => {

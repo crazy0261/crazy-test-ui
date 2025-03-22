@@ -1,10 +1,8 @@
 import { priorityList } from '@/common';
-// import {
-//   listAllByAppId as listAllApiByAppId,
-//   queryById as queryApiById,
-// } from '@/services/apiManage';
 import { add as addApiTestcase, modify as modifyApiTestcase, queryById } from '@/services/apiCase';
+import { list as listApiManagement, queryApiById } from '@/services/apiManagement';
 import { list } from '@/services/applicationManagement';
+import { listPage } from '@/services/domain';
 // import { listAll } from '@/services/config/secretManage';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
@@ -59,6 +57,7 @@ const CaseDetail = (props) => {
   const [requestParamsTemp, setRequestParamsTemp] = useState(curApiId === null ? null : undefined);
   const [activeTab, setActiveTab] = useState(['requestParams']);
   const [secretList, setSecretList] = useState([]);
+  const [domainUrl, setDomainUrl] = useState('-');
 
   useEffect(() => {
     applicationList();
@@ -85,25 +84,25 @@ const CaseDetail = (props) => {
 
   // 查询接口列表
   const queryApiList = () => {
-    // if (curAppId !== '' && curAppId !== null) {
-    //   setApiList([]);
-    //   listAllApiByAppId({ appId: curAppId + '' }).then((result) => {
-    //     if (result.code === 200) {
-    //       setApiList(
-    //         result.data.map((item) => ({
-    //           value: item.id,
-    //           // label: item.name,
-    //           label: item.path,
-    //           method: item.method,
-    //           path: item.path,
-    //           requestParams: item.requestParams,
-    //         })),
-    //       );
-    //     } else {
-    //       message.error('查询接口列表失败');
-    //     }
-    //   });
-    // }
+    if (curAppId !== '' && curAppId !== null) {
+      setApiList([]);
+      listApiManagement({ applicationId: curAppId }).then((result) => {
+        if (result.code === 200) {
+          setApiList(
+            result.data.map((item) => ({
+              value: item.id,
+              // label: item.name,
+              label: item.path,
+              method: item.method,
+              path: item.path,
+              requestParams: item.requestParams,
+            })),
+          );
+        } else {
+          message.error('查询接口列表失败');
+        }
+      });
+    }
   };
 
   // 生成断言Array
@@ -213,19 +212,27 @@ const CaseDetail = (props) => {
 
   // 选择接口名时，更新method和path
   function handleClickApiName(apiId) {
-    // if (apiId !== undefined && apiId !== null) {
-    //   queryApiById({ id: apiId }).then((res) => {
-    //     if (formRef?.current?.getFieldsValue().name === undefined) {
-    //       formRef?.current?.setFieldsValue({
-    //         name: res.data.name,
-    //       });
-    //     }
-    //     setMethod(res.data.method);
-    //     setPath(res.data.path);
-    //     setRequestParamsTemp(res.data.requestParams);
-    //   });
-    // }
+    if (apiId !== undefined && apiId !== null) {
+      queryApiById({ id: apiId }).then((res) => {
+        if (formRef?.current?.getFieldsValue().name === undefined) {
+          formRef?.current?.setFieldsValue({
+            name: res.data.name,
+          });
+        }
+        setMethod(res.data.method);
+        setPath(res.data.path);
+        setRequestParamsTemp(res.data.requestParams);
+      });
+    }
   }
+
+  const getDomainUrl = (value) => {
+    listPage({ appId: value }).then((res) => {
+      if (res.code === 200 && res.data.length > 0) {
+        setDomainUrl(res?.data[0]?.urlPath);
+      }
+    });
+  };
 
   // 生成JSON格式请求头头
   function genRequestHeadersJSON() {
@@ -365,6 +372,7 @@ const CaseDetail = (props) => {
             name="appId"
             label="应用名"
             onChange={(e) => {
+              getDomainUrl(e);
               setCurAppId(e);
               setCurApiId();
               formRef?.current?.setFieldsValue({
@@ -406,7 +414,7 @@ const CaseDetail = (props) => {
             }}
           >
             <Radio.Button>{method}</Radio.Button>
-            <Radio.Button>{props.domain}</Radio.Button>
+            <Radio.Button>{domainUrl}</Radio.Button>
             <Radio.Button onClick={() => window.open('/application/apimanage?id=' + curApiId)}>
               {path}
             </Radio.Button>

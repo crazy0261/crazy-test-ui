@@ -1,31 +1,14 @@
 import { request } from '@umijs/max';
-import { post } from '../utils/requestUtil';
+import { get, post } from '../utils/requestUtil';
 
 /** 分页查询接口列表 */
 export async function list(body) {
-  return post('/crazy/api/management/listAll', body);
-}
-
-/** 查询应用下所有接口 */
-export async function listAllByAppId(options) {
-  return request('/api/apimanage/listAllByAppId', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+  return post('/crazy/api/management/list', body);
 }
 
 /** 根据id查询接口 */
-export async function queryById(options) {
-  return request('/api/apimanage/queryById', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function queryApiById(parmas) {
+  return get('/crazy/api/management/get/id', parmas);
 }
 
 /** 新增接口 */
