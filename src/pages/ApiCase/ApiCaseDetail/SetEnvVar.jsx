@@ -1,10 +1,29 @@
+import { list } from '@/services/envConfig';
 import { ProCard } from '@ant-design/pro-components';
 import { message } from 'antd';
-import { useState } from 'react';
-// import EnvVarComponent from './EnvVarComponent';
+import { useEffect, useState } from 'react';
+import EnvVarComponent from './EnvVarComponent';
 
 const SetEnvVar = (props) => {
   const [curEnv, setCurEnv] = useState('testEnv');
+  const [envListName, setEnvListName] = useState([]);
+
+  useEffect(() => {
+    envList();
+  }, []);
+
+  // todo 后期改造动态
+  const envList = () => {
+    list({ current: 1, pageSize: 1000 }).then((result) => {
+      if (result.code === 200 && result.data.length > 0) {
+        setEnvListName(
+          result?.data?.map((item) => {
+            return item.name;
+          }),
+        );
+      }
+    });
+  };
 
   // 同步环境变量
   const syncEnvVar = () => {
@@ -37,7 +56,7 @@ const SetEnvVar = (props) => {
         bordered={true}
       >
         <ProCard.TabPane key="testEnv" tab="测试环境">
-          {/* <EnvVarComponent
+          <EnvVarComponent
             dataSource={props.testEnvParams}
             setDataSource={props.setTestEnvParams}
             setTestAccount={props.setTestAccountInTest}
@@ -45,10 +64,10 @@ const SetEnvVar = (props) => {
             isEdit={props.isEdit}
             syncEnvVar={syncEnvVar}
             needTestAccount={true}
-          /> */}
+          />
         </ProCard.TabPane>
         <ProCard.TabPane key="demoEnv" tab="Demo环境">
-          {/* <EnvVarComponent
+          <EnvVarComponent
             dataSource={props.demoEnvParams}
             setDataSource={props.setDemoEnvParams}
             setTestAccount={props.setTestAccountInDemo}
@@ -56,10 +75,10 @@ const SetEnvVar = (props) => {
             isEdit={props.isEdit}
             syncEnvVar={syncEnvVar}
             needTestAccount={true}
-          /> */}
+          />
         </ProCard.TabPane>
         <ProCard.TabPane key="prodEnv" tab="生产环境">
-          {/* <EnvVarComponent
+          <EnvVarComponent
             dataSource={props.prodEnvParams}
             setDataSource={props.setProdEnvParams}
             setTestAccount={props.setTestAccountInProd}
@@ -67,7 +86,7 @@ const SetEnvVar = (props) => {
             isEdit={props.isEdit}
             syncEnvVar={syncEnvVar}
             needTestAccount={true}
-          /> */}
+          />
         </ProCard.TabPane>
       </ProCard>
     </div>

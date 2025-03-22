@@ -9,17 +9,6 @@ export async function list(body) {
   return get('/crazy/application/management/list', body);
 }
 
-/** 查询项目下所有应用 */
-export async function listAll(options) {
-  return request('/api/application/listAll', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    ...(options || {}),
-  });
-}
-
 /** 新增编辑 */
 export async function save(body) {
   return post('/crazy/application/management/save', body);

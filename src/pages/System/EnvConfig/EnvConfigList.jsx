@@ -1,4 +1,4 @@
-import { listAll as listAllApp } from '@/services/applicationManagement';
+import { list as appList } from '@/services/applicationManagement';
 // import { listAll as listAllDomain } from '@/services/config/domainInfo';
 import { list } from '@/services/envConfig';
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
@@ -127,7 +127,7 @@ const EnvConfigList = () => {
   ];
 
   const requestAppEnum = () => {
-    listAllApp().then((result) => {
+    appList({ current: 1, pageSize: 1000 }).then((result) => {
       if (result.code === 200) {
         setAppEnum(result.data.map((item) => ({ value: item.id, label: item.name })));
       } else {

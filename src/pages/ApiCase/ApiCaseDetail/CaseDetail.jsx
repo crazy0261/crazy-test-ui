@@ -1,5 +1,5 @@
 import { priorityList } from '@/common';
-import { add as addApiTestcase, modify as modifyApiTestcase, queryById } from '@/services/apiCase';
+import { modify as modifyApiTestcase, queryById, save } from '@/services/apiCase';
 import { list as listApiManagement, queryApiById } from '@/services/apiManagement';
 import { list } from '@/services/applicationManagement';
 import { listPage } from '@/services/domain';
@@ -289,7 +289,7 @@ const CaseDetail = (props) => {
           }
         });
       } else {
-        addApiTestcase({
+        save({
           name: values.name,
           priority: values.priority,
           apiId: values.apiId,
@@ -312,7 +312,7 @@ const CaseDetail = (props) => {
             props.setIsEdit(false);
             props.setTestcaseId(res.data.id);
             message.success('新增成功');
-            history.push('/apiTestCase/detail?id=' + res.data.id);
+            history.push('/apiCase');
           }
         });
       }
@@ -460,6 +460,7 @@ const CaseDetail = (props) => {
         </ProForm.Group>
 
         <SetEnvVar
+          isAppid={curAppId}
           isEdit={props.isEdit}
           testEnvParams={testEnvParams}
           setTestEnvParams={setTestEnvParams}

@@ -1,4 +1,4 @@
-// import { priorityEnum } from '@/pages/Common/utils';
+import { priorityEnum } from '@/common';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { copy, list } from '@/services/apiCase';
 // import { listAll as listAllApp } from '@/services/application';
@@ -125,21 +125,21 @@ const ApiCaseList = () => {
       width: 60,
       search: false,
       valueType: 'select',
-      //   valueEnum: priorityEnum,
+      valueEnum: priorityEnum,
     },
     {
       disable: true,
       title: '状态',
-      dataIndex: 'isDelete',
+      dataIndex: 'status',
       ellipsis: true,
       valueType: 'select',
       width: 80,
       valueEnum: {
-        0: {
+        true: {
           text: '正常',
           status: 'Success',
         },
-        2: {
+        false: {
           text: '已下架',
           status: 'Default',
         },
@@ -200,33 +200,6 @@ const ApiCaseList = () => {
       },
     },
     {
-      title: '作者',
-      dataIndex: 'creatorName',
-      ellipsis: true,
-      width: 70,
-      search: false,
-    },
-    {
-      title: '作者',
-      dataIndex: 'creator',
-      search: true,
-      hideInTable: true,
-      renderFormItem: () => {
-        return (
-          <Select
-            key="searchSelcet"
-            showSearch
-            allowClear
-            placeholder="请输入关键字搜索"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={ownerEnum}
-          ></Select>
-        );
-      },
-    },
-    {
       title: '备注',
       dataIndex: 'remark',
       search: false,
@@ -235,8 +208,32 @@ const ApiCaseList = () => {
       width: 100,
     },
     {
+      title: '创建者',
+      dataIndex: 'createByName',
+      search: false,
+      copyable: false,
+      ellipsis: true,
+      width: 100,
+    },
+    {
       title: '创建时间',
       dataIndex: 'createTime',
+      ellipsis: true,
+      width: 160,
+      search: false,
+      valueType: 'dateTime',
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateByName',
+      search: false,
+      copyable: false,
+      ellipsis: true,
+      width: 100,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
       ellipsis: true,
       width: 160,
       search: false,

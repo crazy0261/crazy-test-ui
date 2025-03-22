@@ -7,7 +7,7 @@ export async function listAll(body) {
 
 /** 分页查询接口列表 */
 export async function list(body) {
-  return post('/crazy/api/case/list', body);
+  return get('/crazy/api/case/list', body);
 }
 
 /** 根据用例id查询用例 */
@@ -20,9 +20,9 @@ export async function queryByLikeName(body) {
   return post('/api/apiTestcase/queryByLikeName', body);
 }
 
-/** 新增接口 */
-export async function add(body) {
-  return post('/api/apiTestcase/add', body);
+/** 新增/编辑接口 */
+export async function save(body) {
+  return post('/crazy/api/case/save', body);
 }
 
 /** 编辑接口 */

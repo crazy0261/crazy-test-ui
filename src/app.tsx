@@ -3,7 +3,7 @@ import {
   listAll as listAllUser,
   currentUser as queryCurrentUser,
 } from '@/services/ant-design-pro/api';
-import { listAll as listAllApp } from '@/services/applicationManagement';
+import { list as listAllApp } from '@/services/applicationManagement';
 import { getProjectList, listAllEnvName } from '@/services/projectManagement';
 
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
@@ -85,7 +85,7 @@ export async function getInitialState(): Promise<{
   const fetchAppList = async (): Promise<{ value: number; label: string }[] | undefined> => {
     try {
       const appList: { value: number; label: string }[] = [];
-      const result = await listAllApp();
+      const result = await listAllApp({ current: 1, pageSize: 1000 });
       if (result.code === 200) {
         result.data.map((item: any) => appList.push({ value: item.id, label: item.name }));
       }
