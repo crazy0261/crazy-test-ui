@@ -4,7 +4,7 @@ import { useState } from 'react';
 // import ExecLog from '../MulTestCase/ExecLog';
 import CaseDetail from './CaseDetail';
 import CaseResult from './CaseResult';
-// import Debug from './Debug';
+import Debug from './Debug';
 
 const App = () => {
   const { Sider, Content } = Layout;
@@ -50,14 +50,14 @@ const App = () => {
             </Content>
             <Sider style={siderStyle} width="40%" theme="light">
               <div style={{ marginTop: 0 }}>
-                {/* <Debug
+                <Debug
                   caseType="apiTestcase"
                   isEdit={isEdit}
                   caseId={testcaseId}
                   setDebugResult={setDebugResult}
                   setDomain={setDomain}
                   setEnvName={setEnvName}
-                /> */}
+                />
               </div>
               {!isEdit && (
                 <Button
