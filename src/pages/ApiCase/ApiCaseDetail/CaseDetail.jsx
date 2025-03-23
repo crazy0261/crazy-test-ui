@@ -438,14 +438,22 @@ const CaseDetail = (props) => {
                 requestParamsTemp={requestParamsTemp}
               />
             </ProCard.TabPane>
-            <ProCard.TabPane key="requestHeaders" tab="请求头">
+            <ProCard.TabPane
+              key="requestHeaders"
+              tab="请求头"
+              style={{ width: '204vh', maxWidth: '100%' }}
+            >
               <SetReqHeader
                 isEdit={props.isEdit}
                 dataSource={reqHeaderArray}
                 setDataSource={setReqHeaderArray}
               />
             </ProCard.TabPane>
-            <ProCard.TabPane key="assertsArray" tab="断言">
+            <ProCard.TabPane
+              key="assertsArray"
+              tab="断言"
+              style={{ width: '204vh', maxWidth: '100%' }}
+            >
               <SetAssert
                 isEdit={props.isEdit}
                 enableEdit={enableEdit}
