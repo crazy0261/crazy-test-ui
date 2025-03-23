@@ -56,8 +56,9 @@ const AddOrUpdateTestAccountManagement = (props) => {
       form.setFieldsValue({
         name: props.record?.name,
         account: props.record?.account,
-        // password: props.record?.password,
-        loginPath: props.record?.loginPath,
+        password: props.record?.password,
+        apiCaseId: props.record?.apiCaseId,
+        headerParams: props.record?.headerParams,
       });
   }, [props.isModalOpen]);
 
