@@ -1,5 +1,5 @@
 import { priorityList } from '@/common';
-import { modify as modifyApiTestcase, queryById, save } from '@/services/apiCase';
+import { queryById, save } from '@/services/apiCase';
 import { list as listApiManagement, queryApiById } from '@/services/apiManagement';
 import { list } from '@/services/applicationManagement';
 import { listPage } from '@/services/domain';
@@ -263,7 +263,7 @@ const CaseDetail = (props) => {
     if (props.isEdit) {
       const urlParams = new URL(window.location.href).searchParams;
       if (urlParams.get('id')) {
-        modifyApiTestcase({
+        save({
           id: props.testcaseId,
           name: values.name,
           priority: values.priority,
@@ -273,14 +273,14 @@ const CaseDetail = (props) => {
           requestHeaders: genRequestHeadersJSON(),
           requestParams: reqParams,
           assertsArray: genAssertsArrayJSON(),
-          // envVariables: genJsonEnvVar(
-          //   testEnvParams,
-          //   testAccountInTest,
-          //   demoEnvParams,
-          //   testAccountInDemo,
-          //   prodEnvParams,
-          //   testAccountInProd,
-          // ),
+          envVariables: genJsonEnvVar(
+            testEnvParams,
+            testAccountInTest,
+            demoEnvParams,
+            testAccountInDemo,
+            prodEnvParams,
+            testAccountInProd,
+          ),
         }).then((res) => {
           if (res.code === 200) {
             props.setIsEdit(false);
