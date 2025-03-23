@@ -11,6 +11,11 @@ export async function list(body) {
 }
 
 /** 编辑 */
-export async function modify(body) {
-  return post('/api/envinfo/modify', body);
+export async function save(body) {
+  return post('/crazy/env/config/save', body);
+}
+
+/** 详情 */
+export async function queryById(params) {
+  return get('/crazy/env/config/queryById', params);
 }

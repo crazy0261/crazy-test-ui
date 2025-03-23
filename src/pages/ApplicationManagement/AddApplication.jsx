@@ -43,7 +43,6 @@ const AddApplication = (props) => {
       if (result.code === 200) {
         let owners = [];
         result.data.map((item) => owners.push({ value: item.id, label: item.name }));
-        console.log('owners=' + owners);
         setOwnerEnum(owners);
       }
     });

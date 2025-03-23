@@ -1,5 +1,7 @@
 import SetReqHeader from '@/pages/ApiCase/ApiCaseDetail/SetReqHeader';
-import { modify } from '@/services/envConfig';
+import { list } from '@/services/applicationManagement';
+import { listPage as domainlist } from '@/services/domain';
+import { queryById, save } from '@/services/envConfig';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Button, Form, message, Modal } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -13,7 +15,8 @@ const EditEnvConfig = (props) => {
   const [isloading, setIsloading] = useState(false);
   const [reqHeaderArray, setReqHeaderArray] = useState([]);
   const [envVarArray, setEnvVarArray] = useState([]);
-  const [initData, setInitData] = useState(false);
+  const [appList, setAppList] = useState([]);
+  const [domainList, setDomainList] = useState([]);
 
   // 去除空key-value
   function trimKeyValue(item) {
@@ -26,52 +29,108 @@ const EditEnvConfig = (props) => {
     return res;
   }
 
-  const onFinish = () => {
-    setIsloading(true);
-    modify({
-      ...formRef.current.getFieldValue(),
-      id: props.record.id,
-      requestHeadersList: trimKeyValue(reqHeaderArray),
-      envVariablesList: trimKeyValue(envVarArray),
-    }).then((result) => {
-      setIsloading(false);
-      if (result.code === 200) {
-        message.success('修改成功！');
-        props.actionRef.current.reload();
-        props.setIsModalOpen(false);
-        form.resetFields();
-        props.setRecord(null);
+  const appListData = () => {
+    list({ current: 1, pageSize: 1000 }).then((res) => {
+      if (res.code === 200 && res.data) {
+        const applicationData = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppList(applicationData);
       }
     });
   };
 
+  const doaminListData = () => {
+    domainlist({ current: 1, pageSize: 1000 }).then((res) => {
+      if (res.code === 200 && res.data) {
+        const domainData = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setDomainList(domainData);
+      }
+    });
+  };
+
+  useEffect(() => {
+    appListData();
+    doaminListData();
+  }, []);
+
+  const onFinish = () => {
+    setIsloading(true);
+
+    if (props.record === null) {
+      save({
+        ...formRef.current.getFieldValue(),
+        requestHeaders: trimKeyValue(reqHeaderArray),
+        envVariables: trimKeyValue(envVarArray),
+      }).then((result) => {
+        setIsloading(false);
+        if (result.code === 200) {
+          message.success('修改成功！');
+          props.actionRef.current.reload();
+          props.setIsModalOpen(false);
+          form.resetFields();
+          props.setRecord(null);
+        }
+      });
+    } else {
+      save({
+        ...formRef.current.getFieldValue(),
+        id: props.record.id,
+        requestHeaders: trimKeyValue(reqHeaderArray),
+        envVariables: trimKeyValue(envVarArray),
+      }).then((result) => {
+        setIsloading(false);
+        if (result.code === 200) {
+          message.success('修改成功！');
+          props.actionRef.current.reload();
+          props.setIsModalOpen(false);
+          form.resetFields();
+          props.setRecord(null);
+        }
+      });
+    }
+  };
   const handleCancel = () => {
     props.setIsModalOpen(false);
   };
 
   useEffect(() => {
-    if (props.isModalOpen && props.record !== null) {
-      formRef?.current?.setFieldsValue({
-        appName: props.record.appName,
-        name: props.record.name,
-        domainId: props.record.domainId,
+    if (props.isModalOpen && props.record !== null && props.record.id !== null) {
+      queryById({ id: props.record.id }).then((res) => {
+        if (res.code === 200) {
+          formRef?.current?.setFieldsValue({
+            appId: res.data.appId,
+            name: res.data.name,
+            domainId: res.data.domainId,
+          });
+          const reqHeadersList = res.data.requestHeaders;
+          const envVarList = res.data.envVariables;
+          setReqHeaderArray(reqHeadersList === null ? [] : reqHeadersList);
+          setEnvVarArray(envVarList === null ? [] : envVarList);
+        }
       });
-      const reqHeadersList = props.record.requestHeadersList;
-      const envVarList = props.record.envVariablesList;
-      setReqHeaderArray(reqHeadersList === null ? [] : reqHeadersList);
-      setEnvVarArray(envVarList === null ? [] : envVarList);
-      setInitData(true);
+    } else {
+      formRef.current?.resetFields();
+      setReqHeaderArray([]);
+      setEnvVarArray([]);
     }
   }, [props.isModalOpen]);
 
   return (
     <>
       <Modal
-        title="编辑环境"
+        title={props?.record === null ? '新增环境' : '编辑环境'}
         open={props.isModalOpen}
         onCancel={handleCancel}
         width={700}
-        //删去了form表单自带的submit，在modal的footer自行渲染了一个button，点击后回调onFinish函数
         footer={[
           <>
             <Button type="primary" onClick={handleCancel} key={'cancel'}>
@@ -99,9 +158,9 @@ const EditEnvConfig = (props) => {
           <ProForm.Group>
             <ProFormSelect
               showSearch
-              options={props.domainList}
+              options={appList}
               width={260}
-              name="domainId"
+              name="appId"
               label="应用"
               rules={[{ required: true }]}
             />
@@ -111,7 +170,7 @@ const EditEnvConfig = (props) => {
           <ProForm.Group>
             <ProFormSelect
               showSearch
-              options={props.domainList}
+              options={domainList}
               width={260}
               name="domainId"
               label="域名"
@@ -120,14 +179,12 @@ const EditEnvConfig = (props) => {
           </ProForm.Group>
 
           <ProCard tabs={{ type: 'card' }}>
-            <ProCard.TabPane key="requestHeadersList" tab="请求头">
-              {initData && (
-                <SetReqHeader
-                  dataSource={reqHeaderArray}
-                  setDataSource={setReqHeaderArray}
-                  isEdit={true}
-                />
-              )}
+            <ProCard.TabPane key="requestHeaders" tab="请求头">
+              <SetReqHeader
+                dataSource={reqHeaderArray}
+                setDataSource={setReqHeaderArray}
+                isEdit={true}
+              />
             </ProCard.TabPane>
             <ProCard.TabPane key="envVariablesList" tab="环境变量">
               <SetReqHeader dataSource={envVarArray} setDataSource={setEnvVarArray} isEdit={true} />

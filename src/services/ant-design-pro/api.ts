@@ -109,7 +109,6 @@ export async function register(options: any) {
 
 /** 更新选择的项目id */
 export async function updateSelectProjectId(params: any) {
-  console.log('updateSelectProjectId', params);
   return request('/crazy/user/update/projectId', {
     method: 'GET',
     params: params,

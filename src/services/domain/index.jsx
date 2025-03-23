@@ -17,7 +17,6 @@ export async function listAll() {
 
 /** 分页查询 */
 export async function listPage(params) {
-  console.log(params);
   return get('/crazy/domain/list', params);
 }
 

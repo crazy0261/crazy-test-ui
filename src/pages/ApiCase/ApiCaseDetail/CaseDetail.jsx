@@ -257,7 +257,6 @@ const CaseDetail = (props) => {
 
   // 点击保存或修改
   const handleFinish = (values) => {
-    console.log('values--detail-->', values);
     if (props.isEdit) {
       const urlParams = new URL(window.location.href).searchParams;
       if (urlParams.get('id')) {
