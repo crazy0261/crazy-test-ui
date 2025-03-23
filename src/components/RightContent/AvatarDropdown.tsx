@@ -74,7 +74,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
   };
 
   const handleCloseUpdateOnModal = () => {
-    setIsModalOpen(false);
+    setIsUpdateOpen(false);
   };
   const handleUpdateOnModal = () => {
     setIsUpdateOpen(true);

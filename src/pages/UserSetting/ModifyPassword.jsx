@@ -23,12 +23,16 @@ const ModifyPassword = (props) => {
   };
 
   const handleOk = () => {
+    form.submit();
+  };
+
+  const handleCancelOk = () => {
     props.onClose(false);
   };
 
   return (
     <div>
-      <Modal title="修改密码" open={props.isUpdateOpen} onOk={handleOk} onCancel={handleOk}>
+      <Modal title="修改密码" open={props.isUpdateOpen} onOk={handleOk} onCancel={handleCancelOk}>
         <Form
           style={{
             maxWidth: 500,
