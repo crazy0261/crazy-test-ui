@@ -252,7 +252,7 @@ const ApiCaseList = () => {
               type="primary"
               size={'small'}
               onClick={() => {
-                window.open('/apiTestCase/detail?id=' + record.id);
+                history.push('/apiCase/detail?id=' + record.id);
               }}
             />
           </Tooltip>

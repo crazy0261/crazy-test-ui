@@ -4,16 +4,17 @@ import { list as listApiManagement, queryApiById } from '@/services/apiManagemen
 import { list } from '@/services/applicationManagement';
 import { listPage } from '@/services/domain';
 // import { listAll } from '@/services/config/secretManage';
+import { genEnvVarArray, genJsonEnvVar, getTestAccount } from '@/pages/Common/util';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { message, Radio } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
+import './index.scss';
 import SetAssert from './SetAssert';
 import SetEnvVar from './SetEnvVar';
 import SetReqHeader from './SetReqHeader';
 import SetReqParam from './SetReqParam';
-import './index.scss';
 
 const CaseDetail = (props) => {
   const [appList, setAppList] = useState([]);
@@ -26,9 +27,10 @@ const CaseDetail = (props) => {
   const [curApiId, setCurApiId] = useState(
     apiIdTemp === undefined || apiIdTemp === null ? null : Number.parseInt(apiIdTemp),
   );
-  if (curApiId !== null) {
-    handleClickApiName(curApiId);
-  }
+  // if (curApiId !== null) {
+  //   console.log('curApiId---->handleClickApiName--->',curApiId)
+  //   handleClickApiName(curApiId);
+  // }
   const appIdTemp = urlParams.get('appId');
   const [curAppId, setCurAppId] = useState(
     appIdTemp === undefined || appIdTemp === null ? null : Number.parseInt(appIdTemp),
@@ -139,21 +141,16 @@ const CaseDetail = (props) => {
         setResponse(res);
         setMethod(res.data.method);
         setPath(res.data.path);
+        setDomainUrl(res.data.domainUrl);
         setCurAppId(res.data.appId);
         setCurApiId(res.data.apiId);
         handleClickApiName(res.data.apiId);
-        // setTestEnvParams(genEnvVarArray(res.data.envVariables, '1'));
-        // setDemoEnvParams(genEnvVarArray(res.data.envVariables, '2'));
-        // setProdEnvParams(genEnvVarArray(res.data.envVariables, '3'));
-        setTestEnvParams(null);
-        setDemoEnvParams(null);
-        setProdEnvParams(null);
-        // setTestAccountInTest(getTestAccount(res.data.envVariables, '1'));
-        // setTestAccountInDemo(getTestAccount(res.data.envVariables, '2'));
-        // setTestAccountInProd(getTestAccount(res.data.envVariables, '3'));
-        setTestAccountInTest(null);
-        setTestAccountInDemo(null);
-        setTestAccountInProd(null);
+        setTestEnvParams(genEnvVarArray(res.data.envVariables, '1'));
+        setDemoEnvParams(genEnvVarArray(res.data.envVariables, '2'));
+        setProdEnvParams(genEnvVarArray(res.data.envVariables, '3'));
+        setTestAccountInTest(getTestAccount(res.data.envVariables, '1'));
+        setTestAccountInDemo(getTestAccount(res.data.envVariables, '2'));
+        setTestAccountInProd(getTestAccount(res.data.envVariables, '3'));
         setAssertsArray(genAssertsArray(res));
         // setReqHeaderArray(jsonToArray(res.data.requestHeaders));
         setReqHeaderArray(null);
@@ -212,6 +209,7 @@ const CaseDetail = (props) => {
 
   // 选择接口名时，更新method和path
   function handleClickApiName(apiId) {
+    console.log('-------api---', apiId);
     if (apiId !== undefined && apiId !== null) {
       queryApiById({ id: apiId }).then((res) => {
         if (formRef?.current?.getFieldsValue().name === undefined) {
@@ -261,6 +259,7 @@ const CaseDetail = (props) => {
 
   // 点击保存或修改
   const handleFinish = (values) => {
+    console.log('values--detail-->', values);
     if (props.isEdit) {
       const urlParams = new URL(window.location.href).searchParams;
       if (urlParams.get('id')) {
@@ -298,14 +297,14 @@ const CaseDetail = (props) => {
           requestHeaders: genRequestHeadersJSON(),
           requestParams: reqParams,
           assertsArray: genAssertsArrayJSON(),
-          // envVariables: genJsonEnvVar(
-          //   testEnvParams,
-          //   testAccountInTest,
-          //   demoEnvParams,
-          //   testAccountInDemo,
-          //   prodEnvParams,
-          //   testAccountInProd,
-          // ),
+          envVariables: genJsonEnvVar(
+            testEnvParams,
+            testAccountInTest,
+            demoEnvParams,
+            testAccountInDemo,
+            prodEnvParams,
+            testAccountInProd,
+          ),
         }).then((res) => {
           if (res.code === 200) {
             setId(res.data.id);

@@ -11,7 +11,7 @@ const EnvVarComponent = (props) => {
   );
   const [testAccountList, setTestAccountList] = useState([]);
   useEffect(() => {
-    setEditableRowKeys(props.dataSource.map((item) => item.id));
+    // setEditableRowKeys(props.dataSource.map((item) => item.id));
   }, [props.dataSource]);
 
   // 查询测试账号列表
