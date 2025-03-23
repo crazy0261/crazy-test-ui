@@ -1,10 +1,5 @@
 import { get, post } from '../utils/requestUtil';
 
-/** 查询所有测试账号 */
-export async function listAll() {
-  return post('/api/testaccount/listAll');
-}
-
 /** 分页查询测试账号列表 */
 export async function listPage(body) {
   return get('/crazy/test/account/list', body);

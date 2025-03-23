@@ -1,4 +1,4 @@
-// import { listAll as listAllTestAccount } from '@/services/config/testAccount';
+import { listPage } from '@/services/testAccountManagement';
 import { EditableProTable, ProFormSelect } from '@ant-design/pro-components';
 import { Button, Form } from 'antd';
 import { useEffect, useState } from 'react';
@@ -16,13 +16,13 @@ const EnvVarComponent = (props) => {
 
   // 查询测试账号列表
   const queryTestAccountList = () => {
-    // listAllTestAccount().then((result) => {
-    //   if (result.code === 200) {
-    //     setTestAccountList(result.data.map((item) => ({ value: item.id, label: item.name })));
-    //   } else {
-    //     message.error('查询测试账号列表失败');
-    //   }
-    // });
+    listPage({ current: 1, pageSize: 1000 }).then((result) => {
+      if (result.code === 200) {
+        setTestAccountList(result.data.map((item) => ({ value: item.id, label: item.name })));
+      } else {
+        message.error('查询测试账号列表失败');
+      }
+    });
   };
 
   // 首次进入页面
