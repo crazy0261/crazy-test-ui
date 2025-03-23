@@ -1,5 +1,7 @@
+import ModifyPassword from '@/pages/UserSetting/ModifyPassword';
+import ModifyUserInfo from '@/pages/UserSetting/ModifyUserInfo';
 import { outLogin } from '@/services/ant-design-pro/api';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
@@ -7,7 +9,6 @@ import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback, useState } from 'react';
 import { flushSync } from 'react-dom';
-import ModifyUserInfo from '../../pages/UserSetting/ModifyUserInfo';
 import HeaderDropdown from '../HeaderDropdown';
 
 export type GlobalHeaderRightProps = {
@@ -63,12 +64,20 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
 
   const { initialState, setInitialState } = useModel('@@initialState');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
   const handleOnModal = () => {
     setIsModalOpen(true);
+  };
+
+  const handleCloseUpdateOnModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleUpdateOnModal = () => {
+    setIsUpdateOpen(true);
   };
 
   const onMenuClick = useCallback(
@@ -83,6 +92,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
         return;
       } else if (key === 'center') {
         handleOnModal();
+        return;
+      } else if (key === 'updatePwd') {
+        handleUpdateOnModal();
         return;
       }
 
@@ -120,6 +132,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
       label: '个人中心',
     },
     {
+      key: 'updatePwd',
+      icon: <UserSwitchOutlined />,
+      label: '修改密码',
+    },
+    {
       key: 'logout',
       icon: <LogoutOutlined />,
       label: '退出登录',
@@ -138,6 +155,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
         {children}
       </HeaderDropdown>
       <ModifyUserInfo isOpen={isModalOpen} onClose={handleCloseModal} />
+      <ModifyPassword isUpdateOpen={isUpdateOpen} onClose={handleCloseUpdateOnModal} />
     </>
   );
 };
