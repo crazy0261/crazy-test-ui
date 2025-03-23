@@ -153,7 +153,6 @@ const CaseDetail = (props) => {
         setTestAccountInProd(getTestAccount(res.data.envVariables, '3'));
         setAssertsArray(genAssertsArray(res));
         setReqHeaderArray(jsonToArray(res.data.requestHeaders));
-
         setReqParams(JSON.stringify(JSONbig.parse(requestParams), null, 4));
       });
     } else {
@@ -255,11 +254,30 @@ const CaseDetail = (props) => {
     }
   }
 
+  const checkRequestJson = (value) => {
+    if (value !== '' && value !== '{}') {
+      try {
+        JSONbig.parse(value);
+      } catch (e) {
+        message.error('请求参数格式错误');
+        return false;
+      }
+      return true;
+    } else if (value === '{}') {
+      return true;
+    } else {
+      message.error('请求参数格式错误');
+      return false;
+    }
+  };
+
   // 点击保存或修改
   const handleFinish = (values) => {
     if (props.isEdit) {
       const urlParams = new URL(window.location.href).searchParams;
-      if (urlParams.get('id')) {
+      const check = checkRequestJson(reqParams);
+
+      if (urlParams.get('id') && check) {
         save({
           id: props.testcaseId,
           name: values.name,
@@ -284,7 +302,7 @@ const CaseDetail = (props) => {
             message.success('修改成功');
           }
         });
-      } else {
+      } else if (check) {
         save({
           name: values.name,
           priority: values.priority,
