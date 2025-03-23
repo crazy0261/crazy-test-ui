@@ -4,7 +4,7 @@ import { list as listApiManagement, queryApiById } from '@/services/apiManagemen
 import { list } from '@/services/applicationManagement';
 import { listPage } from '@/services/domain';
 // import { listAll } from '@/services/config/secretManage';
-import { genEnvVarArray, genJsonEnvVar, getTestAccount } from '@/pages/Common/util';
+import { genEnvVarArray, genJsonEnvVar, getTestAccount, jsonToArray } from '@/common';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { message, Radio } from 'antd';
@@ -152,8 +152,7 @@ const CaseDetail = (props) => {
         setTestAccountInDemo(getTestAccount(res.data.envVariables, '2'));
         setTestAccountInProd(getTestAccount(res.data.envVariables, '3'));
         setAssertsArray(genAssertsArray(res));
-        // setReqHeaderArray(jsonToArray(res.data.requestHeaders));
-        setReqHeaderArray(null);
+        setReqHeaderArray(jsonToArray(res.data.requestHeaders));
 
         setReqParams(JSON.stringify(JSONbig.parse(requestParams), null, 4));
       });
@@ -209,7 +208,6 @@ const CaseDetail = (props) => {
 
   // 选择接口名时，更新method和path
   function handleClickApiName(apiId) {
-    console.log('-------api---', apiId);
     if (apiId !== undefined && apiId !== null) {
       queryApiById({ id: apiId }).then((res) => {
         if (formRef?.current?.getFieldsValue().name === undefined) {

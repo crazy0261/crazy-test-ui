@@ -1,5 +1,3 @@
-import JSONbig from 'json-bigint';
-
 // /**
 //  * 修改tree，action返回修改后的item， 不修改就不返回
 //  */
@@ -67,69 +65,69 @@ import JSONbig from 'json-bigint';
 //   return array;
 // };
 
-// 去除空环境变量
-export const trimEnvParams = (envParams) => {
-  if (envParams === undefined || envParams === null) {
-    return null;
-  }
-  let envParamsRes = [];
-  for (let i = 0; i < envParams.length; i++) {
-    if (envParams[i].key !== undefined) {
-      envParamsRes.push(envParams[i]);
-    }
-  }
-  return envParamsRes;
-};
+// // 去除空环境变量
+// export const trimEnvParams = (envParams) => {
+//   if (envParams === undefined || envParams === null) {
+//     return null;
+//   }
+//   let envParamsRes = [];
+//   for (let i = 0; i < envParams.length; i++) {
+//     if (envParams[i].key !== undefined) {
+//       envParamsRes.push(envParams[i]);
+//     }
+//   }
+//   return envParamsRes;
+// };
 
 // 生成JSON格式环境变量 前置参数和账号
-export const genJsonEnvVar = (
-  testEnvParams,
-  testAccountInTest,
-  demoEnvParams,
-  testAccountInDemo,
-  prodEnvParams,
-  testAccountInProd,
-) => {
-  let envVar = {};
-  let envVarInTest = {};
-  envVarInTest['envVariables'] = trimEnvParams(testEnvParams);
-  envVarInTest['testaccountID'] = testAccountInTest;
-  envVar['1'] = envVarInTest;
-  let envVarInDemo = {};
-  envVarInDemo['envVariables'] = trimEnvParams(demoEnvParams);
-  envVarInDemo['testaccountID'] = testAccountInDemo;
-  envVar['2'] = envVarInDemo;
-  let envVarInProd = {};
-  envVarInProd['envVariables'] = trimEnvParams(prodEnvParams);
-  envVarInProd['testaccountID'] = testAccountInProd;
-  envVar['3'] = envVarInProd;
-  return JSON.stringify(envVar);
-};
+// export const genJsonEnvVar = (
+//   testEnvParams,
+//   testAccountInTest,
+//   demoEnvParams,
+//   testAccountInDemo,
+//   prodEnvParams,
+//   testAccountInProd,
+// ) => {
+//   let envVar = {};
+//   let envVarInTest = {};
+//   envVarInTest['envVariables'] = trimEnvParams(testEnvParams);
+//   envVarInTest['testaccountID'] = testAccountInTest;
+//   envVar['1'] = envVarInTest;
+//   let envVarInDemo = {};
+//   envVarInDemo['envVariables'] = trimEnvParams(demoEnvParams);
+//   envVarInDemo['testaccountID'] = testAccountInDemo;
+//   envVar['2'] = envVarInDemo;
+//   let envVarInProd = {};
+//   envVarInProd['envVariables'] = trimEnvParams(prodEnvParams);
+//   envVarInProd['testaccountID'] = testAccountInProd;
+//   envVar['3'] = envVarInProd;
+//   return JSON.stringify(envVar);
+// };
 
 // // 获取测试账号id
-export const getTestAccount = (envVariables, envId) => {
-  if (envVariables === undefined || envVariables === null || envVariables === '') {
-    return null;
-  }
-  let envVarJSON = JSONbig.parse(envVariables);
-  if (envVarJSON[envId] !== undefined && envVarJSON[envId] !== null) {
-    const testaccountID = envVarJSON[envId]['testaccountID'];
-    return testaccountID === undefined ? null : testaccountID;
-  } else {
-    return null;
-  }
-};
+// export const getTestAccount = (envVariables, envId) => {
+//   if (envVariables === undefined || envVariables === null || envVariables === '') {
+//     return null;
+//   }
+//   let envVarJSON = JSONbig.parse(envVariables);
+//   if (envVarJSON[envId] !== undefined && envVarJSON[envId] !== null) {
+//     const testaccountID = envVarJSON[envId]['testaccountID'];
+//     return testaccountID === undefined ? null : testaccountID;
+//   } else {
+//     return null;
+//   }
+// };
 
 // 生成环境变量Array
-export const genEnvVarArray = (envVariables, envId) => {
-  if (envVariables === undefined || envVariables === null || envVariables === '') {
-    return [];
-  }
-  let envVarJSON = JSONbig.parse(envVariables);
-  if (envVarJSON[envId] !== undefined && envVarJSON[envId] !== null) {
-    const envVariables = envVarJSON[envId]['envVariables'];
-    return envVariables === undefined || envVariables === null ? [] : envVariables;
-  } else {
-    return [];
-  }
-};
+// export const genEnvVarArray = (envVariables, envId) => {
+//   if (envVariables === undefined || envVariables === null || envVariables === '') {
+//     return [];
+//   }
+//   let envVarJSON = JSONbig.parse(envVariables);
+//   if (envVarJSON[envId] !== undefined && envVarJSON[envId] !== null) {
+//     const envVariables = envVarJSON[envId]['envVariables'];
+//     return envVariables === undefined || envVariables === null ? [] : envVariables;
+//   } else {
+//     return [];
+//   }
+// };

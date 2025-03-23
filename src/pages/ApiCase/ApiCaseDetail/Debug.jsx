@@ -1,4 +1,4 @@
-import { genEnvVarArray, getTestAccount, trimEnvParams } from '@/pages/Common/util';
+import { genEnvVarArray, getTestAccount, trimEnvParams } from '@/common';
 import { updateSelectEnvId } from '@/services/ant-design-pro/api.ts';
 import { debug as debugApiTestcase, queryById as queryApiCaseById } from '@/services/apiCase';
 // import { queryById as queryMulCaseById } from '@/services/mulTestcase/index.js';
