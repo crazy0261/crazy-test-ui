@@ -10,6 +10,11 @@ export async function list(body) {
   return get('/crazy/api/case/list', body);
 }
 
+/** 查询所有用例 */
+export async function allList(params) {
+  return get('/crazy/api/case/all/list', params);
+}
+
 /** 根据用例id查询用例 */
 export async function queryById(params) {
   return get('/crazy/api/case/getById', params);

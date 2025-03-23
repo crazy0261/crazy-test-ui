@@ -1,5 +1,6 @@
-import { add, modify } from '@/services/testAccountManagement';
-import { Button, Form, Input, message, Modal } from 'antd';
+import { allList } from '@/services/apiCase';
+import { save } from '@/services/testAccountManagement';
+import { Button, Form, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 
 /**
@@ -7,7 +8,9 @@ import { useEffect, useState } from 'react';
  */
 const AddOrUpdateTestAccountManagement = (props) => {
   const [form] = Form.useForm();
+  const { TextArea } = Input;
   const [isloading, setIsloading] = useState(false);
+  const [apiCaseList, setApiCaseList] = useState([]);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
@@ -17,11 +20,27 @@ const AddOrUpdateTestAccountManagement = (props) => {
     form.validateFields().then((value) => {
       setIsloading(true);
       props.record === null
-        ? add(value).then((result) => showResult(result, '新建'))
-        : modify({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
+        ? save(value).then((result) => showResult(result, '新建'))
+        : save({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
     });
   };
 
+  const apiCaseListData = async () => {
+    const result = await allList();
+    if (result.code === 200) {
+      const data = result.data.map((item) => {
+        return {
+          value: item.id,
+          label: item.name,
+        };
+      });
+      setApiCaseList(data);
+    }
+  };
+
+  useEffect(() => {
+    apiCaseListData();
+  }, []);
   const showResult = (result, msg) => {
     setIsloading(false);
     if (result.code === 200) {
@@ -80,8 +99,12 @@ const AddOrUpdateTestAccountManagement = (props) => {
           >
             <Input.Password placeholder={props.record === null ? '请输入密码' : '重置密码'} />
           </Form.Item>
-          <Form.Item name="loginPath" label="登录地址" rules={[{ required: true }]}>
-            <Input placeholder="http://***" />
+          <Form.Item name="apiCaseId" label="关联用例" rules={[{ required: true }]}>
+            <Select showSearch placeholder="请输入关键字搜索" options={apiCaseList} />
+          </Form.Item>
+
+          <Form.Item name="headerParams" label="请求头" rules={[{ required: false }]}>
+            <TextArea maxLength={255} />
           </Form.Item>
         </Form>
       </Modal>

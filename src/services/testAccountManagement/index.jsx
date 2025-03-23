@@ -5,14 +5,9 @@ export async function listPage(body) {
   return get('/crazy/test/account/list', body);
 }
 
-/** 新增 */
-export async function add(body) {
-  return post('/api/testaccount/add', body);
-}
-
-/** 修改 */
-export async function modify(body) {
-  return post('/api/testaccount/modify', body);
+/** 新增 修改 */
+export async function save(body) {
+  return post('/crazy/test/account/save', body);
 }
 
 /** 删除 */
