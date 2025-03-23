@@ -164,7 +164,6 @@ const EditEnvConfig = (props) => {
               label="应用"
               rules={[{ required: true }]}
             />
-            {/* <ProFormText name="appName" label="应用名" readonly /> */}
             <ProFormText name="name" label="环境" rules={[{ required: true }]} />
           </ProForm.Group>
           <ProForm.Group>
