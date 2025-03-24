@@ -41,8 +41,8 @@ export async function deleteApi(body) {
 }
 
 /** 调试接口 */
-export async function debug(body, options) {
-  return post('/api/apiTestcase/debug', body);
+export async function debug(body) {
+  return post('/crazy/api/case/debug', body);
 }
 
 /** 根据用例id和环境名id获取domian */

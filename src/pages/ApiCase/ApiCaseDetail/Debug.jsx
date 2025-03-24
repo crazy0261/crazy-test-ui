@@ -6,7 +6,7 @@ import { debug as debugApiTestcase, queryById as queryApiCaseById } from '@/serv
 import { Button, Form, message, Modal, Radio, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-// import EnvVarComponent from './EnvVarComponent';
+import EnvVarComponent from './EnvVarComponent';
 
 const Debug = (props) => {
   const [form] = Form.useForm();
@@ -31,8 +31,8 @@ const Debug = (props) => {
     envVar[curEnvId] = envVarInEnv;
     if (props.caseType === 'apiTestcase') {
       debugApiTestcase({
-        testcaseId: testcaseId,
-        envNameId: curEnvId,
+        id: testcaseId,
+        envId: curEnvId,
         inputParams: JSON.stringify(envVar),
       }).then((res) => {
         setIsModalExecButtonLoading(false);
@@ -190,7 +190,7 @@ const Debug = (props) => {
           </Radio.Group>
         </div>
         <Spin spinning={isModelExecButtonDisable} tip="Loading...">
-          {/* <EnvVarComponent
+          <EnvVarComponent
             dataSource={tempReqParams}
             setDataSource={setTempReqParams}
             setTestAccount={setTempTestAccount}
@@ -198,7 +198,7 @@ const Debug = (props) => {
             isEdit={true}
             syncEnvVar={null}
             needTestAccount={true}
-          /> */}
+          />
         </Spin>
       </Modal>
     </div>

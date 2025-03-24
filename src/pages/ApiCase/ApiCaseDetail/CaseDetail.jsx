@@ -263,7 +263,7 @@ const CaseDetail = (props) => {
         return false;
       }
       return true;
-    } else if (value === '{}') {
+    } else if (value === '{}' || value === null) {
       return true;
     } else {
       message.error('请求参数格式错误');
