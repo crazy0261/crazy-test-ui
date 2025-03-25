@@ -1,5 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+import { history } from '@umijs/max';
 import { message, notification } from 'antd';
 
 // 错误处理方案： 错误类型
@@ -112,6 +113,9 @@ export const errorConfig: RequestConfig = {
         message.error('请求失败！');
       } else if (data?.success === true && data?.code === 400) {
         message.error(data.message);
+      } else if (data?.success === true && data?.code === 401) {
+        message.error('验证已过期，请重新登录！');
+        history.push('/user/login');
       }
       return response;
     },
