@@ -6,7 +6,7 @@ import {
 import { list as listAllApp } from '@/services/applicationManagement';
 import { listAllEnvName, listPage } from '@/services/projectManagement';
 
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import { WaterMark, type Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -138,8 +138,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.name ?? 'Crazy Test',
     },
+
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -168,21 +169,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         width: '331px',
       },
     ],
-    // links: isDev
-    //   ? [
-    //       <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-    //         <LinkOutlined />
-    //         <span>OpenAPI 文档</span>
-    //       </Link>,
-    //     ]
-    //   : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
-      return <>{children}</>;
+      return (
+        <>
+          <WaterMark content={initialState?.currentUser?.name ?? 'Crazy Test'}>
+            {children}
+          </WaterMark>
+        </>
+      );
     },
     ...initialState?.settings,
   };
