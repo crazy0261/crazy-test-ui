@@ -47,7 +47,13 @@ const SetAssert = (props) => {
   const columns = [
     {
       title: 'JSONPath',
-      tip: '一、从JSONObject中取值：code；二、数组大小：data.records.size()三、从JSONArray中取值：data.records[0].stationOrderNo',
+      tip: (
+        <>
+          一、从JSONObject中取值:data <br />
+          二、数组大小:data.records.size() <br />
+          三、从JSONArray中取值:data.records[0].id`,
+        </>
+      ),
       dataIndex: 'jsonpath',
       formItemProps: () => {
         return {
@@ -81,7 +87,7 @@ const SetAssert = (props) => {
       },
     },
     {
-      title: '期望值',
+      title: '预期值',
       dataIndex: 'expValue',
       formItemProps: () => {
         return {

@@ -1,7 +1,6 @@
 import { ProCard } from '@ant-design/pro-components';
-import { Button, Collapse, Form, List, Typography } from 'antd';
+import { Collapse, Form, List, Typography } from 'antd';
 import { useEffect, useState } from 'react';
-// import CreateBug from './CreateBug';
 
 const CaseResult = (props) => {
   const { Panel } = Collapse;
@@ -66,18 +65,6 @@ const CaseResult = (props) => {
   return (
     <div>
       <Form>
-        {assertResultText !== '暂无' && (
-          <div>
-            <Button
-              type="primary"
-              size="small"
-              style={{ float: 'right' }}
-              onClick={(e) => setIsCreateBugOpen(true)}
-            >
-              一键BUG
-            </Button>
-          </div>
-        )}
         <b style={{ color: assertResultColor, float: 'left' }}>执行结果：{assertResultText}</b>
         {assertResultText !== '暂无' && (
           <div>
