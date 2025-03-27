@@ -7,12 +7,10 @@ import { useEffect, useState } from 'react';
 // import CommonVar from './CommonVar';
 
 // 设置断言
-const SetAssert = (props) => {
+const Assert = (props) => {
   const [commonVarModalOpen, setCommonVarModalOpen] = useState(false);
   const [caseVarModalOpen, setCaseVarModalOpen] = useState(false);
-  const [editableKeys, setEditableRowKeys] = useState(() =>
-    props.dataSource.map((item) => item.id),
-  );
+  const [editableKeys, setEditableRowKeys] = useState(props.dataSource.map((item) => item.id));
   const urlParams = new URL(window.location.href).searchParams;
   const [testcaseId, setTestcaseId] = useState(urlParams.get('id'));
   const isMulCase = window.location.href.indexOf('mulTestCase') !== -1;
@@ -54,7 +52,7 @@ const SetAssert = (props) => {
           三、从JSONArray中取值:data.records[0].id`,
         </>
       ),
-      dataIndex: 'jsonpath',
+      dataIndex: 'jsonPath',
       formItemProps: () => {
         return {
           rules: [{ required: true }],
@@ -88,7 +86,7 @@ const SetAssert = (props) => {
     },
     {
       title: '预期值',
-      dataIndex: 'expValue',
+      dataIndex: 'expectValue',
       formItemProps: () => {
         return {
           rules: [{ required: true }],
@@ -203,4 +201,4 @@ const SetAssert = (props) => {
   );
 };
 
-export default SetAssert;
+export default Assert;

@@ -10,11 +10,11 @@ import { history } from '@umijs/max';
 import { message, Radio } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
+import Assert from './Assert';
+import SetEnvVar from './EnvVar';
 import './index.scss';
-import SetAssert from './SetAssert';
-import SetEnvVar from './SetEnvVar';
-import SetReqHeader from './SetReqHeader';
-import SetReqParam from './SetReqParam';
+import SetReqHeader from './ReqHeader';
+import SetReqParam from './ReqParam';
 
 const CaseDetail = (props) => {
   const [appList, setAppList] = useState([]);
@@ -471,7 +471,8 @@ const CaseDetail = (props) => {
               tab="断言"
               style={{ width: '204vh', maxWidth: '100%' }}
             >
-              <SetAssert
+              {console.log('-----------', assertsArray)}
+              <Assert
                 isEdit={props.isEdit}
                 enableEdit={enableEdit}
                 dataSource={assertsArray}
