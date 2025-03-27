@@ -11,7 +11,7 @@ import { message, Radio } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
 import Assert from './Assert';
-import SetEnvVar from './EnvVar';
+import EnvVar from './EnvVar';
 import './index.scss';
 import SetReqHeader from './ReqHeader';
 import SetReqParam from './ReqParam';
@@ -482,7 +482,7 @@ const CaseDetail = (props) => {
           </ProCard>
         </ProForm.Group>
 
-        <SetEnvVar
+        <EnvVar
           isAppid={curAppId}
           isEdit={props.isEdit}
           testEnvParams={testEnvParams}

@@ -1,10 +1,16 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-22 20:03:28
+ * @LastEditTime: 2025-03-27 23:43:12
+ * @Description:
+ */
 import { list } from '@/services/envConfig';
 import { ProCard } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import EnvVarComponent from './EnvVarComponent';
 
-const SetEnvVar = (props) => {
+const EnvVar = (props) => {
   const [curEnv, setCurEnv] = useState('testEnv');
   const [envListName, setEnvListName] = useState([]);
 
@@ -93,4 +99,4 @@ const SetEnvVar = (props) => {
   );
 };
 
-export default SetEnvVar;
+export default EnvVar;
