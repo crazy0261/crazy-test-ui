@@ -252,7 +252,7 @@ const ApiCaseList = () => {
               type="primary"
               size={'small'}
               onClick={() => {
-                history.push('/apiCase/detail?id=' + record.id);
+                history.push('/case/apiCase/detail?id=' + record.id);
               }}
             />
           </Tooltip>
@@ -376,7 +376,7 @@ const ApiCaseList = () => {
         toolBarRender={() => [
           <Button
             // onClick={() => window.open('/apiTestCase/detail')}
-            onClick={() => history.push('/apiCase/detail')}
+            onClick={() => history.push('/case/apiCase/detail')}
             key="button"
             icon={<PlusOutlined />}
             type="primary"

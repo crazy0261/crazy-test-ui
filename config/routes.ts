@@ -23,33 +23,33 @@ export default [
     ],
   },
   {
-    path: '/apiCase',
-    name: '接口用例',
+    path: '/case',
+    name: '用例管理',
     icon: 'ProfileOutlined',
     routes: [
       {
-        path: '/apiCase',
+        name: '接口用例',
+        path: '/case/apiCase',
         component: './ApiCase',
       },
       {
-        path: '/apiCase/bathExec',
+        path: '/case/apiCase/bathExec',
         // component: './ApiTestCase/BathExecTestCase.jsx',
       },
       {
-        path: '/apiCase/detail',
+        path: '/case/apiCase/detail',
         component: './ApiCase/ApiCaseDetail',
       },
+      {
+        name: '场景用例',
+        path: '/case/mulTestCase',
+        // component: './MulTestCase',
+      },
+      {
+        path: '/case/mulTestCase/detail',
+        // component: './MulTestCaseDetail',
+      },
     ],
-  },
-  {
-    path: '/mulTestCase',
-    name: '场景用例',
-    icon: 'ClusterOutlined',
-    // component: './MulTestCase',
-  },
-  {
-    path: '/mulTestCase/detail',
-    // component: './MulTestCaseDetail',
   },
   {
     path: '/taskManagement',
@@ -199,7 +199,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/apiCase',
+    redirect: '/case/apiCase',
   },
   {
     path: '*',
