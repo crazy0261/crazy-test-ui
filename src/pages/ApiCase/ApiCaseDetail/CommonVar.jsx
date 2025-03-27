@@ -1,34 +1,39 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-15 16:41:19
+ * @LastEditTime: 2025-03-27 23:46:33
+ * @Description:  公共变量信息
+ */
 import { ProTable } from '@ant-design/pro-components';
 import { Modal } from 'antd';
 
-// 公共变量
 const CommonVar = (props) => {
   const tableListDataSource = [
     {
       describe: '当前时间戳(毫秒)',
       commonVar: '${__timestamp__}',
-      example: '1686819571376',
+      example: '1686819577876',
     },
     {
       describe: '当前时间戳(秒)',
       commonVar: '${__timestamp_second__}',
-      example: '1724121383',
+      example: '1728921383',
     },
     {
       describe: '当前时间',
       commonVar: '${__current_time__}',
-      example: '2023-07-13 10:30:50',
+      example: '2025-03-13 11:20:10',
     },
     {
       describe: '当前日期',
       commonVar: '${__current_date__}',
-      example: '2023-07-13',
+      example: '2025-03-13',
     },
     {
       describe: 'token',
       commonVar: '${token}',
       example:
-        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMDIzMDcwNDAwMDAxNjc2MTM0MjIzNDY5MDMxNDI2Iiwib3Blbl9pZCI6IjU5NjM2NTA3NzU2NTY2OTM3NiIsImlzX3N5c3RlbSI6ImZhbHNlIiwidXNlcl9sb2dpbl9pZCI6IjIwMjMwNzA0MDAwMDE2NzYxMzQyMjM0NjkwMzE0MjYiLCJwYXJ0eUlkIjoiMjAyMzA3MDQwMDAwMTY3NjEzNDIyMzA1Nzk4OTYzMyIsInRlbmFudF9pZCI6IjIwMjAwMzE3MDAwMDEyMzk3NTY2NTk4ODY5OTE2MTgiLCJpYXQiOjE2OTE0ODAxNDl9.XbJvihW32ny457-NjV5ppvQFTjgusoIib44evvNxsW8',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEsIm5hbWUiOiLnrqHnkIblkZgiLCJ0ZW5hbnRJZCI6IjEiLCJpZCI6MSwiZXhwIjoxNzQzMDk4NzkzLCJpYXQiOjE3NDMwODQzOTMsImFjY291bnQiOiJhZG1pbiJ9.uRRdNzalx-cHKtx6oiUHu071fNUHYJ1p-h9cX0LdHxs',
     },
   ];
 
