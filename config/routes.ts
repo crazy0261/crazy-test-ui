@@ -181,23 +181,6 @@ export default [
   //   ],
   // },
   {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    routes: [
-      {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: '二级页面',
-        component: './Admin',
-      },
-    ],
-  },
-  {
     path: '/',
     redirect: '/case/apiCase',
   },
