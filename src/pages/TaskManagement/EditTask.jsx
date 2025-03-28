@@ -1,11 +1,11 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-28 17:00:21
- * @LastEditTime: 2025-03-28 17:21:54
+ * @LastEditTime: 2025-03-28 20:51:22
  * @Description: 任务编辑弹框
  */
 import { caseTypeEnum } from '@/common';
-import { save } from '@/services/domain';
+import { save } from '@/services/taskManagement';
 import { Button, Form, Input, message, Modal, Select, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
  * 新建弹框
  */
 const EditTask = (props) => {
+  console.log('----', props);
   const [form] = Form.useForm();
   const { TextArea } = Input;
   const [isloading, setIsloading] = useState(false);
@@ -24,7 +25,7 @@ const EditTask = (props) => {
   const onFinish = () => {
     form.validateFields().then((value) => {
       setIsloading(true);
-      props.record === null
+      props.record === undefined
         ? save(value).then((result) => showResult(result, '新建'))
         : save({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
     });
@@ -51,7 +52,7 @@ const EditTask = (props) => {
   return (
     <>
       <Modal
-        title={props.record === null ? '新建任务' : '编辑任务'}
+        title={props.record === undefined ? '新建任务' : '编辑任务'}
         open={props.isModalOpen}
         onCancel={handleCancel}
         footer={[
@@ -90,11 +91,11 @@ const EditTask = (props) => {
             <Select options={caseTypeEnum} placeholder="请输入任务名称" />
           </Form.Item>
           <Form.Item name="env" label="执行环境" rules={[{ required: true }]}>
-            {/* <Select options={envNameEnum} placeholder="请输入任务名称" /> */}
-            <Select placeholder="请选择环境" />
+            <Select options={caseTypeEnum} placeholder="请输入任务名称" />
+            {/* <Select placeholder="请选择环境" /> */}
           </Form.Item>
-          <Form.Item name="enable" label="是否开启">
-            <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
+          <Form.Item name="enable" label="是否开启" initialValue={0}>
+            <Switch checkedChildren="开启" unCheckedChildren="关闭" />
           </Form.Item>
           <Form.Item name="remark" label="任务描述">
             <TextArea placeholder="请输入任务描述" maxLength={255} showCount />

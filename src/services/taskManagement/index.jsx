@@ -1,4 +1,4 @@
-import { post } from '../utils/requestUtil';
+import { get, post } from '../utils/requestUtil';
 
 export async function add(body) {
   return post('/api/schedule/add', body);
@@ -12,8 +12,8 @@ export async function deleteSchedule(body) {
   return post('/api/schedule/delete', body);
 }
 
-export async function listAll(body) {
-  return post('/api/schedule/listAll', body);
+export async function list(params) {
+  return get('/crazy/task/schedule/list', params);
 }
 
 export async function queryById(body) {
@@ -53,4 +53,9 @@ export async function interrupt(body) {
 /** 更新场景用例定时任务执行记录状态 */
 export async function updateScheduleStatus(body) {
   return post('/api/schedule/updateScheduleStatus', body);
+}
+
+/** 保存任务信息 */
+export async function save(body) {
+  return post('/crazy/task/schedule/save', body);
 }

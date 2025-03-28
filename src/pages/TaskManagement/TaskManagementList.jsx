@@ -1,6 +1,6 @@
 import EditTask from '@/pages/TaskManagement/EditTask';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { deleteSchedule, execOnce, listAll } from '@/services/taskManagement';
+import { deleteSchedule, execOnce, list } from '@/services/taskManagement';
 import {
   DeleteTwoTone,
   ExclamationCircleFilled,
@@ -48,7 +48,7 @@ const TaskManagementList = () => {
       },
     },
     {
-      title: 'cron',
+      title: 'Cron',
       dataIndex: 'cron',
       ellipsis: true,
       width: 150,
@@ -61,13 +61,13 @@ const TaskManagementList = () => {
       ellipsis: true,
       width: 100,
       valueEnum: {
-        1: { text: '启用', status: 'Success' },
-        0: { text: '禁用', status: 'Error' },
+        true: { text: '启用', status: 'Success' },
+        false: { text: '禁用', status: 'Error' },
       },
     },
     {
       title: '负责人',
-      dataIndex: 'creatorName',
+      dataIndex: 'ownerName',
       ellipsis: true,
       width: 100,
       search: false,
@@ -114,10 +114,32 @@ const TaskManagementList = () => {
       },
     },
     {
+      title: '创建者',
+      dataIndex: 'createByName',
+      ellipsis: true,
+      width: 150,
+      search: false,
+    },
+    {
       title: '创建时间',
       dataIndex: 'createTime',
       ellipsis: true,
-      width: 160,
+      width: 180,
+      search: false,
+      valueType: 'dateTime',
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateByName',
+      ellipsis: true,
+      width: 150,
+      search: false,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      ellipsis: true,
+      width: 180,
       search: false,
       valueType: 'dateTime',
     },
@@ -217,7 +239,7 @@ const TaskManagementList = () => {
         actionRef={ref}
         cardBordered
         request={async (params = {}, sort, filter) => {
-          return listAll(params);
+          return list(params);
         }}
         editable={{
           type: 'multiple',
