@@ -3,6 +3,7 @@ import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { deleteSchedule, execOnce, list } from '@/services/taskManagement';
 import {
   DeleteTwoTone,
+  EditOutlined,
   ExclamationCircleFilled,
   FileSearchOutlined,
   PlayCircleTwoTone,
@@ -17,9 +18,9 @@ const TaskManagementList = () => {
   const [ownerEnum, setOwnerEnum] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recordData, setRecordData] = useState({});
   const ref = useRef();
   const [pageSize, setPageSize] = useState(10);
-
   const columns = [
     {
       dataIndex: 'index',
@@ -94,8 +95,8 @@ const TaskManagementList = () => {
       search: false,
     },
     {
-      title: '作者',
-      dataIndex: 'creatorId',
+      title: '负责人',
+      dataIndex: 'ownerId',
       search: true,
       hideInTable: true,
       renderFormItem: () => {
@@ -159,6 +160,16 @@ const TaskManagementList = () => {
             />
           </Tooltip>
         </div>,
+        <div key="edit">
+          <Tooltip title="编辑">
+            <Button
+              icon={<EditOutlined />}
+              type="primary"
+              size={'small'}
+              onClick={() => onEditTask(record)}
+            />
+          </Tooltip>
+        </div>,
         <div key="retry">
           <Tooltip title="手工触发">
             <Button
@@ -216,7 +227,8 @@ const TaskManagementList = () => {
     });
   };
 
-  const onEditTask = () => {
+  const onEditTask = (record) => {
+    setRecordData(record);
     setIsModalOpen(true);
   };
 
@@ -288,7 +300,12 @@ const TaskManagementList = () => {
           </Button>,
         ]}
       />
-      <EditTask isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <EditTask
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        recordData={recordData}
+        actionRef={ref}
+      />
     </div>
   );
 };

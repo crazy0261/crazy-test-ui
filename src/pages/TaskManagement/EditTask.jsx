@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-28 17:00:21
- * @LastEditTime: 2025-03-28 20:51:22
+ * @LastEditTime: 2025-03-28 22:08:35
  * @Description: 任务编辑弹框
  */
 import { caseTypeEnum } from '@/common';
@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
  * 新建弹框
  */
 const EditTask = (props) => {
-  console.log('----', props);
   const [form] = Form.useForm();
   const { TextArea } = Input;
   const [isloading, setIsloading] = useState(false);
@@ -25,9 +24,9 @@ const EditTask = (props) => {
   const onFinish = () => {
     form.validateFields().then((value) => {
       setIsloading(true);
-      props.record === undefined
+      props.recordData === undefined
         ? save(value).then((result) => showResult(result, '新建'))
-        : save({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
+        : save({ ...value, id: props.recordData.id }).then((result) => showResult(result, '修改'));
     });
   };
 
@@ -44,15 +43,19 @@ const EditTask = (props) => {
   useEffect(() => {
     props.isModalOpen &&
       form.setFieldsValue({
-        name: props.record?.name,
-        urlPath: props.record?.urlPath,
+        name: props.recordData?.name,
+        cron: props.recordData?.cron,
+        testcaseType: props.recordData?.testcaseType,
+        env: props.recordData?.env,
+        enable: props.recordData?.enable,
+        remark: props.recordData?.remark,
       });
   }, [props.isModalOpen]);
 
   return (
     <>
       <Modal
-        title={props.record === undefined ? '新建任务' : '编辑任务'}
+        title={props.recordData === undefined ? '新建任务' : '编辑任务'}
         open={props.isModalOpen}
         onCancel={handleCancel}
         footer={[
@@ -94,7 +97,7 @@ const EditTask = (props) => {
             <Select options={caseTypeEnum} placeholder="请输入任务名称" />
             {/* <Select placeholder="请选择环境" /> */}
           </Form.Item>
-          <Form.Item name="enable" label="是否开启" initialValue={0}>
+          <Form.Item name="enable" label="是否开启" initialValue={true}>
             <Switch checkedChildren="开启" unCheckedChildren="关闭" />
           </Form.Item>
           <Form.Item name="remark" label="任务描述">
