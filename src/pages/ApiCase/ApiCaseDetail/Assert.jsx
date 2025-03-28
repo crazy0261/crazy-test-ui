@@ -47,9 +47,9 @@ const Assert = (props) => {
       title: 'JSONPath',
       tip: (
         <>
-          一、从JSONObject中取值:data <br />
-          二、数组大小:data.records.size() <br />
-          三、从JSONArray中取值:data.records[0].id`,
+          一、从JSONObject中取值:$.data <br />
+          二、数组大小:$.data.records.size() <br />
+          三、从JSONArray中取值:$.data.records[0].id`,
         </>
       ),
       dataIndex: 'jsonPath',

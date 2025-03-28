@@ -471,7 +471,6 @@ const CaseDetail = (props) => {
               tab="断言"
               style={{ width: '204vh', maxWidth: '100%' }}
             >
-              {console.log('-----------', assertsArray)}
               <Assert
                 isEdit={props.isEdit}
                 enableEdit={enableEdit}
