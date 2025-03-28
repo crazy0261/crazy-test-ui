@@ -86,8 +86,8 @@ export async function genAsserts(body) {
 }
 
 /** 查询接口用例执行记录 */
-export async function queryApiCaseExecLog(body) {
-  return post('/api/apiTestcase/queryExecLog', body);
+export async function queryApiCaseExecLog(param) {
+  return get('/crazy/api/case/result/list', param);
 }
 
 /** 执行应用下的所有接口用例 */

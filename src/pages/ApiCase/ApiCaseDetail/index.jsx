@@ -1,7 +1,13 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-15 16:41:19
+ * @LastEditTime: 2025-03-28 15:33:22
+ * @Description: 接口用例页
+ */
+import ExecLog from '@/pages/Common/ExecLog';
 import { ClockCircleTwoTone } from '@ant-design/icons';
 import { Button, Layout, Space } from 'antd';
 import { useState } from 'react';
-// import ExecLog from '../MulTestCase/ExecLog';
 import CaseDetail from './CaseDetail';
 import CaseResult from './CaseResult';
 import Debug from './Debug';
@@ -79,13 +85,13 @@ const App = () => {
           </Layout>
         </Layout>
       </Space>
-      {/* <ExecLog
+      <ExecLog
         open={isExecLogModalOpen}
         setOpen={setIsExecLogModalOpen}
-        caseId={testcaseId}
+        apiTestcaseId={testcaseId}
         caseName={testcaseName}
         caseType="apiCase"
-      /> */}
+      />
     </div>
   );
 };
