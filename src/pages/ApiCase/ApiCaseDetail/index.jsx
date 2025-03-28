@@ -1,8 +1,8 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-03-28 15:33:22
- * @Description: 接口用例页
+ * @LastEditTime: 2025-03-28 15:39:16
+ * @Description: 接口用例详情
  */
 import ExecLog from '@/pages/Common/ExecLog';
 import { ClockCircleTwoTone } from '@ant-design/icons';

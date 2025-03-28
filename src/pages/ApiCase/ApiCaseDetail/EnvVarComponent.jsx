@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 // 设置环境变量的公共组件
 const EnvVarComponent = (props) => {
+  console.log('EnvVarComponent---->', props);
   const [editForm] = Form.useForm();
   const [editableKeys, setEditableRowKeys] = useState(() =>
     props.dataSource.map((item) => item.id),

@@ -104,6 +104,8 @@ const Debug = (props) => {
       } else if (props.caseType === 'apiTestcase') {
         setIsModelExecButtonDisable(true);
         queryApiCaseById({ id: props.caseId }).then((res) => {
+          console.log('queryApiCaseById--->', res);
+          // todo 默认为1 ，后改更改环境
           setTempReqParams(genEnvVarArray(res.data.envVariables, curEnvId));
           setTempTestAccount(getTestAccount(res.data.envVariables, curEnvId));
           setIsModelExecButtonDisable(false);
@@ -129,6 +131,7 @@ const Debug = (props) => {
           //   });
         } else if (props.caseType === 'apiTestcase') {
           queryApiCaseById({ id: props.caseId }).then((res) => {
+            console.log('queryApiCaseById----->', res);
             setTempReqParams(genEnvVarArray(res.data.envVariables, curEnvId));
             setTempTestAccount(getTestAccount(res.data.envVariables, curEnvId));
             setIsExecModalOpen(true);
@@ -175,7 +178,7 @@ const Debug = (props) => {
           环境：
           <Radio.Group
             name="radiogroup"
-            defaultValue={curEnvId}
+            defaultValue={1}
             onChange={(e) => handleEnv(e)}
             optionType="button"
             buttonStyle="solid"

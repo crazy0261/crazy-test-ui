@@ -111,7 +111,8 @@ export const genJsonEnvVar = (
 };
 
 // 获取测试账号id
-export const getTestAccount = (envVariables, envId) => {
+// todo 默认为1  后续根据动态调整
+export const getTestAccount = (envVariables, envId = 1) => {
   if (envVariables === undefined || envVariables === null || envVariables === '') {
     return null;
   }
