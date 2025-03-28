@@ -1,6 +1,6 @@
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { list } from '@/services/apiTestcase';
-import { listAll as listAllApp } from '@/services/applicationManagement';
+import { list } from '@/services/apiCase';
+import { list as listAllApp } from '@/services/applicationManagement';
 import { ProTable } from '@ant-design/pro-components';
 import { Select, Space } from 'antd';
 import { useEffect, useRef, useState } from 'react';

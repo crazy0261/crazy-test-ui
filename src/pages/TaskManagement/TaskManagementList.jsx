@@ -1,3 +1,4 @@
+import EditTask from '@/pages/TaskManagement/EditTask';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { deleteSchedule, execOnce, listAll } from '@/services/taskManagement';
 import {
@@ -15,6 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 const TaskManagementList = () => {
   const [ownerEnum, setOwnerEnum] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const ref = useRef();
   const [pageSize, setPageSize] = useState(10);
 
@@ -64,7 +66,7 @@ const TaskManagementList = () => {
       },
     },
     {
-      title: '作者',
+      title: '负责人',
       dataIndex: 'creatorName',
       ellipsis: true,
       width: 100,
@@ -192,6 +194,10 @@ const TaskManagementList = () => {
     });
   };
 
+  const onEditTask = () => {
+    setIsModalOpen(true);
+  };
+
   useEffect(() => {
     requestOwnerEnum();
   }, []);
@@ -202,7 +208,7 @@ const TaskManagementList = () => {
         style={{ marginBottom: 10 }}
         items={[
           {
-            title: '定时任务列表',
+            title: '任务列表',
           },
         ]}
       />
@@ -247,10 +253,11 @@ const TaskManagementList = () => {
           onShowSizeChange: (current, pageSize) => setPageSize(pageSize),
         }}
         dateFormatter="string"
-        headerTitle="定时任务列表"
+        headerTitle="任务列表"
         toolBarRender={() => [
           <Button
-            onClick={() => history.push('/schedule/detail')}
+            // onClick={() => history.push('/task/detail')}
+            onClick={onEditTask}
             key="button"
             icon={<PlusOutlined />}
             type="primary"
@@ -259,6 +266,7 @@ const TaskManagementList = () => {
           </Button>,
         ]}
       />
+      <EditTask isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </div>
   );
 };

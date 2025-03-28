@@ -52,14 +52,14 @@ export default [
     ],
   },
   {
-    path: '/taskManagement',
+    path: '/task',
     name: '任务管理',
     icon: 'FieldTimeOutlined',
     component: './TaskManagement',
   },
   {
-    path: '/taskManagement/detail/*',
-    // component: './Schedule/ScheduleDetail',
+    path: '/task/detail',
+    component: './TaskManagement/TaskManagementDetail',
   },
   {
     path: '/taskManagement/result/*',
@@ -153,33 +153,6 @@ export default [
       },
     ],
   },
-  // {
-  //   path: '/userSetting',
-  //   name: '用户设置',
-  //   icon: 'UserOutlined',
-  //   routes: [
-  //     {
-  //       path: '/userSetting',
-  //       // name: '注册用户',
-  //       component: './UserSetting',
-  //     },
-  //     {
-  //       path: '/userSetting/registAccount',
-  //       // name: '注册用户',
-  //       // component: './UserSetting/RegistAccount',
-  //     },
-  //     {
-  //       path: '/userSetting/modifyPassword',
-  //       // name: '修改密码',
-  //       // component: './UserSetting/ModifyPassword',
-  //     },
-  //     {
-  //       path: '/userSetting/resetPwd',
-  //       // name: '重置密码',
-  //       // component: './UserSetting/ResetPwd',
-  //     },
-  //   ],
-  // },
   {
     path: '/',
     redirect: '/case/apiCase',

@@ -56,6 +56,17 @@ export const arrayToJson = (array) => {
   }
 };
 
+export const caseTypeEnum = [
+  {
+    value: 'API_CASE',
+    label: '接口用例',
+  },
+  {
+    value: 'MUL_CASE',
+    label: '场景用例',
+  },
+];
+
 export const jsonToArray = (jsonReq) => {
   let array = new Array();
   const json = JSONbig.parse(jsonReq);
