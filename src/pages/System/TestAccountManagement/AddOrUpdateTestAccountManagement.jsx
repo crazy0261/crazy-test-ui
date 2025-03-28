@@ -59,6 +59,7 @@ const AddOrUpdateTestAccountManagement = (props) => {
         password: props.record?.password,
         apiCaseId: props.record?.apiCaseId,
         headerParams: props.record?.headerParams,
+        jsonPath: props.record?.jsonPath,
       });
   }, [props.isModalOpen]);
 
@@ -103,8 +104,10 @@ const AddOrUpdateTestAccountManagement = (props) => {
           <Form.Item name="apiCaseId" label="关联用例" rules={[{ required: true }]}>
             <Select showSearch placeholder="请输入关键字搜索" options={apiCaseList} />
           </Form.Item>
-
           <Form.Item name="headerParams" label="请求头" rules={[{ required: false }]}>
+            <TextArea maxLength={255} />
+          </Form.Item>
+          <Form.Item name="jsonPath" label="jsonPath" rules={[{ required: true }]}>
             <TextArea maxLength={255} />
           </Form.Item>
         </Form>
