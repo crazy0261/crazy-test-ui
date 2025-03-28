@@ -6,7 +6,7 @@ import {
 import { list as listAllApp } from '@/services/applicationManagement';
 import { listAllEnvName, listPage } from '@/services/projectManagement';
 
-import { WaterMark, type Settings as LayoutSettings } from '@ant-design/pro-components';
+import { type Settings as LayoutSettings, WaterMark } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -158,7 +158,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
         <>
-          <WaterMark content={initialState?.currentUser?.name ?? 'Crazy Test'}>
+          <WaterMark
+            content={[
+              `${initialState?.currentUser?.name ?? 'Crazy Test'}`,
+              `${initialState?.currentUser?.email ?? ''}`,
+            ]}
+          >
             {children}
           </WaterMark>
         </>
