@@ -15,8 +15,8 @@ const TaskManagementDetail = () => {
   const [selectedCaseIds, setSelectedCaseIds] = useState([]);
   const [envNameEnum, setEnvNameEnum] = useState([]);
   const [open, setOpen] = useState(false);
-  const path = new URL(window.location.href).pathname;
-  const scheduleId = Number.parseInt(path.split('/').pop());
+  const path = window.location.search;
+  const scheduleId = new URLSearchParams(path).get('id');
   const [editDisabled, setEditDisabled] = useState(scheduleId); // 默认不可编辑
   const [testcaseType, setTestcaseType] = useState(null);
   const [isAllTestCase, setIsAllTestCase] = useState(false);
@@ -66,7 +66,11 @@ const TaskManagementDetail = () => {
     if (scheduleId) {
       queryById({ id: scheduleId }).then((res) => {
         if (res.code === 200) {
-          if (res.data.testcaseList !== '' && res.data.testcaseList !== 'ALL') {
+          if (
+            res.data.testcaseList !== null &&
+            res.data.testcaseList !== '' &&
+            res.data.testcaseList !== 'ALL'
+          ) {
             let testcaseList = [];
             const testcaseListString = res.data.testcaseList.split(',');
             for (let i = 0; i < testcaseListString.length; i++) {
@@ -221,11 +225,11 @@ const TaskManagementDetail = () => {
                   width={100}
                   options={[
                     {
-                      value: 1,
+                      value: true,
                       label: '启用',
                     },
                     {
-                      value: 0,
+                      value: false,
                       label: '禁用',
                     },
                   ]}

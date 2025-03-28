@@ -156,7 +156,7 @@ const TaskManagementList = () => {
               icon={<FileSearchOutlined />}
               type="primary"
               size={'small'}
-              onClick={() => history.push('/schedule/detail/' + record.id)}
+              onClick={() => history.push('/task/detail?id=' + record.id)}
             />
           </Tooltip>
         </div>,

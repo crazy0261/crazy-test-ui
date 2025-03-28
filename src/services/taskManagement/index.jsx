@@ -16,8 +16,8 @@ export async function list(params) {
   return get('/crazy/task/schedule/list', params);
 }
 
-export async function queryById(body) {
-  return post('/api/schedule/queryById', body);
+export async function queryById(params) {
+  return get('/crazy/task/schedule/query', params);
 }
 
 export async function stop(body) {
