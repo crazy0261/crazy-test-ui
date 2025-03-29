@@ -1,6 +1,7 @@
 import { allList } from '@/services/apiCase';
 import { save } from '@/services/testAccountManagement';
 import { Button, Form, Input, message, Modal, Select } from 'antd';
+import JSONbig from 'json-bigint';
 import { useEffect, useState } from 'react';
 
 /**
@@ -16,12 +17,25 @@ const AddOrUpdateTestAccountManagement = (props) => {
     props.setIsModalOpen(false);
   };
 
+  const checkJson = (value) => {
+    try {
+      JSONbig.parse(value);
+      return true;
+    } catch (error) {
+      setIsloading(false);
+      message.error('账号/密码不是JSON格式，请检查！');
+      return false;
+    }
+  };
   const onFinish = () => {
     form.validateFields().then((value) => {
+      const checkInputParams = checkJson(value?.inputParams);
       setIsloading(true);
-      props.record === null
-        ? save(value).then((result) => showResult(result, '新建'))
-        : save({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
+      if (checkInputParams) {
+        props.record === null
+          ? save(value).then((result) => showResult(result, '新建'))
+          : save({ ...value, id: props.record.id }).then((result) => showResult(result, '修改'));
+      }
     });
   };
 
@@ -59,6 +73,7 @@ const AddOrUpdateTestAccountManagement = (props) => {
         apiCaseId: props.record?.apiCaseId,
         headerParams: props.record?.headerParams,
         jsonPath: props.record?.jsonPath,
+        cron: props.record?.cron,
       });
   }, [props.isModalOpen]);
 
@@ -95,6 +110,9 @@ const AddOrUpdateTestAccountManagement = (props) => {
               placeholder='json格式{"account":"admin","pwd":"123456"}'
               autoSize={{ minRows: 2, maxRows: 6 }}
             />
+          </Form.Item>
+          <Form.Item name="cron" label="Cron表达式" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
           <Form.Item name="apiCaseId" label="关联用例" rules={[{ required: true }]}>
             <Select showSearch placeholder="请输入关键字搜索" options={apiCaseList} />
