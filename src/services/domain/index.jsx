@@ -1,4 +1,4 @@
-import { get, post } from '../utils/requestUtil';
+import { get, post } from '../../utils/requestUtil';
 
 /** 新增 修改*/
 export async function save(body) {

@@ -1,4 +1,4 @@
-import { get, post } from '../utils/requestUtil';
+import { get, post } from '../../utils/requestUtil';
 
 /** 查询所有环境名称 */
 export async function listAllEnvName() {

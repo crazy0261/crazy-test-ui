@@ -1,4 +1,4 @@
-import { get, post } from '../utils/requestUtil';
+import { get, post } from '../../utils/requestUtil';
 
 /** 查询当前项目下所有接口用例 */
 export async function listAll(body) {

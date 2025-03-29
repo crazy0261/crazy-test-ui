@@ -1,4 +1,4 @@
-import { get, post } from '../utils/requestUtil';
+import { get, post } from '../../utils/requestUtil';
 
 export async function userListApi(params) {
   return get('/crazy/user/list', params);

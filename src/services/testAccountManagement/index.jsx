@@ -1,4 +1,4 @@
-import { get, post } from '../utils/requestUtil';
+import { get, post } from '../../utils/requestUtil';
 
 /** 分页查询测试账号列表 */
 export async function listPage(body) {

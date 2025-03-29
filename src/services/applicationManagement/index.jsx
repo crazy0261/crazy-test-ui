@@ -6,7 +6,7 @@
  */
 import { request } from '@umijs/max';
 
-import { get, post } from '@/services/utils/requestUtil';
+import { get, post } from '@/utils/requestUtil';
 
 /** 分页查询应用列表 */
 export async function list(parasm) {
