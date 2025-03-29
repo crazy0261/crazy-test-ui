@@ -36,12 +36,6 @@ const TestAccountList = () => {
       width: 200,
     },
     {
-      title: '账号',
-      dataIndex: 'account',
-      ellipsis: true,
-      width: 200,
-    },
-    {
       title: '用例名称',
       dataIndex: 'apiCaseName',
       ellipsis: true,

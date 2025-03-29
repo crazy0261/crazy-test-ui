@@ -55,8 +55,7 @@ const AddOrUpdateTestAccountManagement = (props) => {
     props.isModalOpen &&
       form.setFieldsValue({
         name: props.record?.name,
-        account: props.record?.account,
-        password: props.record?.password,
+        inputParams: props.record?.inputParams,
         apiCaseId: props.record?.apiCaseId,
         headerParams: props.record?.headerParams,
         jsonPath: props.record?.jsonPath,
@@ -66,13 +65,11 @@ const AddOrUpdateTestAccountManagement = (props) => {
   return (
     <>
       <Modal
-        title={props.record === null ? '新建测试账号' : '编辑测试账号'}
+        title={props.record === null ? '新建账号' : '编辑账号'}
         open={props.isModalOpen}
         onCancel={handleCancel}
-        //删去了form表单自带的submit，在modal的footer自行渲染了一个button，点击后回调onFinish函数
         footer={[
           <>
-            {/* {contextHolder} */}
             <Button type="primary" onClick={handleCancel} key={'cancel'}>
               取消
             </Button>
@@ -91,15 +88,13 @@ const AddOrUpdateTestAccountManagement = (props) => {
           <Form.Item name="name" label="名称" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="account" label="账号" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="密码"
-            rules={[{ required: props.record === null ? true : false }]}
-          >
-            <Input.Password placeholder={props.record === null ? '请输入密码' : '重置密码'} />
+          <Form.Item name="inputParams" label="账号/密码" rules={[{ required: true }]}>
+            <TextArea
+              showCount
+              maxLength={255}
+              placeholder='json格式{"account":"admin","pwd":"123456"}'
+              autoSize={{ minRows: 2, maxRows: 6 }}
+            />
           </Form.Item>
           <Form.Item name="apiCaseId" label="关联用例" rules={[{ required: true }]}>
             <Select showSearch placeholder="请输入关键字搜索" options={apiCaseList} />
