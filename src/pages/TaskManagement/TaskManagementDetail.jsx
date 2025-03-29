@@ -1,7 +1,6 @@
 import { listAllEnvName } from '@/services/envConfig';
-import { add, modify, queryById } from '@/services/taskManagement';
+import { queryById, save } from '@/services/taskManagement';
 import { ProForm, ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-components';
-import { history } from '@umijs/max';
 import { Breadcrumb, Button, Drawer, Layout, message, Space } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import RecordList from './RecordList';
@@ -105,7 +104,7 @@ const TaskManagementDetail = () => {
       setEditDisabled(false);
     } else {
       if (scheduleId) {
-        modify({
+        save({
           ...values,
           testcaseList: isAllTestCase ? 'ALL' : selectedCaseIds.toString(),
           id: scheduleId,
@@ -115,16 +114,6 @@ const TaskManagementDetail = () => {
             setEditDisabled(true);
           }
         });
-      } else {
-        add({ ...values, testcaseList: isAllTestCase ? 'ALL' : selectedCaseIds.toString() }).then(
-          (res) => {
-            if (res.code === 200) {
-              message.success('新增成功');
-              setEditDisabled(true);
-              history.push('/schedule/detail/' + res.data.id);
-            }
-          },
-        );
       }
     }
   };
