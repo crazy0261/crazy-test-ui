@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-20 21:47:49
+ * @LastEditTime: 2025-03-30 02:01:06
+ * @Description:
+ */
 import { get, post } from '../../utils/requestUtil';
 
 /** 分页查询测试账号列表 */
@@ -12,15 +18,10 @@ export async function save(body) {
 
 /** 删除 */
 export async function deleteTestAccount(body) {
-  return post('/api/testaccount/delete', body);
+  return post('/crazy/test/account/del', body);
 }
 
 /** 单个账号生成token */
 export async function createToken(body) {
-  return post('/api/testaccount/createToken', body);
-}
-
-/** 单个账号生成token */
-export async function queryByTestAccount(body) {
-  return post('/api/testaccount/queryByTestAccount', body);
+  return post('/crazy/test/account/token', body);
 }
