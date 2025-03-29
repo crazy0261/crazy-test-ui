@@ -1,12 +1,21 @@
-// @ts-ignore
-/* eslint-disable */
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-22 20:03:28
+ * @LastEditTime: 2025-03-29 14:17:36
+ * @Description: 任务请求
+ */
 import { request } from '@umijs/max';
 
 import { get, post } from '@/services/utils/requestUtil';
 
 /** 分页查询应用列表 */
-export async function list(body) {
-  return get('/crazy/application/management/list', body);
+export async function list(parasm) {
+  return get('/crazy/application/management/list', parasm);
+}
+
+/** 分页查询应用列表 */
+export async function listAll(parasm) {
+  return get('/crazy/application/management/list/all', parasm);
 }
 
 /** 新增编辑 */

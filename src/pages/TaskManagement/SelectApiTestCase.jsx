@@ -1,6 +1,6 @@
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { list } from '@/services/apiCase';
-import { list as listAllApp } from '@/services/applicationManagement';
+import { listAll as listAllApp } from '@/services/applicationManagement';
 import { ProTable } from '@ant-design/pro-components';
 import { Select, Space } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -80,33 +80,33 @@ const SelectApiTestCase = (props) => {
     {
       disable: true,
       title: '状态',
-      dataIndex: 'isDelete',
+      dataIndex: 'status',
       // filters: true,
       // onFilter: true,
       ellipsis: true,
       valueType: 'select',
       width: 75,
       valueEnum: {
-        0: {
+        false: {
           text: '正常',
           status: 'Success',
         },
-        2: {
+        true: {
           text: '已下架',
           status: 'Error',
         },
       },
     },
     {
-      title: '作者',
-      dataIndex: 'creatorName',
+      title: '负责人',
+      dataIndex: 'ownerName',
       ellipsis: true,
       width: 60,
       search: false,
     },
     {
-      title: '作者',
-      dataIndex: 'creator',
+      title: '负责人',
+      dataIndex: 'ownerId',
       search: true,
       hideInTable: true,
       renderFormItem: () => {
@@ -204,22 +204,11 @@ const SelectApiTestCase = (props) => {
         tableAlertOptionRender={() => {
           return (
             <Space size={16}>
-              {/* <a onClick={() => props.setSelectedCaseIds([])}>取消选择</a> */}
               <a onClick={() => props.setSelectedCaseIds([])}></a>
             </Space>
           );
         }}
       />
-      {/* <Button
-        type="primary"
-        style={{ margin: 10, float: 'left', left: '50%' }}
-        onClick={() => {
-          message.success('已选择' + props.selectedCaseIds.length + '个用例');
-          props.setOpen(false);
-        }}
-      >
-        确定
-      </Button> */}
     </div>
   );
 };
