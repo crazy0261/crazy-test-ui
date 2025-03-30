@@ -1,7 +1,8 @@
 import { priorityEnum } from '@/common';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { cancelClaim, claim, list, setPriority, setProdExec } from '@/services/apiManagement';
-// import { listAll as listAllApp } from '@/services/application';
+import { batchSetPriority, cancelClaim, claim, list, setProdExec } from '@/services/apiManagement';
+import { listAll } from '@/services/applicationManagement';
+
 import {
   DeleteTwoTone,
   EditTwoTone,
@@ -13,6 +14,7 @@ import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { priorityList } from '../../common';
 import BatchDeleteApi from './BatchDeleteApi';
 import EditApi from './EditApi';
 import ImportApi from './ImportApi';
@@ -46,15 +48,21 @@ const ApimanageList = () => {
   const [addApiOperType, setAddApiOperType] = useState(''); // 新增接口操作类型：add、edit
   let cancleRowKeys = []; // 取消选择的项目
 
+  const applicationList = () => {
+    listAll().then((result) => {
+      if (result.code === 200) {
+        const appEnumData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppEnum(appEnumData);
+      }
+    });
+  };
+
   const operList = [
-    {
-      value: 'claim',
-      label: '认领接口',
-    },
-    {
-      value: 'cancelClaim',
-      label: '取消认领',
-    },
     {
       value: 'disableApi',
       label: '下架接口',
@@ -335,14 +343,6 @@ const ApimanageList = () => {
       },
     },
     {
-      title: '接口id',
-      dataIndex: 'apiId',
-      ellipsis: true,
-      width: 60,
-      hideInTable: true,
-      initialValue: apiId,
-    },
-    {
       title: '创建者',
       dataIndex: 'createByName',
       ellipsis: true,
@@ -432,13 +432,6 @@ const ApimanageList = () => {
 
   const actionRef = useRef();
 
-  const requestAppEnum = () => {
-    // listAllApp().then((result) => {
-    //   if (result.code === 200) {
-    //     setAppEnum(result.data.map((item) => ({ value: item.id, label: item.name })));
-    //   }
-    // });
-  };
   const requestOwnerEnum = () => {
     listAllUser().then((result) => {
       if (result.code === 200) {
@@ -451,7 +444,7 @@ const ApimanageList = () => {
   };
 
   useEffect(() => {
-    requestAppEnum();
+    applicationList();
     requestOwnerEnum();
   }, []);
 
@@ -578,11 +571,11 @@ const ApimanageList = () => {
             key="priority"
             style={{ width: 120 }}
             value={null}
-            // options={priorityList}
+            options={priorityList}
             placeholder="设置优先级"
             onChange={(e) => {
               if (selectedCaseIds.length > 0) {
-                setPriority({ apiIds: selectedCaseIds.join(), priority: e }).then((res) => {
+                batchSetPriority({ apiIds: selectedCaseIds.join(), priority: e }).then((res) => {
                   if (res.code === 200) {
                     message.success('优先级设置成功');
                     setSelectedCaseIds([]);

@@ -187,6 +187,11 @@ export async function batchMove(body) {
   return post('/crazy/api/management/batch/update/move', body);
 }
 
+/** 批量设置优先级 */
+export async function batchSetPriority(body) {
+  return post('/crazy/api/management/batch/update/setPriority', body);
+}
+
 /** curl导入 */
 export async function cURLApiImport(body) {
   return post('/crazy/api/management/curl/import', body);
