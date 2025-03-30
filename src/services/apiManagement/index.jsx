@@ -186,3 +186,13 @@ export async function batchModApiType(body) {
 export async function batchMove(body) {
   return post('/crazy/api/management/batch/update/move', body);
 }
+
+/** curl导入 */
+export async function cURLApiImport(body) {
+  return post('/crazy/api/management/curl/import', body);
+}
+
+/** swagger导入 */
+export async function swaggerApiImport(body) {
+  return post('/crazy/api/management/swagger/import', body);
+}

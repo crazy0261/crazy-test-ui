@@ -1,17 +1,37 @@
-import { importApi, importByFetch } from '@/services/apiManagement';
+import { cURLApiImport, swaggerApiImport } from '@/services/apiManagement';
+import { listAll } from '@/services/applicationManagement';
 import { Button, Form, Input, message, Modal, Radio, Select } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 /**
  * 导入接口
  */
 const ImportApi = (props) => {
   const [form] = Form.useForm();
   const [isloading, setIsloading] = useState(false);
-  const [importType, setImportType] = useState('fetch');
+  const [importType, setImportType] = useState('cURL');
   const { TextArea } = Input;
+  const [appEnum, setAppEnum] = useState([]);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
+  };
+  useEffect(() => {
+    applicationList();
+  }, []);
+
+  const applicationList = () => {
+    listAll().then((result) => {
+      if (result.code === 200) {
+        const appEnumData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppEnum(appEnumData);
+      }
+    });
   };
 
   const onFinish = () => {
@@ -19,9 +39,9 @@ const ImportApi = (props) => {
       form.validateFields().then((value) => {
         setIsloading(true);
         if (importType === 'swagger') {
-          importApi({ ...value }).then((res) => handleApiResponse(res));
-        } else if (importType === 'fetch') {
-          importByFetch({ ...value }).then((res) => handleApiResponse(res));
+          swaggerApiImport({ ...value }).then((res) => handleApiResponse(res));
+        } else if (importType === 'cURL') {
+          cURLApiImport({ ...value }).then((res) => handleApiResponse(res));
         } else {
           message.error('不支持的导入类型：' + importType);
         }
@@ -69,8 +89,8 @@ const ImportApi = (props) => {
           form={form}
         >
           <div style={{ marginBottom: 20 }}>
-            <Radio.Group defaultValue={'fetch'} onChange={changeImportType}>
-              <Radio value="fetch">通过fetch导入</Radio>
+            <Radio.Group defaultValue={'cURL'} onChange={changeImportType}>
+              <Radio value="cURL">通过cURL导入</Radio>
               <Radio value="swagger">通过swagger导入</Radio>
             </Radio.Group>
           </div>
@@ -83,7 +103,7 @@ const ImportApi = (props) => {
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
-              options={props.appEnum}
+              options={appEnum}
             />
           </Form.Item>
 
@@ -92,19 +112,14 @@ const ImportApi = (props) => {
               <Input />
             </Form.Item>
           )}
-          {importType === 'swagger' && (
-            <Form.Item name="appPath" label="应用路径" rules={[{ required: false }]}>
-              <Input placeholder="会在接口前统一加上应用路径，比如：/prod-order" />
-            </Form.Item>
-          )}
-          {importType === 'fetch' && (
+          {importType === 'cURL' && (
             <Form.Item name="apiName" label="接口名" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           )}
-          {importType === 'fetch' && (
-            <Form.Item name="fetch" label="fetch" rules={[{ required: true }]}>
-              <TextArea rows={4} />
+          {importType === 'cURL' && (
+            <Form.Item name="curl" label="cURL" rules={[{ required: true }]}>
+              <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
             </Form.Item>
           )}
         </Form>

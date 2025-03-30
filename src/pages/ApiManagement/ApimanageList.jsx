@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import BatchDeleteApi from './BatchDeleteApi';
 import EditApi from './EditApi';
+import ImportApi from './ImportApi';
 import ModApiType from './ModApiType';
 import MoveApi from './MoveApi';
 
@@ -614,12 +615,12 @@ const ApimanageList = () => {
         ownerEnum={ownerEnum}
         addApiOperType={addApiOperType}
       />
-      {/* <ImportApi
+      <ImportApi
         isModalOpen={isImportModalOpen}
         setIsModalOpen={setIsImportModalOpen}
         appEnum={appEnum}
         actionRef={actionRef}
-      /> */}
+      />
       {/* <DisableApi
         open={disableApiOpen}
         setOpen={setDisableApiOpen}
