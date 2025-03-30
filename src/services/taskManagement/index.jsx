@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-20 23:07:43
+ * @LastEditTime: 2025-03-30 17:42:39
+ * @Description:
+ */
 import { get, post } from '../../utils/requestUtil';
 
 export async function add(body) {
@@ -8,8 +14,8 @@ export async function modify(body) {
   return post('/api/schedule/modify', body);
 }
 
-export async function deleteSchedule(body) {
-  return post('/api/schedule/delete', body);
+export async function deleteTask(body) {
+  return post('/crazy/task/schedule/delete', body);
 }
 
 export async function list(params) {

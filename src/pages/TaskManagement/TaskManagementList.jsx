@@ -1,6 +1,6 @@
 import EditTask from '@/pages/TaskManagement/EditTask';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { deleteSchedule, execOnce, list } from '@/services/taskManagement';
+import { deleteTask, execOnce, list } from '@/services/taskManagement';
 import {
   DeleteTwoTone,
   EditOutlined,
@@ -207,7 +207,7 @@ const TaskManagementList = () => {
       okButtonProps: { loading: isLoading },
       onOk() {
         setIsLoading(true);
-        deleteSchedule({ id: id }).then((res) => {
+        deleteTask({ id: id }).then((res) => {
           setIsLoading(false);
           if (res.code === 200) {
             message.success('删除成功');
