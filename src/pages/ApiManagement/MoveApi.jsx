@@ -1,28 +1,49 @@
-import { copy, move } from '@/services/apiManagement';
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-13 23:06:21
+ * @LastEditTime: 2025-03-30 21:41:39
+ * @Description: 移动接口应用
+ */
+import { batchMove } from '@/services/apiManagement';
+import { listAll } from '@/services/applicationManagement';
 import { Button, Form, message, Modal, Select } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const MoveApi = (props) => {
   const [form] = Form.useForm();
   const [isloading, setIsloading] = useState(false);
+  const [appEnum, setAppEnum] = useState([]);
+
+  useEffect(() => {
+    applicationList();
+  }, []);
+  const applicationList = () => {
+    listAll().then((result) => {
+      if (result.code === 200) {
+        const appEnumData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppEnum(appEnumData);
+      }
+    });
+  };
 
   const onFinish = () => {
     form.validateFields().then((value) => {
       setIsloading(true);
-      props.moveOrCopy === 'move'
-        ? move({ ...value, apiIds: props.selectedCaseIds.join() }).then((result) =>
-            showResult(result),
-          )
-        : copy({ ...value, apiIds: props.selectedCaseIds.join() }).then((result) =>
-            showResult(result),
-          );
+      batchMove({ ...value, apiIds: props.selectedCaseIds.join() }).then((result) =>
+        showResult(result),
+      );
     });
   };
 
   const showResult = (result) => {
     setIsloading(false);
     if (result.code === 200) {
-      message.success(result.data);
+      message.success(result.message);
       props.setIsModalOpen(false);
       props.actionRef.current.reload();
       form.resetFields();
@@ -63,7 +84,7 @@ const MoveApi = (props) => {
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
-              options={props.appEnum}
+              options={appEnum}
             />
           </Form.Item>
         </Form>

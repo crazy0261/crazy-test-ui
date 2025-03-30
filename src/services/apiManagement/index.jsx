@@ -161,17 +161,6 @@ export async function move(options) {
   });
 }
 
-/** 复制 */
-export async function copy(options) {
-  return request('/api/apimanage/copy', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
 /** 通过fetch导入接口 */
 export async function importByFetch(options) {
   return request('/api/apimanage/importByFetch', {
@@ -184,23 +173,16 @@ export async function importByFetch(options) {
 }
 
 /** 批量删除接口 */
-export async function batchDelete(options) {
-  return request('/api/apimanage/batchDelete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function batchDelete(body) {
+  return post('/crazy/api/management/batch/update/delete', body);
 }
 
 /** 批量修改接口类型 */
-export async function batchModApiType(options) {
-  return request('/api/apimanage/batchModApiType', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function batchModApiType(body) {
+  return post('/crazy/api/management/batch/update/type', body);
+}
+
+/** 批量移动接口到应用 */
+export async function batchMove(body) {
+  return post('/crazy/api/management/batch/update/move', body);
 }
