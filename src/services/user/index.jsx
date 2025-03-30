@@ -7,3 +7,7 @@ export async function userListApi(params) {
 export async function userListApi1(body) {
   return post('/user/list', body);
 }
+
+export async function save(body) {
+  return post('/crazy/user/save', body);
+}

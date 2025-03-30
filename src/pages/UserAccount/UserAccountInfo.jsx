@@ -2,10 +2,17 @@ import { userListApi } from '@/services/user/index';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { Button } from 'antd';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import EditUser from './EditUser';
 
 const UserAccountInfo = () => {
   const actionRef = useRef();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [record, setRecord] = useState(null);
+
+  const onOk = () => {
+    setModalOpen(true);
+  };
 
   const columns = [
     {
@@ -61,13 +68,21 @@ const UserAccountInfo = () => {
       copyable: true,
       ellipsis: true,
       search: false,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
+    },
+    {
+      title: '角色',
+      dataIndex: 'roleId',
+      copyable: false,
+      ellipsis: true,
+      search: false,
+      valueType: 'select',
+      valueEnum: {
+        1: {
+          text: '管理员',
+        },
+        0: {
+          text: '质量员',
+        },
       },
     },
     {
@@ -145,7 +160,8 @@ const UserAccountInfo = () => {
         <a
           key="editable"
           onClick={() => {
-            action?.startEditable?.(record.id);
+            setRecord(record);
+            onOk();
           }}
         >
           编辑
@@ -166,79 +182,88 @@ const UserAccountInfo = () => {
   ];
 
   return (
-    <ProTable
-      columns={columns}
-      actionRef={actionRef}
-      cardBordered
-      request={async (params, sort, filter) => {
-        return await userListApi({
-          account: params.account,
-          name: params.name,
-          phone: params.phone,
-          status: params.status,
-          current: params.current,
-          pageSize: params.pageSize,
-        }).then((res) => {
-          return {
-            data: res.data,
-            success: true,
-            total: res.total,
-          };
-        });
-      }}
-      editable={{
-        type: 'multiple',
-      }}
-      columnsState={{
-        persistenceKey: 'pro-table-singe-demos',
-        persistenceType: 'localStorage',
-        defaultValue: {
-          option: { fixed: 'right', disable: true },
-        },
-        onChange(value) {
-          console.log('value: ', value);
-        },
-      }}
-      rowKey="id"
-      search={{
-        labelWidth: 'auto',
-      }}
-      options={{
-        setting: {
-          listsHeight: 400,
-        },
-      }}
-      form={{
-        // 由于配置了 transform，提交的参数与定义的不同这里需要转化一下
-        syncToUrl: (values, type) => {
-          if (type === 'get') {
+    <>
+      <ProTable
+        columns={columns}
+        actionRef={actionRef}
+        cardBordered
+        request={async (params, sort, filter) => {
+          return await userListApi({
+            account: params.account,
+            name: params.name,
+            phone: params.phone,
+            status: params.status,
+            current: params.current,
+            pageSize: params.pageSize,
+          }).then((res) => {
             return {
-              ...values,
-              created_at: [values.startTime, values.endTime],
+              data: res.data,
+              success: true,
+              total: res.total,
             };
-          }
-          return values;
-        },
-      }}
-      pagination={{
-        pageSize: 5,
-        onChange: (page) => console.log(page),
-      }}
-      dateFormatter="string"
-      headerTitle="用户列表"
-      toolBarRender={() => [
-        <Button
-          key="button"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            actionRef.current?.reload();
-          }}
-          type="primary"
-        >
-          新建
-        </Button>,
-      ]}
-    />
+          });
+        }}
+        editable={{
+          type: 'multiple',
+        }}
+        columnsState={{
+          persistenceKey: 'pro-table-singe-demos',
+          persistenceType: 'localStorage',
+          defaultValue: {
+            option: { fixed: 'right', disable: true },
+          },
+          onChange(value) {
+            console.log('value: ', value);
+          },
+        }}
+        rowKey="id"
+        search={{
+          labelWidth: 'auto',
+        }}
+        options={{
+          setting: {
+            listsHeight: 400,
+          },
+        }}
+        form={{
+          // 由于配置了 transform，提交的参数与定义的不同这里需要转化一下
+          syncToUrl: (values, type) => {
+            if (type === 'get') {
+              return {
+                ...values,
+                created_at: [values.startTime, values.endTime],
+              };
+            }
+            return values;
+          },
+        }}
+        pagination={{
+          pageSize: 5,
+          onChange: (page) => console.log(page),
+        }}
+        dateFormatter="string"
+        headerTitle="用户列表"
+        toolBarRender={() => [
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setRecord(null);
+              onOk();
+            }}
+            type="primary"
+          >
+            新建
+          </Button>,
+        ]}
+      />
+      <EditUser
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        record={record}
+        actionRef={actionRef}
+      />
+    </>
   );
 };
 
