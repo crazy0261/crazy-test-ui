@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-03-30 17:53:05
+ * @LastEditTime: 2025-03-30 19:48:18
  * @Description: 接口用例列表
  */
 import { priorityEnum } from '@/common';
@@ -21,7 +21,7 @@ import { useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
 
 import ExecLog from '../Common/ExecLog';
-// import DeleteCase from './DeleteCase';
+import DeleteCase from './DeleteCase';
 // import DisableCase from './DisableCase';
 // import EnableCase from './EnableCase';
 // import ModOwner from './ModOwner';
@@ -460,12 +460,12 @@ const ApiCaseList = () => {
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       /> */}
-      {/* <DeleteCase
+      <DeleteCase
         open={deleteCaseOpen}
         setOpen={setDeleteCaseOpen}
         curApiId={curApiId}
         actionRef={actionRef}
-      /> */}
+      />
       <ExecLog
         open={isExecLogModalOpen}
         setOpen={setIsExecLogModalOpen}

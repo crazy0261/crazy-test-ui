@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-22 20:03:28
+ * @LastEditTime: 2025-03-30 19:55:47
+ * @Description: 接口管理管理
+ */
 import { get, post } from '../../utils/requestUtil';
 
 /** 查询当前项目下所有接口用例 */
@@ -37,7 +43,7 @@ export async function modify(body) {
 
 /** 删除接口用例 */
 export async function deleteApi(body) {
-  return post('/api/apiTestcase/delete', body);
+  return post('/crazy/api/case/delete', body);
 }
 
 /** 调试接口 */
@@ -62,7 +68,7 @@ export async function batchExec(body) {
 
 /** 复制用例 */
 export async function copy(body) {
-  return post('/api/apiTestcase/copy', body);
+  return post('/crazy/api/case/copy', body);
 }
 
 /** 下架用例 */
