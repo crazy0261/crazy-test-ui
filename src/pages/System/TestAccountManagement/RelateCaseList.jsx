@@ -1,4 +1,4 @@
-import { queryByTestAccount } from '@/services/testAccountManagement';
+import { createToken } from '@/services/testAccountManagement';
 import { ProTable } from '@ant-design/pro-components';
 import { Modal } from 'antd';
 import { useEffect, useRef } from 'react';
@@ -103,7 +103,7 @@ const RelateCaseList = (props) => {
         actionRef={actionRef}
         cardBordered
         request={async (params = {}, sort, filter) => {
-          return queryByTestAccount({ testAccountId: props.testAccountId });
+          return createToken({ testAccountId: props.testAccountId });
         }}
         editable={{
           type: 'multiple',
