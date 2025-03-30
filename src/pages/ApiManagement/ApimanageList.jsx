@@ -14,6 +14,7 @@ import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import EditApi from './EditApi';
 
 /**
  * 接口列表页
@@ -614,7 +615,7 @@ const ApimanageList = () => {
           />,
         ]}
       />
-      {/* <AddApi
+      <EditApi
         isModalOpen={isAddModalOpen}
         setIsModalOpen={setIsAddModalOpen}
         actionRef={actionRef}
@@ -624,38 +625,38 @@ const ApimanageList = () => {
         ownerEnum={ownerEnum}
         addApiOperType={addApiOperType}
       />
-      <ImportApi
+      {/* <ImportApi
         isModalOpen={isImportModalOpen}
         setIsModalOpen={setIsImportModalOpen}
         appEnum={appEnum}
         actionRef={actionRef}
-      />
-      <DisableApi
+      /> */}
+      {/* <DisableApi
         open={disableApiOpen}
         setOpen={setDisableApiOpen}
         apiIds={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
-      <EnableApi
+      /> */}
+      {/* <EnableApi
         open={enableApiOpen}
         setOpen={setEnableApiOpen}
         apiIds={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
-      <DeleteApi
+      /> */}
+      {/* <DeleteApi
         open={deleteApiOpen}
         setOpen={setDeleteApiOpen}
         curApiId={curApiId}
         actionRef={actionRef}
-      />
-      <RelateCaseList
+      /> */}
+      {/* <RelateCaseList
         open={isRelateCaseModalOpen}
         setOpen={setIsRelateCaseModalOpen}
         apiId={curApiId}
-      />
-      <MoveApi
+      /> */}
+      {/* <MoveApi
         isModalOpen={isMoveModalOpen}
         setIsModalOpen={setIsMoveModalOpen}
         actionRef={actionRef}
@@ -663,21 +664,21 @@ const ApimanageList = () => {
         moveOrCopy={moveOrCopy}
         selectedCaseIds={selectedCaseIds}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
-      <BatchDeleteApi
+      /> */}
+      {/* <BatchDeleteApi
         isModalOpen={batchDelApiOpen}
         setIsModalOpen={setBatchDelApiOpen}
         apiIds={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
-      <ModApiType
+      /> */}
+      {/* <ModApiType
         isModalOpen={modApiTypeOpen}
         setIsModalOpen={setModApiTypeOpen}
         apiIds={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      /> */}
+      />  */}
     </div>
   );
 };

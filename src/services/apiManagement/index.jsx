@@ -6,6 +6,11 @@ export async function list(body) {
   return post('/crazy/api/management/list', body);
 }
 
+/** 保存 */
+export async function save(body) {
+  return post('/crazy/api/management/save', body);
+}
+
 /** 根据id查询接口 */
 export async function queryApiById(parmas) {
   return get('/crazy/api/management/get/id', parmas);
