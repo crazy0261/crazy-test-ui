@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-15 20:39:58
+ * @LastEditTime: 2025-03-30 16:52:11
+ * @Description:
+ */
 import { save } from '@/services/projectManagement';
 import { Button, Form, Input, message, Modal } from 'antd';
 import { useEffect, useState } from 'react';
@@ -11,6 +17,7 @@ const AddOrEditProject = (props) => {
   const { TextArea } = Input;
 
   const handleCancel = () => {
+    form.resetFields();
     props.setIsModalOpen(false);
   };
 
