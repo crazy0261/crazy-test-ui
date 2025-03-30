@@ -1,7 +1,12 @@
-import { userListApi } from '@/services/user/index';
-import { PlusOutlined } from '@ant-design/icons';
-import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { del, userListApi } from '@/services/user/index';
+import {
+  DeleteTwoTone,
+  EditTwoTone,
+  ExclamationCircleFilled,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { ProTable } from '@ant-design/pro-components';
+import { Button, message, Modal as model } from 'antd';
 import { useRef, useState } from 'react';
 import EditUser from './EditUser';
 
@@ -12,6 +17,24 @@ const UserAccountInfo = () => {
 
   const onOk = () => {
     setModalOpen(true);
+  };
+
+  const showDeleteConfirm = (id) => {
+    model.confirm({
+      title: '确定要删除么？',
+      icon: <ExclamationCircleFilled />,
+      content: '一旦删除将无法恢复',
+      okType: 'danger',
+      onOk() {
+        del({ id: id }).then((res) => {
+          if (res.code === 200) {
+            message.success('删除成功');
+            actionRef.current.reload();
+          }
+        });
+      },
+      onCancel() {},
+    });
   };
 
   const columns = [
@@ -157,26 +180,23 @@ const UserAccountInfo = () => {
       valueType: 'option',
       key: 'option',
       render: (text, record, _, action) => [
-        <a
-          key="editable"
-          onClick={() => {
-            setRecord(record);
-            onOk();
-          }}
-        >
-          编辑
-        </a>,
-        <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-          查看
-        </a>,
-        <TableDropdown
-          key="actionGroup"
-          onSelect={() => action?.reload()}
-          menus={[
-            { key: 'copy', name: '复制' },
-            { key: 'delete', name: '删除' },
-          ]}
-        />,
+        <div key="edit">
+          <Button
+            icon={<EditTwoTone />}
+            onClick={() => {
+              setRecord(record);
+              onOk();
+            }}
+            size={'small'}
+          ></Button>
+        </div>,
+        <div key="delete">
+          <Button
+            icon={<DeleteTwoTone />}
+            onClick={() => showDeleteConfirm(record.id)}
+            size={'small'}
+          />
+        </div>,
       ],
     },
   ];
