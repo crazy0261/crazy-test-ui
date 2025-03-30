@@ -6,8 +6,8 @@ export async function save(body) {
 }
 
 /** 删除 */
-export async function deleteById(body) {
-  return post('/api/domain/delete', body);
+export async function del(body) {
+  return post('/crazy/domain/delete', body);
 }
 
 /** 查询所有 */

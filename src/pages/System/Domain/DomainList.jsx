@@ -1,4 +1,10 @@
-import { deleteById, listPage } from '@/services/domain';
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-20 21:43:13
+ * @LastEditTime: 2025-03-30 17:10:07
+ * @Description:
+ */
+import { del, listPage } from '@/services/domain';
 import {
   DeleteTwoTone,
   EditTwoTone,
@@ -104,7 +110,7 @@ const DomainList = () => {
       content: '一旦删除将无法恢复',
       okType: 'danger',
       onOk() {
-        deleteById({ id: id }).then((res) => {
+        del({ id: id }).then((res) => {
           if (res.code === 200) {
             actionRef.current.reload();
             message.success('删除成功');
