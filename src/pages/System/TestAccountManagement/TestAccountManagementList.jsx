@@ -54,7 +54,7 @@ const TestAccountList = () => {
           text: '成功',
           status: 'Success',
         },
-        FAILE: {
+        Error: {
           text: '失败',
           status: 'Error',
         },

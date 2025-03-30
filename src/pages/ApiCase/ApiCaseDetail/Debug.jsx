@@ -14,7 +14,7 @@ const Debug = (props) => {
   const testcaseId = parseInt(urlParams.get('id'));
   const [noDomian, setNoDomian] = useState(false);
   const { initialState } = useModel('@@initialState');
-  const [curEnvId, setCurEnvId] = useState(initialState?.currentUser?.selectEnvId);
+  const [curEnvId, setCurEnvId] = useState(initialState?.currentUser?.selectEnvId ?? 1);
   const [isExecModalOpen, setIsExecModalOpen] = useState(false);
   const [tempReqParams, setTempReqParams] = useState({}); // 临时请求参数
   const [tempTestAccount, setTempTestAccount] = useState({}); // 临时测试账号
@@ -178,7 +178,7 @@ const Debug = (props) => {
           环境：
           <Radio.Group
             name="radiogroup"
-            defaultValue={1}
+            defaultValue={curEnvId}
             onChange={(e) => handleEnv(e)}
             optionType="button"
             buttonStyle="solid"
