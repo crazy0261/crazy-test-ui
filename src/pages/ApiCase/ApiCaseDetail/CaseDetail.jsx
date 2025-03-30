@@ -411,13 +411,6 @@ const CaseDetail = (props) => {
             disabled={!props.isEdit}
             initialValue={curApiId}
           />
-          <ProFormText
-            name="creatorName"
-            label="作者"
-            width="90px"
-            rules={[{ required: false }]}
-            disabled={true}
-          />
         </ProForm.Group>
 
         <ProForm.Group>
