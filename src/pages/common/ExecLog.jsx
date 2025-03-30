@@ -85,7 +85,7 @@ const ExecLog = (props) => {
         INIT: { text: '初始化', status: 'Default' },
         RUNNING: { text: '执行中', status: 'Processing' },
         SUCCESS: { text: '执行成功', status: 'Success' },
-        FAILE: { text: '执行失败', status: 'Error' },
+        FAIL: { text: '执行失败', status: 'Error' },
         INTERRUPT: { text: '中断', status: 'Error' },
         TIMEOUT: { text: '超时', status: 'Error' },
       },

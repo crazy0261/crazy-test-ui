@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-03-27 21:02:32
+ * @LastEditTime: 2025-03-30 17:53:05
  * @Description: 接口用例列表
  */
 import { priorityEnum } from '@/common';
@@ -20,7 +20,7 @@ import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
 
-// import ExecLog from '../MulTestCase/ExecLog';
+import ExecLog from '../Common/ExecLog';
 // import DeleteCase from './DeleteCase';
 // import DisableCase from './DisableCase';
 // import EnableCase from './EnableCase';
@@ -452,27 +452,27 @@ const ApiCaseList = () => {
         ids={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
-      <ModOwner
+      /> */}
+      {/* <ModOwner
         open={modOwnerOpen}
         setOpen={setModOwnerOpen}
         ids={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      />
-      <DeleteCase
+      /> */}
+      {/* <DeleteCase
         open={deleteCaseOpen}
         setOpen={setDeleteCaseOpen}
         curApiId={curApiId}
         actionRef={actionRef}
-      />
+      /> */}
       <ExecLog
         open={isExecLogModalOpen}
         setOpen={setIsExecLogModalOpen}
-        caseId={curCaseId}
+        apiTestcaseId={curCaseId}
         caseName={curCaseName}
         caseType="apiCase"
-      /> */}
+      />
     </div>
   );
 };
