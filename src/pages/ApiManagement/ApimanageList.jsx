@@ -3,7 +3,6 @@ import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { cancelClaim, claim, list, setPriority, setProdExec } from '@/services/apiManagement';
 // import { listAll as listAllApp } from '@/services/application';
 import {
-  CopyTwoTone,
   DeleteTwoTone,
   EditTwoTone,
   PlusOutlined,
@@ -404,19 +403,6 @@ const ApimanageList = () => {
               icon={<EditTwoTone />}
               onClick={() => {
                 setAddApiOperType('edit');
-                setRecord(record);
-                setIsAddModalOpen(true);
-              }}
-              size={'small'}
-            />
-          </Tooltip>
-        </div>,
-        <div key="copy">
-          <Tooltip title="复制">
-            <Button
-              icon={<CopyTwoTone />}
-              onClick={() => {
-                setAddApiOperType('add');
                 setRecord(record);
                 setIsAddModalOpen(true);
               }}

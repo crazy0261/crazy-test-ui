@@ -84,7 +84,7 @@ const EditApi = (props) => {
         contentType: props?.record?.contentType,
         priority: props?.record?.priority,
         timeOut: props?.record?.timeOut,
-        owner: props?.record?.owner,
+        ownerId: props?.record?.ownerId,
         requestParams: props?.record?.requestParams,
         apiType: props?.record?.apiType,
       });
@@ -193,13 +193,13 @@ const EditApi = (props) => {
             <InputNumber min={1} max={300} placeholder={10} />
           </Form.Item>
 
-          <Form.Item name="priority" label="优先级">
+          <Form.Item name="priority" label="优先级" rules={[{ required: true }]}>
             <Select key="priority" options={priorityList} />
           </Form.Item>
 
-          <Form.Item name="owner" label="负责人">
+          <Form.Item name="ownerId" label="负责人" rules={[{ required: true }]}>
             <Select
-              key="owner"
+              key="ownerId"
               allowClear
               showSearch
               placeholder="请输入关键字搜索"
