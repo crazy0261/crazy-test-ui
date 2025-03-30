@@ -1,4 +1,5 @@
 import { allList } from '@/services/apiCase';
+import { listAll } from '@/services/envConfig';
 import { save } from '@/services/testAccountManagement';
 import { Button, Form, Input, message, Modal, Select } from 'antd';
 import JSONbig from 'json-bigint';
@@ -12,6 +13,7 @@ const AddOrUpdateTestAccountManagement = (props) => {
   const { TextArea } = Input;
   const [isloading, setIsloading] = useState(false);
   const [apiCaseList, setApiCaseList] = useState([]);
+  const [envData, setEnvData] = useState([]);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
@@ -52,8 +54,22 @@ const AddOrUpdateTestAccountManagement = (props) => {
     }
   };
 
+  const envList = async () => {
+    const result = await listAll();
+    if (result.code === 200) {
+      const data = result.data.map((item) => {
+        return {
+          value: item.id,
+          label: item.name,
+        };
+      });
+      setEnvData(data);
+    }
+  };
+
   useEffect(() => {
     apiCaseListData();
+    envList();
   }, []);
   const showResult = (result, msg) => {
     setIsloading(false);
@@ -68,6 +84,7 @@ const AddOrUpdateTestAccountManagement = (props) => {
   useEffect(() => {
     props.isModalOpen &&
       form.setFieldsValue({
+        envId: props.record?.envId,
         name: props.record?.name,
         inputParams: props.record?.inputParams,
         apiCaseId: props.record?.apiCaseId,
@@ -100,6 +117,9 @@ const AddOrUpdateTestAccountManagement = (props) => {
           }}
           form={form}
         >
+          <Form.Item name="envId" label="环境" rules={[{ required: true }]}>
+            <Select showSearch placeholder="请输入关键字搜索" options={envData} />
+          </Form.Item>
           <Form.Item name="name" label="名称" rules={[{ required: true }]}>
             <Input />
           </Form.Item>

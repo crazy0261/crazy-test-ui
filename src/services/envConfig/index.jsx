@@ -19,3 +19,8 @@ export async function save(body) {
 export async function queryById(params) {
   return get('/crazy/env/config/queryById', params);
 }
+
+/** 全部环境 */
+export async function listAll(params) {
+  return get('/crazy/env/config/list/all', params);
+}
