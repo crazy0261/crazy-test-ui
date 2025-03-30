@@ -15,6 +15,11 @@ export async function save(body) {
   return post('/crazy/env/config/save', body);
 }
 
+/** 删除 */
+export async function del(body) {
+  return post('/crazy/env/config/delete', body);
+}
+
 /** 详情 */
 export async function queryById(params) {
   return get('/crazy/env/config/queryById', params);

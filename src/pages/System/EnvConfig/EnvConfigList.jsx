@@ -1,9 +1,14 @@
 import { list as appList } from '@/services/applicationManagement';
 // import { listAll as listAllDomain } from '@/services/config/domainInfo';
-import { list } from '@/services/envConfig';
-import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { del, list } from '@/services/envConfig';
+import {
+  DeleteTwoTone,
+  EditTwoTone,
+  ExclamationCircleFilled,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, message, Select } from 'antd';
+import { Button, message, Modal as model, Select } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import EditEnvConfig from './EditEnvConfig';
 
@@ -28,6 +33,25 @@ const EnvConfigList = () => {
   //     }
   //   });
   // }, []);
+
+  const showDeleteConfirm = (id) => {
+    model.confirm({
+      title: '确定要删除么？',
+      icon: <ExclamationCircleFilled />,
+      content: '一旦删除将无法恢复',
+      okType: 'danger',
+      onOk() {
+        del({ id: id }).then((res) => {
+          if (res.code === 200) {
+            actionRef.current.reload();
+            message.success('删除成功');
+          }
+        });
+      },
+      onCancel() {},
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'index',
@@ -121,6 +145,13 @@ const EnvConfigList = () => {
             }}
             size={'small'}
           ></Button>
+        </div>,
+        <div key="delete">
+          <Button
+            icon={<DeleteTwoTone />}
+            onClick={() => showDeleteConfirm(record.id)}
+            size={'small'}
+          />
         </div>,
       ],
     },
