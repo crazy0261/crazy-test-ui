@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-03-30 19:55:47
+ * @LastEditTime: 2025-03-31 13:17:45
  * @Description: 接口管理管理
  */
 import { get, post } from '../../utils/requestUtil';
@@ -72,18 +72,18 @@ export async function copy(body) {
 }
 
 /** 下架用例 */
-export async function disable(body) {
-  return post('/api/apiTestcase/disable', body);
+export async function batchDown(body) {
+  return post('/crazy/api/case/batch/down', body);
 }
 
 /** 上架用例 */
-export async function enable(body) {
-  return post('/api/apiTestcase/enable', body);
+export async function batchUpdate(body) {
+  return post('/crazy/api/case/batch/up', body);
 }
 
 /** 批量修改负责人 */
-export async function modifyOwner(body) {
-  return post('/api/apiTestcase/modify/owner', body);
+export async function batchOwner(body) {
+  return post('/crazy/api/case/batch/owner', body);
 }
 
 /** 生成断言 */

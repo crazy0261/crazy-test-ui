@@ -1,4 +1,4 @@
-import { enable } from '@/services/apiCase';
+import { batchUpdate } from '@/services/apiCase';
 import { Form, Input, message, Modal } from 'antd';
 
 const EnableCase = (props) => {
@@ -7,7 +7,7 @@ const EnableCase = (props) => {
   const handleOk = (values) => {
     form.validateFields().then((values) => {
       // form.resetFields();
-      enable({ ids: props.ids, remark: values.remark }).then((res) => {
+      batchUpdate({ ids: props.ids, remark: values.remark }).then((res) => {
         if (res.code === 200) {
           message.success('上架成功');
           props.setOpen(false);

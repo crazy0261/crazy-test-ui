@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-03-30 19:48:18
+ * @LastEditTime: 2025-03-31 13:18:28
  * @Description: 接口用例列表
  */
 import { priorityEnum } from '@/common';
@@ -22,8 +22,8 @@ import { history } from 'umi';
 
 import ExecLog from '../Common/ExecLog';
 import DeleteCase from './DeleteCase';
-// import DisableCase from './DisableCase';
-// import EnableCase from './EnableCase';
+import DisableCase from './DisableCase';
+import EnableCase from './EnableCase';
 import OwnerEdit from './OwnerEdit';
 
 /**
@@ -404,18 +404,6 @@ const ApiCaseList = () => {
           <Button
             onClick={() => {
               if (selectedCaseIds.length > 0) {
-                window.open('/apiTestCase/batchExec?CaseIds=' + selectedCaseIds);
-              } else {
-                message.warning('请选择用例');
-              }
-            }}
-            key="button"
-          >
-            批量执行
-          </Button>,
-          <Button
-            onClick={() => {
-              if (selectedCaseIds.length > 0) {
                 setEnableCaseOpen(true);
               } else {
                 message.warning('请选择用例');
@@ -439,20 +427,20 @@ const ApiCaseList = () => {
           </Button>,
         ]}
       />
-      {/* <DisableCase
+      <DisableCase
         open={disableCaseOpen}
         setOpen={setDisableCaseOpen}
         ids={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      /> */}
-      {/* <EnableCase
+      />
+      <EnableCase
         open={enableCaseOpen}
         setOpen={setEnableCaseOpen}
         ids={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      /> */}
+      />
       <OwnerEdit
         open={modOwnerOpen}
         setOpen={setModOwnerOpen}

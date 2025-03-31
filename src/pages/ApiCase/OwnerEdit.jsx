@@ -1,5 +1,5 @@
-import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { modifyOwner } from '@/services/apiCase';
+import { batchOwner } from '@/services/apiCase';
+import { listAll as listAllUser } from '@/services/user';
 import { Form, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -11,7 +11,7 @@ const OwnerEdit = (props) => {
   const handleOk = (values) => {
     form.validateFields().then((values) => {
       setIsLoading(true);
-      modifyOwner({ caseIds: props.ids, ownerId: values.ownerId }).then((res) => {
+      batchOwner({ caseIds: props.ids, ownerId: values.ownerId }).then((res) => {
         setIsLoading(false);
         if (res.code === 200) {
           message.success('修改成功');

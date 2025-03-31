@@ -1,4 +1,10 @@
-import { disable } from '@/services/apiCase';
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-15 16:14:01
+ * @LastEditTime: 2025-03-31 13:20:35
+ * @Description:下架用例弹窗
+ */
+import { batchDown } from '@/services/apiCase';
 import { Form, Input, message, Modal } from 'antd';
 
 const DisableCase = (props) => {
@@ -7,7 +13,7 @@ const DisableCase = (props) => {
   const handleOk = (values) => {
     form.validateFields().then((values) => {
       // form.resetFields();
-      disable({ ids: props.ids, remark: values.remark }).then((res) => {
+      batchDown({ ids: props.ids, remark: values.remark }).then((res) => {
         if (res.code === 200) {
           message.success('下架成功');
           props.setOpen(false);
