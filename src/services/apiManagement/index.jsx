@@ -107,36 +107,18 @@ export async function setPriority(options) {
 }
 
 /** 设置是否可在生产执行 */
-export async function setProdExec(options) {
-  return request('/api/apimanage/setProdExec', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function setProdExec(body) {
+  return post('/crazy/api/management/batch/update/prod', body);
 }
 
 /** 下架接口 */
-export async function disable(options) {
-  return request('/api/apimanage/disable', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function disable(body) {
+  return post('/crazy/api/management/batch/update/down', body);
 }
 
 /** 上架接口 */
-export async function enable(options) {
-  return request('/api/apimanage/enable', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
+export async function enable(boday) {
+  return post('/crazy/api/management/batch/update/up', boday);
 }
 
 /** 查询关联用例 */
@@ -190,6 +172,11 @@ export async function batchMove(body) {
 /** 批量设置优先级 */
 export async function batchSetPriority(body) {
   return post('/crazy/api/management/batch/update/setPriority', body);
+}
+
+/** 批量设置负责人 */
+export async function batchOwner(body) {
+  return post('/crazy/api/management/batch/update/owner', body);
 }
 
 /** curl导入 */

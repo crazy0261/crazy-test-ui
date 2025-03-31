@@ -1,6 +1,6 @@
 import { priorityEnum } from '@/common';
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { batchSetPriority, cancelClaim, claim, list, setProdExec } from '@/services/apiManagement';
+import { batchSetPriority, list, setProdExec } from '@/services/apiManagement';
 import { listAll } from '@/services/applicationManagement';
 
 import {
@@ -16,7 +16,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { priorityList } from '../../common';
 import BatchDeleteApi from './BatchDeleteApi';
+import DisableApi from './DisableApi';
 import EditApi from './EditApi';
+import EditOwnerApi from './EditOwnerApi';
+import EnableApi from './EnableApi';
 import ImportApi from './ImportApi';
 import ModApiType from './ModApiType';
 import MoveApi from './MoveApi';
@@ -40,6 +43,7 @@ const ApimanageList = () => {
   const [pageSize, setPageSize] = useState(10);
   const [disableApiOpen, setDisableApiOpen] = useState(false);
   const [enableApiOpen, setEnableApiOpen] = useState(false);
+  const [editOwnerApiOpen, setEditOwnerApiOpen] = useState(false);
   const [deleteApiOpen, setDeleteApiOpen] = useState(false);
   const [batchDelApiOpen, setBatchDelApiOpen] = useState(false);
   const [modApiTypeOpen, setModApiTypeOpen] = useState(false);
@@ -63,6 +67,10 @@ const ApimanageList = () => {
   };
 
   const operList = [
+    {
+      value: 'updateOwner',
+      label: '更改负责人',
+    },
     {
       value: 'disableApi',
       label: '下架接口',
@@ -109,24 +117,10 @@ const ApimanageList = () => {
 
   const handleApiSet = (e) => {
     if (selectedCaseIds.length > 0) {
-      if (e === 'claim') {
-        claim({ apiIds: selectedCaseIds.join() }).then((res) => {
-          if (res.code === 200) {
-            message.success('认领成功');
-            setSelectedCaseIds([]);
-            actionRef.current.reload();
-          }
-        });
-      } else if (e === 'cancelClaim') {
-        cancelClaim({ apiIds: selectedCaseIds.join() }).then((res) => {
-          if (res.code === 200) {
-            message.success('已取消认领');
-            setSelectedCaseIds([]);
-            actionRef.current.reload();
-          }
-        });
+      if (e === 'updateOwner') {
+        setEditOwnerApiOpen(true);
       } else if (e === 'setProdExec') {
-        setProdExec({ apiIds: selectedCaseIds.join(), canProdExec: 1 }).then((res) => {
+        setProdExec({ apiIds: selectedCaseIds, canProdExec: 1 }).then((res) => {
           if (res.code === 200) {
             message.success('设置成功');
             setSelectedCaseIds([]);
@@ -134,7 +128,7 @@ const ApimanageList = () => {
           }
         });
       } else if (e === 'cancelProdExec') {
-        setProdExec({ apiIds: selectedCaseIds.join(), canProdExec: 0 }).then((res) => {
+        setProdExec({ apiIds: selectedCaseIds, canProdExec: 0 }).then((res) => {
           if (res.code === 200) {
             message.success('设置成功');
             setSelectedCaseIds([]);
@@ -436,7 +430,6 @@ const ApimanageList = () => {
     listAllUser().then((result) => {
       if (result.code === 200) {
         let owners = [];
-        owners.push({ value: 0, label: '-空-' });
         result.data.map((item) => owners.push({ value: item.id, label: item.name }));
         setOwnerEnum(owners);
       }
@@ -575,7 +568,7 @@ const ApimanageList = () => {
             placeholder="设置优先级"
             onChange={(e) => {
               if (selectedCaseIds.length > 0) {
-                batchSetPriority({ apiIds: selectedCaseIds.join(), priority: e }).then((res) => {
+                batchSetPriority({ apiIds: selectedCaseIds, priority: e }).then((res) => {
                   if (res.code === 200) {
                     message.success('优先级设置成功');
                     setSelectedCaseIds([]);
@@ -614,20 +607,27 @@ const ApimanageList = () => {
         appEnum={appEnum}
         actionRef={actionRef}
       />
-      {/* <DisableApi
+      <DisableApi
         open={disableApiOpen}
         setOpen={setDisableApiOpen}
-        apiIds={selectedCaseIds.join()}
+        apiIds={selectedCaseIds}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      /> */}
-      {/* <EnableApi
+      />
+      <EnableApi
         open={enableApiOpen}
         setOpen={setEnableApiOpen}
-        apiIds={selectedCaseIds.join()}
+        apiIds={selectedCaseIds}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      /> */}
+      />
+      <EditOwnerApi
+        open={editOwnerApiOpen}
+        setOpen={setEditOwnerApiOpen}
+        apiIds={selectedCaseIds}
+        actionRef={actionRef}
+        clearSelectedCaseIds={clearSelectedCaseIds}
+      />
       {/* <DeleteApi
         open={deleteApiOpen}
         setOpen={setDeleteApiOpen}
@@ -651,14 +651,14 @@ const ApimanageList = () => {
       <BatchDeleteApi
         isModalOpen={batchDelApiOpen}
         setIsModalOpen={setBatchDelApiOpen}
-        apiIds={selectedCaseIds.join()}
+        apiIds={selectedCaseIds}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
       <ModApiType
         isModalOpen={modApiTypeOpen}
         setIsModalOpen={setModApiTypeOpen}
-        apiIds={selectedCaseIds.join()}
+        apiIds={selectedCaseIds}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />

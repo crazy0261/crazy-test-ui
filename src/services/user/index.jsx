@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-11 21:33:20
+ * @LastEditTime: 2025-03-31 11:57:14
+ * @Description:
+ */
 import { get, post } from '../../utils/requestUtil';
 
 /**
@@ -29,4 +35,13 @@ export async function save(body) {
  */
 export async function del(body) {
   return post('/crazy/user/del', body);
+}
+
+/**
+ * 所有用户
+ * @param {*} body
+ * @returns
+ */
+export async function listAll(params) {
+  return get('/crazy/user/list/all', params);
 }
