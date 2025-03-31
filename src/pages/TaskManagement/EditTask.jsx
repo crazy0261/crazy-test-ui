@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-28 17:00:21
- * @LastEditTime: 2025-03-28 22:08:35
+ * @LastEditTime: 2025-03-31 14:06:13
  * @Description: 任务编辑弹框
  */
 import { caseTypeEnum } from '@/common';
@@ -19,12 +19,13 @@ const EditTask = (props) => {
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
+    form.resetFields();
   };
 
   const onFinish = () => {
     form.validateFields().then((value) => {
       setIsloading(true);
-      props.recordData === undefined
+      props.recordData?.id === undefined
         ? save(value).then((result) => showResult(result, '新建'))
         : save({ ...value, id: props.recordData.id }).then((result) => showResult(result, '修改'));
     });
@@ -42,6 +43,7 @@ const EditTask = (props) => {
 
   useEffect(() => {
     props.isModalOpen &&
+      props.recordData?.id &&
       form.setFieldsValue({
         name: props.recordData?.name,
         cron: props.recordData?.cron,
@@ -55,7 +57,7 @@ const EditTask = (props) => {
   return (
     <>
       <Modal
-        title={props.recordData === undefined ? '新建任务' : '编辑任务'}
+        title={props.recordData.id === undefined ? '新建任务' : '编辑任务'}
         open={props.isModalOpen}
         onCancel={handleCancel}
         footer={[
@@ -98,7 +100,7 @@ const EditTask = (props) => {
             {/* <Select placeholder="请选择环境" /> */}
           </Form.Item>
           <Form.Item name="enable" label="是否开启" initialValue={true}>
-            <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+            <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
           </Form.Item>
           <Form.Item name="remark" label="任务描述">
             <TextArea placeholder="请输入任务描述" maxLength={255} showCount />
