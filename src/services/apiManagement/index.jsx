@@ -16,96 +16,6 @@ export async function queryApiById(parmas) {
   return get('/crazy/api/management/get/id', parmas);
 }
 
-/** 新增接口 */
-export async function add(body, options) {
-  return request('/api/apimanage/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-/** 编辑接口 */
-export async function modify(body, options) {
-  return request('/api/apimanage/modify', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
-/** 删除接口 */
-export async function deleteApi(options) {
-  return request('/api/apimanage/delete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 通过swagger地址导入接口 */
-export async function importApi(options) {
-  return request('/api/apimanage/importApi', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 通过JSON导入接口 */
-export async function importApiByJson(options) {
-  return request('/api/apimanage/importApiByJson', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 认领接口 */
-export async function claim(options) {
-  return request('/api/apimanage/claim', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 取消认领 */
-export async function cancelClaim(options) {
-  return request('/api/apimanage/cancelClaim', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 设置接口优先级 */
-export async function setPriority(options) {
-  return request('/api/apimanage/setPriority', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
 /** 设置是否可在生产执行 */
 export async function setProdExec(body) {
   return post('/crazy/api/management/batch/update/prod', body);
@@ -124,28 +34,6 @@ export async function enable(boday) {
 /** 查询关联用例 */
 export async function queryRelateCase(options) {
   return request('/api/apimanage/queryRelateCase', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 移动 */
-export async function move(options) {
-  return request('/api/apimanage/move', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
-}
-
-/** 通过fetch导入接口 */
-export async function importByFetch(options) {
-  return request('/api/apimanage/importByFetch', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

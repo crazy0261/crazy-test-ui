@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { priorityList } from '../../common';
 import BatchDeleteApi from './BatchDeleteApi';
+import DeleteApi from './DeleteApi';
 import DisableApi from './DisableApi';
 import EditApi from './EditApi';
 import EditOwnerApi from './EditOwnerApi';
@@ -628,12 +629,12 @@ const ApimanageList = () => {
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
-      {/* <DeleteApi
+      <DeleteApi
         open={deleteApiOpen}
         setOpen={setDeleteApiOpen}
         curApiId={curApiId}
         actionRef={actionRef}
-      /> */}
+      />
       {/* <RelateCaseList
         open={isRelateCaseModalOpen}
         setOpen={setIsRelateCaseModalOpen}

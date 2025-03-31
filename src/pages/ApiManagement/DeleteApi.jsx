@@ -1,4 +1,10 @@
-import { deleteApi } from '@/services/apiManagement';
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-13 23:04:58
+ * @LastEditTime: 2025-03-31 12:31:48
+ * @Description: 删除用例
+ */
+import { batchDelete } from '@/services/apiManagement';
 import { Form, Input, message, Modal } from 'antd';
 import { useState } from 'react';
 
@@ -10,7 +16,7 @@ const DeleteApi = (props) => {
   const handleOk = (values) => {
     form.validateFields().then((values) => {
       setIsLoading(true);
-      deleteApi({ id: props.curApiId, remark: values.remark }).then((res) => {
+      batchDelete({ apiIds: [props.curApiId], remark: values.remark }).then((res) => {
         setIsLoading(false);
         if (res.code === 200) {
           message.success('删除成功');
