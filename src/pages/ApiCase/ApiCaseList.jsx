@@ -24,7 +24,7 @@ import ExecLog from '../Common/ExecLog';
 import DeleteCase from './DeleteCase';
 // import DisableCase from './DisableCase';
 // import EnableCase from './EnableCase';
-// import ModOwner from './ModOwner';
+import OwnerEdit from './OwnerEdit';
 
 /**
  * 用例列表页
@@ -453,13 +453,13 @@ const ApiCaseList = () => {
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       /> */}
-      {/* <ModOwner
+      <OwnerEdit
         open={modOwnerOpen}
         setOpen={setModOwnerOpen}
         ids={selectedCaseIds.join()}
         actionRef={actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
-      /> */}
+      />
       <DeleteCase
         open={deleteCaseOpen}
         setOpen={setDeleteCaseOpen}

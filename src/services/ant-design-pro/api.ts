@@ -126,9 +126,8 @@ export async function updateSelectEnvId(options: any) {
 
 /** 查询当前租户下的所有用户 */
 export async function listAll() {
-  return request('/crazy/user/list', {
+  return request('/crazy/user/list/all', {
     method: 'GET',
-    params: { current: 1, pageSize: 1000 },
   });
 }
 

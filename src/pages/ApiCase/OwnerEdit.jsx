@@ -3,7 +3,7 @@ import { modifyOwner } from '@/services/apiCase';
 import { Form, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 
-const ModOwner = (props) => {
+const OwnerEdit = (props) => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [ownerEnum, setOwnerEnum] = useState([]);
@@ -68,4 +68,4 @@ const ModOwner = (props) => {
     </Modal>
   );
 };
-export default ModOwner;
+export default OwnerEdit;
