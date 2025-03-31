@@ -19,6 +19,7 @@ const TaskManagementDetail = () => {
   const [editDisabled, setEditDisabled] = useState(scheduleId); // 默认不可编辑
   const [testcaseType, setTestcaseType] = useState(null);
   const [isAllTestCase, setIsAllTestCase] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const caseTypeEnum = [
     {
@@ -65,17 +66,9 @@ const TaskManagementDetail = () => {
     if (scheduleId) {
       queryById({ id: scheduleId }).then((res) => {
         if (res.code === 200) {
-          if (
-            res.data.testcaseList !== null &&
-            res.data.testcaseList !== '' &&
-            res.data.testcaseList !== 'ALL'
-          ) {
-            let testcaseList = [];
-            const testcaseListString = res.data.testcaseList.split(',');
-            for (let i = 0; i < testcaseListString.length; i++) {
-              testcaseList.push(Number.parseInt(testcaseListString[i]));
-            }
-            setSelectedCaseIds(testcaseList);
+          if (res.data.testcaseList !== null && res.data.testcaseList !== '') {
+            const testcaseListString = res.data.apiCaseIds;
+            setSelectedCaseIds(testcaseListString);
           }
           formRef?.current?.setFieldsValue({
             name: res.data.name,
@@ -84,14 +77,20 @@ const TaskManagementDetail = () => {
             enable: res.data.enable,
             remark: res.data.remark,
             testcaseType: res.data.testcaseType,
-            allTestCase: res.data.testcaseList === 'ALL',
+            isAllCase: res.data.isAllCase,
           });
           setTestcaseType(res.data.testcaseType);
-          setIsAllTestCase(res.data.testcaseList === 'ALL');
         }
       });
     }
   };
+
+  useEffect(() => {
+    if (isSaved) {
+      requestScheduleDetail();
+      setIsSaved(false);
+    }
+  }, [isSaved]);
 
   useEffect(() => {
     requestEnvNameEnum();
@@ -106,11 +105,12 @@ const TaskManagementDetail = () => {
       if (scheduleId) {
         save({
           ...values,
-          testcaseList: isAllTestCase ? 'ALL' : selectedCaseIds.toString(),
-          id: scheduleId,
+          testcaseList: JSON.stringify(selectedCaseIds),
+          id: Number(scheduleId),
         }).then((res) => {
           if (res.code === 200) {
             message.success('修改成功');
+            setIsSaved(true);
             setEditDisabled(true);
           }
         });
@@ -253,8 +253,8 @@ const TaskManagementDetail = () => {
                 />
                 <ProFormSwitch
                   label="全部用例"
-                  name="allTestCase"
-                  disabled={editDisabled}
+                  name="isAllCase"
+                  disabled={true}
                   onChange={(e) => setIsAllTestCase(e)}
                 />
                 <ProForm.Group>
