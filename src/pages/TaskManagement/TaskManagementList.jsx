@@ -176,7 +176,7 @@ const TaskManagementList = () => {
               icon={<PlayCircleTwoTone />}
               size={'small'}
               onClick={() => {
-                execOnce({ id: record.id, once: true }).then((res) => {
+                execOnce({ id: record.id }).then((res) => {
                   if (res.code === 200) {
                     message.success('触发成功');
                   }

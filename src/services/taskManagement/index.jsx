@@ -31,7 +31,7 @@ export async function stop(body) {
 }
 
 export async function execOnce(body) {
-  return post('/api/schedule/execOnce', body);
+  return post('/crazy/task/schedule/execute"', body);
 }
 
 export async function queryRecord(body) {
