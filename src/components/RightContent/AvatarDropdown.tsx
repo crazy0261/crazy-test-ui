@@ -1,11 +1,9 @@
 import ModifyPassword from '@/pages/UserSetting/ModifyPassword';
 import ModifyUserInfo from '@/pages/UserSetting/ModifyUserInfo';
-import { outLogin } from '@/services/ant-design-pro/api';
 import { LogoutOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
-import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback, useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -44,22 +42,22 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
   /**
    * 退出登录，并且将当前的 url 保存
    */
-  const loginOut = async () => {
-    await outLogin();
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-    /** 此方法会跳转到 redirect 参数所在的位置 */
-    const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      history.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: pathname + search,
-        }),
-      });
-    }
-  };
+  // const loginOut = async () => {
+  //   await outLogin();
+  //   const { search, pathname } = window.location;
+  //   const urlParams = new URL(window.location.href).searchParams;
+  //   /** 此方法会跳转到 redirect 参数所在的位置 */
+  //   const redirect = urlParams.get('redirect');
+  //   // Note: There may be security issues, please note
+  //   if (window.location.pathname !== '/user/login' && !redirect) {
+  //     history.replace({
+  //       pathname: '/user/login',
+  //       search: stringify({
+  //         redirect: pathname + search,
+  //       }),
+  //     });
+  //   }
+  // };
   const { styles } = useStyles();
 
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -88,7 +86,8 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
           setInitialState((s: any) => ({ ...s, currentUser: undefined }));
           localStorage.setItem('Authorization', '');
         });
-        loginOut();
+        // loginOut();
+        history.push('/user/login');
         return;
       } else if (key === 'center') {
         handleOnModal();
