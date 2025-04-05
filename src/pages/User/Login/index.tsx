@@ -83,7 +83,6 @@ const Login: React.FC = () => {
 
   const fetchProjectList = async () => {
     const msg = await initialState?.fetchProjectList?.();
-    console.log('fetchProjectList--->', msg);
     if (msg) {
       flushSync(() => {
         setInitialState((s) => ({
