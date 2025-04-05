@@ -29,24 +29,24 @@ export default [
     routes: [
       {
         name: '接口用例',
-        path: '/case/apiCase',
+        path: '/case/api',
         component: './ApiCase',
       },
       {
-        path: '/case/apiCase/bathExec',
+        path: '/case/api/bathExec',
         // component: './ApiTestCase/BathExecTestCase.jsx',
       },
       {
-        path: '/case/apiCase/detail',
+        path: '/case/api/detail',
         component: './ApiCase/ApiCaseDetail',
       },
       {
         name: '场景用例',
-        path: '/case/mulTestCase',
-        // component: './MulTestCase',
+        path: '/case/proces',
+        component: './ProcessCaseManageme',
       },
       {
-        path: '/case/mulTestCase/detail',
+        path: '/case/proces/detail',
         // component: './MulTestCaseDetail',
       },
     ],
@@ -155,7 +155,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/case/apiCase',
+    redirect: '/case/api',
   },
   {
     path: '*',

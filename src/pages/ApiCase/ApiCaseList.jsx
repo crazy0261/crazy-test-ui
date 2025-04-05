@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-03-31 13:18:28
+ * @LastEditTime: 2025-04-05 21:39:16
  * @Description: 接口用例列表
  */
 import { priorityEnum } from '@/common';
@@ -258,7 +258,7 @@ const ApiCaseList = () => {
               type="primary"
               size={'small'}
               onClick={() => {
-                history.push('/case/apiCase/detail?id=' + record.id);
+                history.push('/case/api/detail?id=' + record.id);
               }}
             />
           </Tooltip>
@@ -382,7 +382,7 @@ const ApiCaseList = () => {
         toolBarRender={() => [
           <Button
             // onClick={() => window.open('/apiTestCase/detail')}
-            onClick={() => history.push('/case/apiCase/detail')}
+            onClick={() => history.push('/case/api/detail')}
             key="button"
             icon={<PlusOutlined />}
             type="primary"
