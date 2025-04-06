@@ -1,4 +1,6 @@
 // import { priorityEnum } from '@/pages/Common/utils';
+import { list } from '@/services/processCase';
+import { listAll } from '@/services/user';
 import {
   ClockCircleTwoTone,
   CopyTwoTone,
@@ -10,9 +12,7 @@ import {
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Modal as model, Select, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
-// import AddMulTestCase from './AddMulTestCase';
-import { list } from '@/services/processCase';
-import { listAll } from '@/services/user';
+import AddProcessCase from './AddProcessCase';
 import DeleteCase from './DeleteCase';
 import DisableCase from './DisableCase';
 import EnableCase from './EnableCase';
@@ -40,6 +40,7 @@ const ProcessCaseList = (props) => {
   const [curCaseId, setCurCaseId] = useState();
   const [curCaseName, setCurCaseName] = useState();
   let cancleRowKeys = []; // 取消选择的项目
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     userAll();
@@ -107,7 +108,7 @@ const ProcessCaseList = (props) => {
 
     {
       title: '优先级',
-      dataIndex: 'priority',
+      dataIndex: 'priorityDesc',
       ellipsis: true,
       width: 60,
       search: false,
@@ -327,7 +328,11 @@ const ProcessCaseList = (props) => {
         actionRef={props.actionRef}
         cardBordered
         request={async (params = {}, sort, filter) => {
-          return list({ ...params, treeKey: props.selectedKeys, current: props.currentPage });
+          if (props.selectedKeys === null || props.selectedKeys === undefined) {
+            messageApi.info('请先选择左侧的树节点');
+          } else {
+            return list({ ...params, treeKey: props.selectedKeys, current: props.currentPage });
+          }
         }}
         scroll={{ x: 1000 }}
         rowKey="id"
@@ -424,13 +429,13 @@ const ProcessCaseList = (props) => {
           );
         }}
       />
-      {/* <AddMulTestCase
+      <AddProcessCase
         isModalOpen={isAddModalOpen}
         setIsModalOpen={setIsAddModalOpen}
         actionRef={props.actionRef}
         selectedKeys={props.selectedKeys}
         selectedNodeName={props.selectedNodeName}
-      /> */}
+      />
       <DisableCase
         open={disableCaseOpen}
         setOpen={setDisableCaseOpen}
@@ -478,6 +483,7 @@ const ProcessCaseList = (props) => {
         caseId={curCaseId}
         caseName={curCaseName}
       />
+      {contextHolder}
     </div>
   );
 };
