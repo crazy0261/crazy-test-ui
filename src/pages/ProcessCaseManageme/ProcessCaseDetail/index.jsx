@@ -1,8 +1,8 @@
 import Debug from '@/pages/ApiCase/ApiCaseDetail/Debug';
 import ExecLog from '@/pages/ProcessCaseManageme/ExecLog';
-import { detail } from '@/services/processCase';
+import { detail, save } from '@/services/processCase';
 import { ClockCircleTwoTone } from '@ant-design/icons';
-import { Button, Layout, Space, Tooltip } from 'antd';
+import { Button, Layout, Space, Tooltip, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useEdgesState, useNodesState } from 'reactflow';
 import ProcessCaseDetail from './ProcessCaseDetail';
@@ -57,16 +57,16 @@ const App = () => {
   }, []);
 
   const handleSave = () => {
-    // align();
-    // modify({
-    //   id: id,
-    //   nodes: nodes,
-    //   edges: edges,
-    // }).then((res) => {
-    //   if (res.code === 200) {
-    //     message.success('保存成功');
-    //   }
-    // });
+    align();
+    save({
+      id: id,
+      nodes: nodes,
+      edges: edges,
+    }).then((res) => {
+      if (res.code === 200) {
+        message.success('保存成功');
+      }
+    });
   };
 
   // 纵向对齐
