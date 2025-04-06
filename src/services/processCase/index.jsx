@@ -19,3 +19,13 @@ export async function batchUpdateOwner(body) {
 export async function batchUpdateMove(body) {
   return post('/crazy/process/case/batch/update/move', body);
 }
+
+/** 批量上架用例 */
+export async function batchUpdateUpCase(body) {
+  return post('/crazy/process/case/batch/update/up', body);
+}
+
+/** 批量下架用例 */
+export async function batchUpdateDownCase(body) {
+  return post('/crazy/process/case/batch/update/down', body);
+}

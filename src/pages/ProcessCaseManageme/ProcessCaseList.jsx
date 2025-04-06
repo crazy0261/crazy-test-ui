@@ -14,12 +14,12 @@ import { Button, message, Modal as model, Select, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import AddProcessCase from './AddProcessCase';
 import DeleteCase from './DeleteCase';
-import DisableCase from './DisableCase';
-import EnableCase from './EnableCase';
+import DownCase from './DownCase';
 import ExecLog from './ExecLog';
 import ModOwner from './ModOwner';
 import MoveMulTestCase from './MoveMulTestCase';
 import RelateCase from './RelateCase';
+import UpCase from './UpCase';
 
 /**
  * 场景用例列表页
@@ -163,7 +163,7 @@ const ProcessCaseList = (props) => {
     {
       disable: true,
       title: '状态',
-      dataIndex: 'isDelete',
+      dataIndex: 'status',
       onFilter: true,
       ellipsis: true,
       valueType: 'select',
@@ -173,7 +173,7 @@ const ProcessCaseList = (props) => {
           text: '正常',
           status: 'Success',
         },
-        2: {
+        1: {
           text: '已下架',
           status: 'Error',
         },
@@ -436,14 +436,14 @@ const ProcessCaseList = (props) => {
         selectedKeys={props.selectedKeys}
         selectedNodeName={props.selectedNodeName}
       />
-      <DisableCase
+      <DownCase
         open={disableCaseOpen}
         setOpen={setDisableCaseOpen}
         ids={selectedCaseIds}
         actionRef={props.actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
-      <EnableCase
+      <UpCase
         open={enableCaseOpen}
         setOpen={setEnableCaseOpen}
         ids={selectedCaseIds}
