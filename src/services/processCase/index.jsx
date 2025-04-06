@@ -29,3 +29,13 @@ export async function batchUpdateUpCase(body) {
 export async function batchUpdateDownCase(body) {
   return post('/crazy/process/case/batch/update/down', body);
 }
+
+/** 复制用例 */
+export async function copy(body) {
+  return post('/crazy/process/case/copy', body);
+}
+
+/** 删除用例 */
+export async function del(body) {
+  return post('/crazy/process/case/delete', body);
+}

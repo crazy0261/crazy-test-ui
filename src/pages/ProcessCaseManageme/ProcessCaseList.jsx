@@ -1,17 +1,16 @@
-// import { priorityEnum } from '@/pages/Common/utils';
-import { list } from '@/services/processCase';
+import { copy, list } from '@/services/processCase';
 import { listAll } from '@/services/user';
 import {
   ClockCircleTwoTone,
   CopyTwoTone,
   DeleteTwoTone,
-  ExclamationCircleFilled,
   FileSearchOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, message, Modal as model, Select, Space, Tooltip } from 'antd';
+import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
+import { priorityEnum } from '../../common';
 import AddProcessCase from './AddProcessCase';
 import DeleteCase from './DeleteCase';
 import DownCase from './DownCase';
@@ -113,7 +112,7 @@ const ProcessCaseList = (props) => {
       width: 60,
       search: false,
       valueType: 'select',
-      // valueEnum: priorityEnum,
+      valueEnum: priorityEnum,
     },
     {
       title: '关联用例数',
@@ -275,12 +274,12 @@ const ProcessCaseList = (props) => {
             <Button
               icon={<CopyTwoTone />}
               onClick={() => {
-                // copy({ id: record.id }).then((res) => {
-                //   if (res.code === 200) {
-                //     props.actionRef.current.reload();
-                //     message.success('复制成功');
-                //   }
-                // });
+                copy({ id: record.id }).then((res) => {
+                  if (res.code === 200) {
+                    props.actionRef.current.reload();
+                    message.success('复制成功');
+                  }
+                });
               }}
               size={'small'}
             />
@@ -294,7 +293,6 @@ const ProcessCaseList = (props) => {
                 setDeleteCaseOpen(true);
                 setCurCaseId(record.id);
                 setCurCaseName(record.name);
-                // showDeleteConfirm(record.id)
               }}
               size={'small'}
             />
@@ -304,22 +302,6 @@ const ProcessCaseList = (props) => {
     },
   ];
   // const actionRef = useRef();
-
-  const showDeleteConfirm = (id) => {
-    model.confirm({
-      title: '确定要删除么？',
-      icon: <ExclamationCircleFilled />,
-      content: '一旦删除将无法恢复',
-      okType: 'danger',
-      onOk() {
-        // deleteTestcase({ id: id }).then((res) => {
-        //   message.success('删除成功');
-        //   props.actionRef.current.reload();
-        // });
-      },
-      onCancel() {},
-    });
-  };
 
   return (
     <div>
