@@ -164,6 +164,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
               `${initialState?.currentUser?.name ?? 'Crazy Test'}`,
               `${initialState?.currentUser?.email ?? ''}`,
             ]}
+            style={{ opacity: 0.6 }}
           >
             {children}
           </WaterMark>

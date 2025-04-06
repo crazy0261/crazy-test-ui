@@ -47,7 +47,7 @@ export default [
       },
       {
         path: '/case/proces/detail',
-        // component: './MulTestCaseDetail',
+        component: './ProcessCaseManageme/ProcessCaseDetail',
       },
     ],
   },
