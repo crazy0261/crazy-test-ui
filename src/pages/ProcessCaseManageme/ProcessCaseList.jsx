@@ -439,21 +439,21 @@ const ProcessCaseList = (props) => {
       <DisableCase
         open={disableCaseOpen}
         setOpen={setDisableCaseOpen}
-        ids={selectedCaseIds.join()}
+        ids={selectedCaseIds}
         actionRef={props.actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
       <EnableCase
         open={enableCaseOpen}
         setOpen={setEnableCaseOpen}
-        ids={selectedCaseIds.join()}
+        ids={selectedCaseIds}
         actionRef={props.actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
       <ModOwner
         open={modOwnerOpen}
         setOpen={setModOwnerOpen}
-        ids={selectedCaseIds.join()}
+        ids={selectedCaseIds}
         actionRef={props.actionRef}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
@@ -473,7 +473,7 @@ const ProcessCaseList = (props) => {
       <MoveMulTestCase
         isModalOpen={isMoveModalOpen}
         setIsModalOpen={setIsMoevModalOpen}
-        selectedCaseIds={selectedCaseIds.join()}
+        selectedCaseIds={selectedCaseIds}
         setSelectedCaseIds={setSelectedCaseIds}
         actionRef={props.actionRef}
       />
