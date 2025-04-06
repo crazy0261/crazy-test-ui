@@ -27,7 +27,7 @@ const TreePage = (props) => {
   // 点击节点
   const onSelect = (keys, { node }) => {
     props.setCurrentPage(1);
-    // props.actionRef.current.reload();
+    props.actionRef.current.reload();
     const [selectedKey] = keys;
     props.setSelectedNodeName(node.titleWord);
     rightConnect && setActiveTabKey(selectedKey);

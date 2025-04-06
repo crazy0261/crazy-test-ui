@@ -1,5 +1,4 @@
 // import { priorityEnum } from '@/pages/Common/utils';
-// import { copy, deleteTestcase, list } from '@/services/mulTestcase';
 import {
   ClockCircleTwoTone,
   CopyTwoTone,
@@ -9,10 +8,11 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
 import { Button, message, Modal as model, Select, Space, Tooltip } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import AddMulTestCase from './AddMulTestCase';
+import { list } from '@/services/processCase';
+import { listAll } from '@/services/user';
 import DeleteCase from './DeleteCase';
 import DisableCase from './DisableCase';
 import EnableCase from './EnableCase';
@@ -25,8 +25,7 @@ import RelateCase from './RelateCase';
  * 场景用例列表页
  */
 const ProcessCaseList = (props) => {
-  const { initialState } = useModel('@@initialState');
-  const { userList } = initialState || {};
+  const [userList, setUserList] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isMoveModalOpen, setIsMoevModalOpen] = useState(false);
   const [isExecLogModalOpen, setIsExecLogModalOpen] = useState(false);
@@ -41,6 +40,24 @@ const ProcessCaseList = (props) => {
   const [curCaseId, setCurCaseId] = useState();
   const [curCaseName, setCurCaseName] = useState();
   let cancleRowKeys = []; // 取消选择的项目
+
+  useEffect(() => {
+    userAll();
+  }, []);
+
+  const userAll = () => {
+    listAll().then((res) => {
+      if (res.code === 200) {
+        const userList = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setUserList(userList);
+      }
+    });
+  };
 
   const clearSelectedCaseIds = () => {
     setSelectedCaseIds([]);
@@ -125,33 +142,6 @@ const ProcessCaseList = (props) => {
     {
       title: '负责人',
       dataIndex: 'ownerId',
-      search: true,
-      hideInTable: true,
-      renderFormItem: () => {
-        return (
-          <Select
-            key="searchSelcet"
-            showSearch
-            allowClear
-            placeholder="请输入关键字搜索"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={userList}
-          ></Select>
-        );
-      },
-    },
-    {
-      title: '作者',
-      dataIndex: 'creatorName',
-      ellipsis: true,
-      width: 60,
-      search: false,
-    },
-    {
-      title: '作者',
-      dataIndex: 'creatorId',
       search: true,
       hideInTable: true,
       renderFormItem: () => {
@@ -336,9 +326,9 @@ const ProcessCaseList = (props) => {
         columns={columns}
         actionRef={props.actionRef}
         cardBordered
-        // request={async (params = {}, sort, filter) => {
-        //   return list({ ...params, treeNodeKey: props.selectedKeys, current: props.currentPage });
-        // }}
+        request={async (params = {}, sort, filter) => {
+          return list({ ...params, treeKey: props.selectedKeys, current: props.currentPage });
+        }}
         scroll={{ x: 1000 }}
         rowKey="id"
         search={{
