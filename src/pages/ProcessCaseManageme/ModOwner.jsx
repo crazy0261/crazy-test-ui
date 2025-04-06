@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 23:50:16
- * @LastEditTime: 2025-04-06 17:41:22
+ * @LastEditTime: 2025-04-06 17:43:51
  * @Description: 批量修改负责人
  */
 import { batchUpdateOwner } from '@/services/processCase';
