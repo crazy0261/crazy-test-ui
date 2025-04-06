@@ -8,6 +8,7 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { priorityEnum } from '../../common';
@@ -273,7 +274,7 @@ const ProcessCaseList = (props) => {
               type="primary"
               size={'small'}
               onClick={() => {
-                window.open('/mulTestCase/detail?id=' + record.id);
+                history.push('/case/proces/detail?id=' + record.id);
               }}
             />
           </Tooltip>

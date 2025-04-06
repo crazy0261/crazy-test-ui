@@ -39,3 +39,8 @@ export async function copy(body) {
 export async function del(body) {
   return post('/crazy/process/case/delete', body);
 }
+
+/** 用例详情 */
+export async function detail(params) {
+  return get('/crazy/process/case/detail', params);
+}
