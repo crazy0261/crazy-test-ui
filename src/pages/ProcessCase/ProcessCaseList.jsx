@@ -17,7 +17,7 @@ import DeleteCase from './DeleteCase';
 import DownCase from './DownCase';
 import ExecLog from './ExecLog';
 import ModOwner from './ModOwner';
-import MoveMulTestCase from './MoveMulTestCase';
+import MoveProcessCase from './MoveProcessCase';
 import RelateCase from './RelateCase';
 import UpCase from './UpCase';
 
@@ -475,7 +475,7 @@ const ProcessCaseList = (props) => {
         caseName={curCaseName}
         caseType="mulCase"
       />
-      <MoveMulTestCase
+      <MoveProcessCase
         isModalOpen={isMoveModalOpen}
         setIsModalOpen={setIsMoevModalOpen}
         selectedCaseIds={selectedCaseIds}

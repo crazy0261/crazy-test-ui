@@ -43,11 +43,11 @@ export default [
       {
         name: '场景用例',
         path: '/case/proces',
-        component: './ProcessCaseManageme',
+        component: './ProcessCase',
       },
       {
         path: '/case/proces/detail',
-        component: './ProcessCaseManageme/ProcessCaseDetail',
+        component: './ProcessCase/ProcessCaseDetail',
       },
     ],
   },

@@ -9,7 +9,7 @@ import { deepTree } from '../../common';
  * 移动场景用例
  */
 const { DirectoryTree } = Tree;
-const MoveMulTestCase = (props) => {
+const MoveProcessCase = (props) => {
   const [isloading, setIsloading] = useState(false);
   const [treeData, setTreeData] = useState();
   const [selectedKeys, setSelectedKeys] = useState(null);
@@ -101,4 +101,4 @@ const MoveMulTestCase = (props) => {
   );
 };
 
-export default MoveMulTestCase;
+export default MoveProcessCase;
