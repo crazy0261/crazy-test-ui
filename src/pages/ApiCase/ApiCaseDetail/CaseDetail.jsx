@@ -88,7 +88,7 @@ const CaseDetail = (props) => {
   const queryApiList = () => {
     if (curAppId !== '' && curAppId !== null) {
       setApiList([]);
-      listApiManagement({ applicationId: curAppId }).then((result) => {
+      listApiManagement({ applicationId: curAppId, current: 1, pageSize: 1000 }).then((result) => {
         if (result.code === 200) {
           setApiList(
             result.data.map((item) => ({
