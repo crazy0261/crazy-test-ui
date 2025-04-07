@@ -2,7 +2,13 @@ import SetReqHeader from '@/pages/ApiCase/ApiCaseDetail/ReqHeader';
 import { list } from '@/services/applicationManagement';
 import { listPage as domainlist } from '@/services/domain';
 import { queryById, save } from '@/services/envConfig';
-import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
+import {
+  ProCard,
+  ProForm,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
 import { Button, Form, message, Modal } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
@@ -73,7 +79,7 @@ const EditEnvConfig = (props) => {
       }).then((result) => {
         setIsloading(false);
         if (result.code === 200) {
-          message.success('修改成功！');
+          message.success('新增成功！');
           props.actionRef.current.reload();
           props.setIsModalOpen(false);
           form.resetFields();
@@ -108,7 +114,8 @@ const EditEnvConfig = (props) => {
         if (res.code === 200) {
           formRef?.current?.setFieldsValue({
             appId: res.data.appId,
-            name: res.data.name,
+            envName: res.data.envName,
+            envSort: res.data.envSort,
             domainId: res.data.domainId,
           });
           const reqHeadersList = res.data.requestHeaders;
@@ -164,7 +171,7 @@ const EditEnvConfig = (props) => {
               label="应用"
               rules={[{ required: true }]}
             />
-            <ProFormText name="name" label="环境" rules={[{ required: true }]} />
+            <ProFormText name="envName" label="环境" rules={[{ required: true }]} />
           </ProForm.Group>
           <ProForm.Group>
             <ProFormSelect
@@ -175,8 +182,15 @@ const EditEnvConfig = (props) => {
               label="域名"
               rules={[{ required: true }]}
             />
+            <ProFormDigit
+              width={260}
+              name="envSort"
+              label="顺序"
+              min={1}
+              max={10}
+              rules={[{ required: true }]}
+            />
           </ProForm.Group>
-
           <ProCard tabs={{ type: 'card' }}>
             <ProCard.TabPane key="requestHeaders" tab="请求头">
               <SetReqHeader

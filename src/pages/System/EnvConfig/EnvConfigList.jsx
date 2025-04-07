@@ -79,7 +79,7 @@ const EnvConfigList = () => {
     },
     {
       title: '环境名',
-      dataIndex: 'name',
+      dataIndex: 'envName',
       ellipsis: true,
       search: true,
       // width: 150,
@@ -97,6 +97,15 @@ const EnvConfigList = () => {
       copyable: false,
       ellipsis: true,
       search: true,
+    },
+    {
+      title: '顺序',
+      dataIndex: 'envSort',
+      valueType: 'digit',
+      copyable: false,
+      ellipsis: true,
+      sorter: true,
+      search: false,
     },
     {
       title: '创建者',
@@ -190,7 +199,7 @@ const EnvConfigList = () => {
         actionRef={actionRef}
         cardBordered
         request={async (params = {}, sort, filter) => {
-          return list(params);
+          return list(params, sort);
         }}
         editable={{
           type: 'multiple',

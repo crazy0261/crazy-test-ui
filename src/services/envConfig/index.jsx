@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-19 22:35:45
+ * @LastEditTime: 2025-04-07 22:02:54
+ * @Description:
+ */
 import { get, post } from '../../utils/requestUtil';
 
 /** 查询所有环境名称 */
@@ -6,8 +12,8 @@ export async function listAllEnvName() {
 }
 
 /** 分页查询环境列表 */
-export async function list(body) {
-  return get('/crazy/env/config/list', body);
+export async function list(params, sort) {
+  return get('/crazy/env/config/list', { ...params, sort: sort?.envSort });
 }
 
 /** 编辑 */
