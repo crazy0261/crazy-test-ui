@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-19 22:35:45
- * @LastEditTime: 2025-04-07 22:02:54
+ * @LastEditTime: 2025-04-09 23:33:57
  * @Description:
  */
 import { get, post } from '../../utils/requestUtil';
@@ -34,4 +34,9 @@ export async function queryById(params) {
 /** 全部环境 */
 export async function listAll(params) {
   return get('/crazy/env/config/list/all', params);
+}
+
+/** 应用下所有环境 */
+export async function envAppList(params) {
+  return get('/crazy/env/config/app/list', params);
 }

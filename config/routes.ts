@@ -91,7 +91,7 @@ export default [
       {
         path: '/system/datasource',
         name: '数据源设置',
-        // component: './Config/Datasource',
+        component: './System/DataSource',
       },
       {
         path: '/system/envinfo',
@@ -109,9 +109,9 @@ export default [
         component: './System/TestAccountManagement',
       },
       {
-        path: '/system/secret',
+        path: '/system/encrypt',
         name: '加密设置',
-        // component: './Config/Secret',
+        component: './System/Encrypt',
       },
       {
         path: '/system/project',
