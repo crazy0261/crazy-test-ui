@@ -441,7 +441,7 @@ const CaseDetail = (props) => {
             }}
           >
             <Radio.Button>{method}</Radio.Button>
-            <Radio.Button>{domainUrl}</Radio.Button>
+            {/* <Radio.Button>{domainUrl}</Radio.Button> */}
             <Radio.Button onClick={() => window.open('/application/apimanage?id=' + curApiId)}>
               {path}
             </Radio.Button>
