@@ -1,10 +1,16 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-15 16:41:19
+ * @LastEditTime: 2025-04-10 21:56:24
+ * @Description:
+ */
 import { Modal, Typography } from 'antd';
 import JSONbig from 'json-bigint';
 
 // 参数模板
 const ParamTemplate = (props) => {
   const { Paragraph } = Typography;
-  const { requestParamsTemp } = props;
+  const { paramsTemplate } = props;
   const handleOk = () => {
     props.setIsModalOpen(false);
   };
@@ -15,7 +21,7 @@ const ParamTemplate = (props) => {
   return (
     <div>
       <Modal
-        title="请求参数模板"
+        title="参数模板"
         width={700}
         open={props.isModalOpen}
         onOk={handleOk}
@@ -27,9 +33,9 @@ const ParamTemplate = (props) => {
               border: 'none',
             }}
           >
-            {requestParamsTemp === undefined
+            {paramsTemplate === undefined
               ? ''
-              : JSON.stringify(JSONbig.parse(requestParamsTemp), null, 2)}
+              : JSON.stringify(JSONbig.parse(paramsTemplate), null, 2)}
           </pre>
         </Paragraph>
       </Modal>

@@ -5,7 +5,7 @@ import { useState } from 'react';
 // import CommonVar from './CommonVar';
 
 // 设置请求头
-const SetReqHeader = (props) => {
+const ReqHeader = (props) => {
   const [editableKeys, setEditableRowKeys] = useState(() =>
     props.dataSource.map((item) => item.id),
   );
@@ -137,4 +137,4 @@ const SetReqHeader = (props) => {
   );
 };
 
-export default SetReqHeader;
+export default ReqHeader;

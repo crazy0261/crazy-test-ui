@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-03-27 23:46:33
+ * @LastEditTime: 2025-04-10 21:15:17
  * @Description:  公共变量信息
  */
 import { ProTable } from '@ant-design/pro-components';
@@ -75,8 +75,6 @@ const CommonVar = (props) => {
         <ProTable
           columns={columns}
           request={(params, sorter, filter) => {
-            // 表单搜索项会从 params 传入，传递给后端接口。
-            console.log(params, sorter, filter);
             return Promise.resolve({
               data: tableListDataSource,
               success: true,

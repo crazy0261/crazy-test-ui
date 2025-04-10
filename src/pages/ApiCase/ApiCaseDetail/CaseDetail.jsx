@@ -14,8 +14,8 @@ import { useEffect, useRef, useState } from 'react';
 import Assert from './Assert';
 import EnvVar from './EnvVar';
 import './index.scss';
-import SetReqHeader from './ReqHeader';
-import SetReqParam from './ReqParam';
+import ReqHeader from './ReqHeader';
+import ReqParam from './ReqParam';
 
 const CaseDetail = (props) => {
   const [appList, setAppList] = useState([]);
@@ -57,7 +57,7 @@ const CaseDetail = (props) => {
   const [assertsArray, setAssertsArray] = useState([]);
   const [reqHeaderArray, setReqHeaderArray] = useState([]);
   const [hasReqParams, setHasReqParams] = useState(false);
-  const [requestParamsTemp, setRequestParamsTemp] = useState(curApiId === null ? null : undefined);
+  const [requestParamsTemp, setRequestParamsTemp] = useState(null);
   const [activeTab, setActiveTab] = useState(['requestParams']);
   const [secretList, setSecretList] = useState([]);
   const [domainUrl, setDomainUrl] = useState('-');
@@ -200,23 +200,9 @@ const CaseDetail = (props) => {
     props.setIsEdit(true);
   };
 
-  const queryAllSecret = () => {
-    // listAll().then((result) => {
-    //   if (result.code === 200) {
-    //     setSecretList(
-    //       result.data.map((item) => ({
-    //         value: item.id,
-    //         label: item.name,
-    //       })),
-    //     );
-    //   }
-    // });
-  };
-
   // 首次进入页面
   useEffect(() => {
     queryTestcaseDetailById();
-    queryAllSecret();
   }, []);
 
   // curAppId变化时，重新请求apiList
@@ -461,7 +447,7 @@ const CaseDetail = (props) => {
             title="设置用例参数"
           >
             <ProCard.TabPane key="requestParams" tab="请求参数">
-              <SetReqParam
+              <ReqParam
                 isEdit={props.isEdit}
                 reqParams={reqParams}
                 setReqParams={setReqParams}
@@ -473,7 +459,7 @@ const CaseDetail = (props) => {
               tab="请求头"
               style={{ width: '204vh', maxWidth: '100%' }}
             >
-              <SetReqHeader
+              <ReqHeader
                 isEdit={props.isEdit}
                 dataSource={reqHeaderArray}
                 setDataSource={setReqHeaderArray}
