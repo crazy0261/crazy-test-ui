@@ -14,3 +14,8 @@ export async function save(body) {
 export async function del(body) {
   return post('/crazy/encrypt/info/del', body);
 }
+
+/** 应用下加密列表 */
+export async function getAppIds(params) {
+  return get('/crazy/encrypt/info/app/Ids', params);
+}

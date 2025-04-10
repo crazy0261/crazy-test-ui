@@ -5,6 +5,7 @@ import { list } from '@/services/applicationManagement';
 import { listPage } from '@/services/domain';
 // import { listAll } from '@/services/config/secretManage';
 import { genEnvVarArray, genJsonEnvVar, getTestAccount, jsonToArray } from '@/common';
+import { getAppIds } from '@/services/encrypt';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { message, Radio } from 'antd';
@@ -70,6 +71,20 @@ const CaseDetail = (props) => {
     wrapperCol: { span: 0 },
   };
 
+  const appEncryptInfoData = (value) => {
+    getAppIds({ appId: value }).then((res) => {
+      if (res.code === 200) {
+        const data = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setSecretList(data);
+      }
+    });
+  };
+
   const applicationList = () => {
     list({ current: 1, pageSize: 1000 }).then((res) => {
       if (res.code === 200 && res.data) {
@@ -121,6 +136,10 @@ const CaseDetail = (props) => {
   const queryTestcaseDetailById = () => {
     if (id !== undefined && id !== null) {
       queryById({ id: id }).then((res) => {
+        if (res.code === 200 && res.data.appId !== null) {
+          appEncryptInfoData(res.data.appId);
+        }
+
         const requestParams = res.data.requestParams;
         if (
           requestParams !== undefined &&
@@ -389,6 +408,7 @@ const CaseDetail = (props) => {
               getDomainUrl(e);
               setCurAppId(e);
               setCurApiId();
+              appEncryptInfoData(e);
               formRef?.current?.setFieldsValue({
                 apiId: null,
               });
