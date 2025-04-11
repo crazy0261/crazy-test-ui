@@ -72,11 +72,11 @@ const ApplicationList = () => {
     },
     {
       title: '接口数',
-      dataIndex: 'apiNum',
+      dataIndex: 'apiCount',
       search: false,
       copyable: false,
       ellipsis: true,
-      sorter: (a, b) => a.apiNum - b.apiNum,
+      sorter: (a, b) => a.apiCount - b.apiCount,
       width: 80,
     },
     // {
