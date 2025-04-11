@@ -2,8 +2,9 @@ import { listAll } from '@/services/applicationManagement';
 import { save, testConnect } from '@/services/dataSource';
 import { envAppList } from '@/services/envConfig';
 import { Button, Form, Input, InputNumber, message, Modal, Select, Tabs } from 'antd';
-import JSONbig from 'json-bigint';
 import { useEffect, useState } from 'react';
+
+const { TextArea } = Input;
 
 /**
  * 新建弹框
@@ -19,6 +20,16 @@ const EditDataSource = (props) => {
   useEffect(() => {
     appData();
   }, []);
+
+  useEffect(() => {
+    if (props.isModalOpen === true && props.record !== null) {
+      appIdListData(props.record.appId);
+    }
+
+    if (props.isModalOpen === true && props.record === null) {
+      setEnv([]);
+    }
+  }, [props.isModalOpen]);
 
   const appData = () => {
     listAll().then((result) => {
@@ -71,6 +82,7 @@ const EditDataSource = (props) => {
   const handleCancel = () => {
     props.setIsModalOpen(false);
     props.setRecord(null);
+    form.resetFields();
   };
 
   // 构建需要校验的字段列表
@@ -107,14 +119,18 @@ const EditDataSource = (props) => {
       });
 
       props.record === null
-        ? save({ name: allValues?.name, appId: allValues.appId, dataSourceJson: dataList }).then(
-            (result) => showResult(result),
-          )
+        ? save({
+            name: allValues?.name,
+            appId: allValues.appId,
+            remark: allValues.remark,
+            dataSourceJson: dataList,
+          }).then((result) => showResult(result))
         : save({
             name: allValues?.name,
             appId: allValues.appId,
             dataSourceJson: dataList,
             id: props.record.id,
+            remark: allValues?.remark,
           }).then((result) => showResult(result));
     });
   };
@@ -122,8 +138,7 @@ const EditDataSource = (props) => {
   const showResult = (result) => {
     setIsloading(false);
     if (result.code === 200) {
-      message.success('新建成功！');
-      form.resetFields();
+      message.success(props.record === null ? '新建成功！' : `编辑成功！`);
       props.actionRef.current.reload();
       props.setIsModalOpen(false);
       props.setRecord(null);
@@ -151,11 +166,34 @@ const EditDataSource = (props) => {
 
   useEffect(() => {
     if (props.isModalOpen && props.record !== null) {
-      let config = JSONbig.parse(props.record.config);
       form.setFieldsValue({
         name: props.record.name,
+        appId: props.record.appId,
+        remark: props.record.remark,
       });
+
+      const dataSourceJson = JSON.parse(props.record.dataSourceJson);
+      // 设置表单字段值
+      if (dataSourceJson && Array.isArray(dataSourceJson)) {
+        dataSourceJson.forEach((item) => {
+          const envId = Object.keys(item)[0]; // 获取环境 ID
+          const dataSourceConfig = item[envId]; // 获取对应环境的配置
+          // 设置每个环境对应的表单字段值
+          Object.keys(dataSourceConfig).forEach((field) => {
+            form.setFieldsValue({
+              [`${field}_${envId}`]: dataSourceConfig[field],
+            });
+          });
+        });
+      }
+
+      // 设置初始环境
+      if (dataSourceJson && dataSourceJson.length > 0) {
+        const firstEnvId = Object.keys(dataSourceJson[0])[0]; // 获取第一个环境的 ID
+        setCurEnv(firstEnvId); // 设置当前环境为第一个环境的 ID
+      }
     }
+
     if (!props.isModalOpen) {
       setTestConnectLoading(false);
     }
@@ -280,6 +318,9 @@ const EditDataSource = (props) => {
               onChange={onChangeEnv}
             />
           )}
+          <Form.Item name="remark" label="备注" rules={[{ required: false }]}>
+            <TextArea showCount maxLength={255} autoSize={{ minRows: 2, maxRows: 6 }} />
+          </Form.Item>
 
           <Button
             type="primary"
