@@ -1,5 +1,7 @@
+import { listAll } from '@/services/applicationManagement';
 import { save, testConnect } from '@/services/dataSource';
-import { Button, Form, Input, message, Modal, Tabs } from 'antd';
+import { envAppList } from '@/services/envConfig';
+import { Button, Form, Input, InputNumber, message, Modal, Select, Tabs } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useState } from 'react';
 
@@ -9,43 +11,61 @@ import { useEffect, useState } from 'react';
 const EditDataSource = (props) => {
   const [form] = Form.useForm();
   const [isloading, setIsloading] = useState(false);
-  const [curEnv, setCurEnv] = useState('1');
+  const [curEnv, setCurEnv] = useState(null);
   const [testConnectLoading, setTestConnectLoading] = useState(false);
+  const [appEnum, setAppEnum] = useState([]);
+  const [env, setEnv] = useState([]);
+
+  useEffect(() => {
+    appData();
+  }, []);
+
+  const appData = () => {
+    listAll().then((result) => {
+      if (result.code === 200) {
+        const appEnumData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppEnum(appEnumData);
+      }
+    });
+  };
 
   const handleTestConnect = () => {
-    let driverClass;
-    let jdbcUrl;
-    let username;
-    let password;
-    if (curEnv === '1') {
-      driverClass = form.getFieldValue('driver_class_test');
-      jdbcUrl = form.getFieldValue('jdbc_url_test');
-      username = form.getFieldValue('username_test');
-      password = form.getFieldValue('password_test');
-    } else if (curEnv === '2') {
-      driverClass = form.getFieldValue('driver_class_demo');
-      jdbcUrl = form.getFieldValue('jdbc_url_demo');
-      username = form.getFieldValue('username_demo');
-      password = form.getFieldValue('password_demo');
-    } else if (curEnv === '3') {
-      driverClass = form.getFieldValue('driver_class_prod');
-      jdbcUrl = form.getFieldValue('jdbc_url_prod');
-      username = form.getFieldValue('username_prod');
-      password = form.getFieldValue('password_prod');
-    } else {
-      message.error('请选择环境！curEnv=' + curEnv);
+    const fields = [
+      'dbName',
+      'jdbcUrl',
+      'username',
+      'password',
+      'driverClass',
+      'minPoolSize',
+      'maxPoolSize',
+      'maxIdleTime',
+      'idleConnectionTestPeriod',
+    ];
+
+    const checkFields = ['dbName', 'jdbcUrl', 'username', 'password', 'driverClass'];
+
+    const values = fields.reduce((acc, field) => {
+      acc[field] = form.getFieldValue(`${field}_${curEnv}`);
+      return acc;
+    }, {});
+
+    if (checkFields.some((field) => values[field] === undefined || values[field] === null)) {
+      message.error('数据库名称、jdbcUrl、用户名、密码、driverClass不能为空！');
+      return;
     }
 
     setTestConnectLoading(true);
-    testConnect({
-      driverClass: driverClass,
-      jdbcUrl: jdbcUrl,
-      username: username,
-      password: password,
-    }).then((res) => {
+    testConnect(values).then((res) => {
       setTestConnectLoading(false);
       if (res.code === 200) {
         message.success('连接成功！');
+      } else {
+        message.error('连接失败,请检查！');
       }
     });
   };
@@ -55,55 +75,50 @@ const EditDataSource = (props) => {
     props.setRecord(null);
   };
 
+  // 构建需要校验的字段列表
+  const fieldsToValidate = [
+    `dbName_${curEnv}`,
+    `jdbcUrl_${curEnv}`,
+    `username_${curEnv}`,
+    `password_${curEnv}`,
+    `driverClass_${curEnv}`,
+    `minPoolSize_${curEnv}`,
+    `maxPoolSize_${curEnv}`,
+    `maxIdleTime_${curEnv}`,
+    `idleConnectionTestPeriod_${curEnv}`,
+  ];
   const onFinish = () => {
-    form.validateFields().then((value) => {
+    form.validateFields(fieldsToValidate).then(() => {
       setIsloading(true);
-      let config = genConfig(value);
+
+      const allValues = form.getFieldsValue();
+      const dataList = env.map(({ key: envId }) => {
+        return {
+          [envId]: {
+            dbName: allValues[`dbName_${envId}`],
+            jdbcUrl: allValues[`jdbcUrl_${envId}`],
+            username: allValues[`username_${envId}`],
+            password: allValues[`password_${envId}`],
+            driverClass: allValues[`driverClass_${envId}`],
+            minPoolSize: allValues[`minPoolSize_${envId}`],
+            maxPoolSize: allValues[`maxPoolSize_${envId}`],
+            maxIdleTime: allValues[`maxIdleTime_${envId}`],
+            idleConnectionTestPeriod: allValues[`idleConnectionTestPeriod_${envId}`],
+          },
+        };
+      });
+
       props.record === null
-        ? save({ name: value?.name, config: config }).then((result) => showResult(result))
-        : save({ name: value?.name, config: config, id: props.record.id }).then((result) =>
-            showResult(result),
-          );
+        ? save({ name: allValues?.name, appId: allValues.appId, dataSourceJson: dataList }).then(
+            (result) => showResult(result),
+          )
+        : save({
+            name: allValues?.name,
+            appId: allValues.appId,
+            dataSourceJson: dataList,
+            id: props.record.id,
+          }).then((result) => showResult(result));
     });
-  };
-
-  // 生成JSON格式的加密参数
-  const genConfig = (value) => {
-    let config = {};
-    let configTest = {};
-    config['1'] = configTest;
-    configTest['driver_class'] = value?.driver_class_test;
-    configTest['jdbc_url'] = value?.jdbc_url_test;
-    configTest['username'] = value?.username_test;
-    configTest['password'] = value?.password_test;
-    configTest['min_pool_size'] = value?.min_pool_size_test;
-    configTest['max_pool_size'] = value?.max_pool_size_test;
-    configTest['max_idle_time'] = value?.max_idle_time_test;
-    configTest['idle_connection_test_period'] = value?.idle_connection_test_period_test;
-
-    let configInDemo = {};
-    config['2'] = configInDemo;
-    configInDemo['driver_class'] = value?.driver_class_demo;
-    configInDemo['jdbc_url'] = value?.jdbc_url_demo;
-    configInDemo['username'] = value?.username_demo;
-    configInDemo['password'] = value?.password_demo;
-    configInDemo['min_pool_size'] = value?.min_pool_size_demo;
-    configInDemo['max_pool_size'] = value?.max_pool_size_demo;
-    configInDemo['max_idle_time'] = value?.max_idle_time_demo;
-    configInDemo['idle_connection_test_period'] = value?.idle_connection_test_period_demo;
-
-    let configInProd = {};
-    config['3'] = configInProd;
-    configInProd['driver_class'] = value?.driver_class_prod;
-    configInProd['jdbc_url'] = value?.jdbc_url_prod;
-    configInProd['username'] = value?.username_prod;
-    configInProd['password'] = value?.password_prod;
-    configInProd['min_pool_size'] = value?.min_pool_size_prod;
-    configInProd['max_pool_size'] = value?.max_pool_size_prod;
-    configInProd['max_idle_time'] = value?.max_idle_time_prod;
-    configInProd['idle_connection_test_period'] = value?.idle_connection_test_period_prod;
-
-    return JSON.stringify(config);
   };
 
   const showResult = (result) => {
@@ -118,37 +133,29 @@ const EditDataSource = (props) => {
     }
   };
 
+  const appIdListData = (value) => {
+    envAppList({ appId: value }).then((result) => {
+      if (result.code === 200) {
+        const envData = result.data.map((item) => {
+          return {
+            key: item.envId,
+            label: item.envName,
+          };
+        });
+        setEnv(envData);
+
+        if (envData.length > 0) {
+          setCurEnv(envData[0].key);
+        }
+      }
+    });
+  };
+
   useEffect(() => {
     if (props.isModalOpen && props.record !== null) {
       let config = JSONbig.parse(props.record.config);
       form.setFieldsValue({
         name: props.record.name,
-        driver_class_test: config['1'].driver_class,
-        jdbc_url_test: config['1'].jdbc_url,
-        username_test: config['1'].username,
-        password_test: config['1'].password,
-        min_pool_size_test: config['1'].min_pool_size,
-        max_pool_size_test: config['1'].max_pool_size,
-        max_idle_time_test: config['1'].max_idle_time,
-        idle_connection_test_period_test: config['1'].idle_connection_test_period,
-
-        driver_class_demo: config['2'].driver_class,
-        jdbc_url_demo: config['2'].jdbc_url,
-        username_demo: config['2'].username,
-        password_demo: config['2'].password,
-        min_pool_size_demo: config['2'].min_pool_size,
-        max_pool_size_demo: config['2'].max_pool_size,
-        max_idle_time_demo: config['2'].max_idle_time,
-        idle_connection_test_period_demo: config['2'].idle_connection_test_period,
-
-        driver_class_prod: config['3'].driver_class,
-        jdbc_url_prod: config['3'].jdbc_url,
-        username_prod: config['3'].username,
-        password_prod: config['3'].password,
-        min_pool_size_prod: config['3'].min_pool_size,
-        max_pool_size_prod: config['3'].max_pool_size,
-        max_idle_time_prod: config['3'].max_idle_time,
-        idle_connection_test_period_prod: config['3'].idle_connection_test_period,
       });
     }
     if (!props.isModalOpen) {
@@ -156,23 +163,74 @@ const EditDataSource = (props) => {
     }
   }, [props.isModalOpen]);
 
-  const items = [
-    {
-      key: '1',
-      label: 'TEST 环境',
-    },
-    {
-      key: '2',
-      label: 'DEMO 环境',
-    },
-    {
-      key: '3',
-      label: 'PROD 环境',
-    },
-  ];
-
   const onChangeEnv = (key) => {
     setCurEnv(key);
+  };
+
+  // 动态表单生成
+  const renderFormItems = (envId) => {
+    const fields = [
+      {
+        name: 'dbName',
+        label: '数据库名称',
+        placeholder: '请输入数据库名称',
+        rules: [{ required: true }],
+      },
+      {
+        name: 'jdbcUrl',
+        label: 'jdbcUrl',
+        placeholder: 'jdbc:mysql://120.220.10.11:3306',
+        rules: [{ required: true }],
+      },
+      {
+        name: 'username',
+        label: '用户名',
+        placeholder: '请输入用户名',
+        rules: [{ required: true }],
+      },
+      { name: 'password', label: '密码', placeholder: '请输入密码', rules: [{ required: true }] },
+      {
+        name: 'driverClass',
+        label: 'driverClass',
+        placeholder: 'com.mysql.cj.jdbc.Driver',
+        rules: [{ required: true }],
+      },
+      {
+        name: 'minPoolSize',
+        label: '最小连接池大小',
+        placeholder: '1',
+        rules: [{ pattern: /^\d+$/, message: '请输入正整数或 0' }],
+      },
+      {
+        name: 'maxPoolSize',
+        label: '最大连接池大小',
+        placeholder: '2',
+        rules: [{ pattern: /^\d+$/, message: '请输入正整数或 0' }],
+      },
+      {
+        name: 'maxIdleTime',
+        label: '最大空闲时间',
+        placeholder: '20000',
+        rules: [{ pattern: /^\d+$/, message: '请输入正整数或 0' }],
+      },
+      {
+        name: 'idleConnectionTestPeriod',
+        label: '空闲连接测试周期',
+        placeholder: '3600',
+        rules: [],
+      },
+    ];
+    return fields.map(({ name, label, placeholder, rules }) => (
+      <Form.Item key={name} name={`${name}_${envId}`} label={label} rules={rules}>
+        {['minPoolSize', 'maxPoolSize', 'maxIdleTime', 'idleConnectionTestPeriod'].includes(
+          name,
+        ) ? (
+          <InputNumber placeholder={placeholder} style={{ width: '100%' }} min={0} />
+        ) : (
+          <Input placeholder={placeholder} />
+        )}
+      </Form.Item>
+    ));
   };
 
   return (
@@ -181,7 +239,6 @@ const EditDataSource = (props) => {
         title={props.record === null ? '新增数据源' : '编辑数据源'}
         open={props.isModalOpen}
         onCancel={handleCancel}
-        //删去了form表单自带的submit，在modal的footer自行渲染了一个button，点击后回调onFinish函数
         footer={[
           <>
             <Button type="primary" onClick={handleCancel} key={'cancel'}>
@@ -202,138 +259,34 @@ const EditDataSource = (props) => {
           <Form.Item name="name" label="名称" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-
-          <Tabs defaultActiveKey="1" items={items} onChange={onChangeEnv} />
-
-          <Form.Item
-            name="driver_class_test"
-            label="driver_class"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '1'}
-          >
-            <Input placeholder="com.mysql.cj.jdbc.Driver" />
-          </Form.Item>
-          <Form.Item
-            name="jdbc_url_test"
-            label="jdbc_url"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '1'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="username_test"
-            label="username"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '1'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="password_test"
-            label="password"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '1'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="min_pool_size_test" label="min_pool_size" hidden={curEnv !== '1'}>
-            <Input placeholder="1" />
-          </Form.Item>
-          <Form.Item name="max_pool_size_test" label="max_pool_size" hidden={curEnv !== '1'}>
-            <Input placeholder="2" />
-          </Form.Item>
-          <Form.Item name="max_idle_time_test" label="max_idle_time" hidden={curEnv !== '1'}>
-            <Input placeholder="20000" />
-          </Form.Item>
-          <Form.Item
-            name="idle_connection_test_period_test"
-            label="idle_connection_test_period"
-            hidden={curEnv !== '1'}
-          >
-            <Input placeholder="3600" />
+          <Form.Item name="appId" label="应用" rules={[{ required: true }]}>
+            <Select
+              showSearch
+              options={appEnum}
+              width={260}
+              name="appId"
+              label="应用"
+              rules={[{ required: true }]}
+              onChange={appIdListData}
+            />
           </Form.Item>
 
-          <Form.Item
-            name="driver_class_demo"
-            label="driver_class"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '2'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="jdbc_url_demo"
-            label="jdbc_url"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '2'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="username_demo"
-            label="username"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '2'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="password_demo"
-            label="password"
-            rules={[{ required: true }]}
-            hidden={curEnv !== '2'}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="min_pool_size_demo" label="min_pool_size" hidden={curEnv !== '2'}>
-            <Input placeholder="1" />
-          </Form.Item>
-          <Form.Item name="max_pool_size_demo" label="max_pool_size" hidden={curEnv !== '2'}>
-            <Input placeholder="2" />
-          </Form.Item>
-          <Form.Item name="max_idle_time_demo" label="max_idle_time" hidden={curEnv !== '2'}>
-            <Input placeholder="20000" />
-          </Form.Item>
-          <Form.Item
-            name="idle_connection_test_period_demo"
-            label="idle_connection_test_period"
-            hidden={curEnv !== '2'}
-          >
-            <Input placeholder="3600" />
-          </Form.Item>
+          {env.length > 0 && (
+            <Tabs
+              defaultActiveKey={curEnv}
+              items={env.map((item) => ({
+                key: item.key,
+                label: item.label,
+                children: renderFormItems(item.key),
+              }))}
+              onChange={onChangeEnv}
+            />
+          )}
 
-          <Form.Item name="driver_class_prod" label="driver_class" hidden={curEnv !== '3'}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="jdbc_url_prod" label="jdbc_url" hidden={curEnv !== '3'}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="username_prod" label="username" hidden={curEnv !== '3'}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="password_prod" label="password" hidden={curEnv !== '3'}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="min_pool_size_prod" label="min_pool_size" hidden={curEnv !== '3'}>
-            <Input placeholder="1" />
-          </Form.Item>
-          <Form.Item name="max_pool_size_prod" label="max_pool_size" hidden={curEnv !== '3'}>
-            <Input placeholder="2" />
-          </Form.Item>
-          <Form.Item name="max_idle_time_prod" label="max_idle_time" hidden={curEnv !== '3'}>
-            <Input placeholder="20000" />
-          </Form.Item>
-          <Form.Item
-            name="idle_connection_test_period_prod"
-            label="idle_connection_test_period"
-            hidden={curEnv !== '3'}
-          >
-            <Input placeholder="3600" />
-          </Form.Item>
           <Button
             type="primary"
             size="small"
+            disabled={curEnv === null ? true : false}
             onClick={handleTestConnect}
             loading={testConnectLoading}
           >

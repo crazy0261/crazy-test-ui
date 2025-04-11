@@ -1,13 +1,13 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-04-10 21:56:04
+ * @LastEditTime: 2025-04-11 19:15:14
  * @Description:
  */
 import { Button, Input, message } from 'antd';
 import JSONbig from 'json-bigint';
 import { useState } from 'react';
-import CaseVar from './CaseVar';
+// import CaseVar from './CaseVar';
 import CommonVar from './CommonVar';
 import ParamTemplate from './ParamTemplate';
 
@@ -80,7 +80,8 @@ const ReqParam = (props) => {
         disabled={!props.isEdit}
         value={props.reqParams}
       />
-      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} />
+      {/* todo 只有场景用例用，暂时注释 */}
+      {/* <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} /> */}
     </div>
   );
 };

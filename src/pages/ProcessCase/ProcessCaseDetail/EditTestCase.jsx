@@ -2,11 +2,10 @@
 import { priorityList } from '../../../common';
 // import { modify, queryById } from '@/services/mulTestcase';
 // import { queryById as queryExecResult } from '@/services/mulTestcaseResult';
-import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
+import { ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Drawer } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import CaseVar from '../../ApiCase/ApiCaseDetail/CaseVar';
-import CommonVar from '../../ApiCase/ApiCaseDetail/CommonVar';
 
 // 开始节点编辑页
 const EditTestCase = (props) => {
@@ -211,7 +210,7 @@ const EditTestCase = (props) => {
             />
           </ProForm.Group>
 
-          <ProForm.Group>
+          {/* <ProForm.Group>
             <ProCard
               tabs={{ type: 'card' }}
               style={{ marginBottom: 10, width: '770px', maxWidth: '100%' }}
@@ -228,7 +227,7 @@ const EditTestCase = (props) => {
                 />
               </ProCard.TabPane>
             </ProCard>
-          </ProForm.Group>
+          </ProForm.Group> */}
         </ProForm>
       </Drawer>
     </>

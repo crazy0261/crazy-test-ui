@@ -119,10 +119,8 @@ const EditEncrypt = (props) => {
         title={props.record === null ? '新建加密参数' : '编辑加密参数'}
         open={props.isModalOpen}
         onCancel={handleCancel}
-        //删去了form表单自带的submit，在modal的footer自行渲染了一个button，点击后回调onFinish函数
         footer={[
           <>
-            {/* {contextHolder} */}
             <Button type="primary" onClick={handleCancel} key={'cancel'}>
               取消
             </Button>

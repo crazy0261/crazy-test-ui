@@ -31,6 +31,12 @@ const DataSourceList = () => {
       ellipsis: true, // 文字超长时，是否自动缩略
     },
     {
+      title: '应用',
+      dataIndex: 'appName',
+      copyable: false, // 是否可复制
+      ellipsis: true, // 文字超长时，是否自动缩略
+    },
+    {
       title: '描述',
       dataIndex: 'remark',
       copyable: false, // 是否可复制
