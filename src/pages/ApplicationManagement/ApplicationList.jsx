@@ -81,7 +81,7 @@ const ApplicationList = () => {
     },
     {
       title: '已覆盖接口数',
-      dataIndex: 'coverapiCount',
+      dataIndex: 'coverApiCount',
       search: false,
       copyable: false,
       ellipsis: true,
