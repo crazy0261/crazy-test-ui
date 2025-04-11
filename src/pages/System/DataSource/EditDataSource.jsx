@@ -64,8 +64,6 @@ const EditDataSource = (props) => {
       setTestConnectLoading(false);
       if (res.code === 200) {
         message.success('连接成功！');
-      } else {
-        message.error('连接失败,请检查！');
       }
     });
   };
