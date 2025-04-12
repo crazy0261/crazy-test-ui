@@ -1,10 +1,11 @@
-// import SetEnvVar from '@/pages/ApiTestCaseDetail/SetEnvVar';
 import { priorityList } from '../../../common';
-// import { modify, queryById } from '@/services/mulTestcase';
 // import { queryById as queryExecResult } from '@/services/mulTestcaseResult';
 import EnvVar from '@/pages/ApiCase/ApiCaseDetail/EnvVar';
+import { listAll } from '@/services/application';
+import { envAppList } from '@/services/envConfig';
+import { detail, save } from '@/services/processCase';
 import { ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
-import { Drawer } from 'antd';
+import { Drawer, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 // 开始节点编辑页
@@ -17,16 +18,70 @@ const EditTestCase = (props) => {
   const [name, setName] = useState();
   const [priority, setPriority] = useState();
   const [isSubProcess, setIsSubProcess] = useState();
-  const [testEnvParams, setTestEnvParams] = useState([]);
-  const [demoEnvParams, setDemoEnvParams] = useState([]);
-  const [prodEnvParams, setProdEnvParams] = useState([]);
-  const [testAccountInTest, setTestAccountInTest] = useState();
-  const [testAccountInDemo, setTestAccountInDemo] = useState();
-  const [testAccountInProd, setTestAccountInProd] = useState();
-  const [caseOutput, setCaseOutput] = useState([]);
+  const [env, setEnv] = useState([]);
+  const [curEnv, setCurEnv] = useState(null);
+  const [appEnum, setAppEnum] = useState([]);
+  const [envData, setEnvData] = useState({}); // 所有环境的数据
+  const [appIdCurrent, setAppIdCurrent] = useState(null);
+
   let resStatus = 'INIT';
 
+  // 更新环境参数
+  const updateEnvParams = (envId, newParams) => {
+    setEnvData((prev) => ({
+      ...prev,
+      [envId]: {
+        ...prev[envId],
+        params: newParams,
+      },
+    }));
+  };
+
+  // 更新测试账号
+  const updateTestAccount = (envId, newTestAccount) => {
+    setEnvData((prev) => ({
+      ...prev,
+      [envId]: {
+        ...prev[envId],
+        testAccount: newTestAccount,
+      },
+    }));
+  };
+
+  const appData = () => {
+    listAll().then((result) => {
+      if (result.code === 200) {
+        const appEnumData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppEnum(appEnumData);
+      }
+    });
+  };
+
+  const appIdListData = (value) => {
+    envAppList({ appId: value }).then((result) => {
+      if (result.code === 200) {
+        const envData = result.data.map((item) => {
+          return {
+            value: item.envId,
+            label: item.envName,
+          };
+        });
+        setEnv(envData);
+
+        if (envData.length > 0) {
+          setCurEnv(envData[0].value);
+        }
+      }
+    });
+  };
+
   useEffect(() => {
+    appData();
     if (!isDebug) {
       queryCaseDetail();
     }
@@ -67,59 +122,56 @@ const EditTestCase = (props) => {
 
   // 用例编辑页详情
   const queryCaseDetail = () => {
-    // queryById({ id: id }).then((res) => {
-    //   if (res.code === 200) {
-    //     props.setCaseName(res.data.name);
-    //     setName(res.data.name);
-    //     setPriority(res.data.priority);
-    //     setIsSubProcess(res.data.isSubProcess);
-    //     setTestEnvParams(genEnvVarArray(res.data.inputParams, '1'));
-    //     setDemoEnvParams(genEnvVarArray(res.data.inputParams, '2'));
-    //     setProdEnvParams(genEnvVarArray(res.data.inputParams, '3'));
-    //     setTestAccountInTest(getTestAccount(res.data.inputParams, '1'));
-    //     setTestAccountInDemo(getTestAccount(res.data.inputParams, '2'));
-    //     setTestAccountInProd(getTestAccount(res.data.inputParams, '3'));
-    //     setCaseOutput(jsonToArray(res.data.outputParams));
-    //     if (res.data.nodeArray !== null) {
-    //       props.setNodes(res.data.nodeArray);
-    //     }
-    //     if (res.data.edgeArray !== null) {
-    //       props.setEdges(res.data.edgeArray);
-    //     }
-    //   }
-    // });
+    detail({ id: id }).then((res) => {
+      if (res.code === 200) {
+        props.setCaseName(res.data.name);
+        setName(res.data.name);
+        setPriority(res.data.priority);
+        setAppIdCurrent(res.data.appId);
+        setIsSubProcess(res.data.isSubProcess);
+        setEnvData(res.data.inputParamsJson);
+        appIdListData(res.data.appId);
+        if (res.data.nodeArray !== null) {
+          props.setNodes(res.data.nodeArray);
+        }
+        if (res.data.edgeArray !== null) {
+          props.setEdges(res.data.edgesArray);
+        }
+      }
+    });
   };
 
   // 点击保存或修改
   const handleFinish = (values) => {
+    const inputParams = Object.keys(envData).reduce((acc, envId) => {
+      acc[envId] = {
+        params: envData[envId].params,
+        testAccount: envData[envId].testAccount,
+      };
+      return acc;
+    }, {});
+
     if (isEdit) {
       for (let i = 0; i < props.nodes.length; i++) {
         props.nodes[i]['data']['borderColor'] = 'black';
       }
       props.align();
       props.setCaseName(values.name);
-      // modify({
-      //   id: id,
-      //   name: values.name,
-      //   priority: values.priority,
-      //   isSubProcess: values.isSubProcess,
-      //   inputParams: genJsonEnvVar(
-      //     testEnvParams,
-      //     testAccountInTest,
-      //     demoEnvParams,
-      //     testAccountInDemo,
-      //     prodEnvParams,
-      //     testAccountInProd,
-      //   ),
-      //   outputParams: arrayToJson(caseOutput),
-      //   nodes: props.nodes,
-      //   edges: props.edges,
-      // }).then((res) => {
-      //   if (res.code === 200) {
-      //     setIsEdit(false);
-      //     message.success('修改成功');
-      //   }
-      // });
+      save({
+        id: id,
+        name: values.name,
+        appId: values.appId,
+        priority: values.priority,
+        isSubProcess: values.isSubProcess,
+        inputParams: inputParams,
+        nodes: props.nodes,
+        edges: props.edges,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
     } else {
       setIsEdit(true);
     }
@@ -191,43 +243,28 @@ const EditTestCase = (props) => {
               disabled={!isEdit}
               initialValue={isSubProcess}
             />
+
+            <ProFormSelect
+              options={appEnum}
+              width="sm"
+              name="appId"
+              label="应用"
+              rules={[{ required: isEdit }]}
+              disabled={!isEdit}
+              onChange={appIdListData}
+              initialValue={appIdCurrent}
+            />
           </ProForm.Group>
           <ProForm.Group>
             <EnvVar
               isEdit={isEdit}
-              testEnvParams={testEnvParams}
-              setTestEnvParams={setTestEnvParams}
-              demoEnvParams={demoEnvParams}
-              setDemoEnvParams={setDemoEnvParams}
-              prodEnvParams={prodEnvParams}
-              setProdEnvParams={setProdEnvParams}
-              testAccountInTest={testAccountInTest}
-              setTestAccountInTest={setTestAccountInTest}
-              testAccountInDemo={testAccountInDemo}
-              setTestAccountInDemo={setTestAccountInDemo}
-              testAccountInProd={testAccountInProd}
-              setTestAccountInProd={setTestAccountInProd}
+              envData={env}
+              envParams={envData}
+              curEnv={curEnv}
+              updateEnvParams={updateEnvParams}
+              updateTestAccount={updateTestAccount}
             />
           </ProForm.Group>
-
-          {/* <ProForm.Group>
-            <ProCard
-              tabs={{ type: 'card' }}
-              style={{ marginBottom: 10, width: '770px', maxWidth: '100%' }}
-              size="small"
-              // title="设置用例出参"
-              bordered={true}
-            >
-              <ProCard.TabPane key="setOutput" tab="设置用例出参">
-                <CommonVar
-                  dataSource={caseOutput}
-                  setDataSource={setCaseOutput}
-                  isEdit={isEdit}
-                  needTestAccount={false}
-                />
-              </ProCard.TabPane>
-            </ProCard>
-          </ProForm.Group> */}
         </ProForm>
       </Drawer>
     </>

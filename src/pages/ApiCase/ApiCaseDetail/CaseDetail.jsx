@@ -1,11 +1,10 @@
-import { priorityList } from '@/common';
+import { jsonToArray, priorityList } from '@/common';
 import { list as listApiManagement, queryApiById } from '@/services/api';
 import { queryById, save } from '@/services/apiCase';
 import { list } from '@/services/application';
 import { listPage } from '@/services/domain';
-// import { listAll } from '@/services/config/secretManage';
-import { genEnvVarArray, genJsonEnvVar, getTestAccount, jsonToArray } from '@/common';
 import { getAppIds } from '@/services/encrypt';
+import { envAppList } from '@/services/envConfig';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { message, Radio } from 'antd';
@@ -23,15 +22,15 @@ const CaseDetail = (props) => {
   const [id, setId] = useState(urlParams.get('id'));
   props.setTestcaseId(parseInt(id));
 
+  const [env, setEnv] = useState([]);
+  const [curEnv, setCurEnv] = useState(null);
+  const [envData, setEnvData] = useState({}); // 所有环境的数据
+
   const apiName = urlParams.get('apiName');
   const apiIdTemp = urlParams.get('apiId');
   const [curApiId, setCurApiId] = useState(
     apiIdTemp === undefined || apiIdTemp === null ? null : Number.parseInt(apiIdTemp),
   );
-  // if (curApiId !== null) {
-  //   console.log('curApiId---->handleClickApiName--->',curApiId)
-  //   handleClickApiName(curApiId);
-  // }
   const appIdTemp = urlParams.get('appId');
   const [curAppId, setCurAppId] = useState(
     appIdTemp === undefined || appIdTemp === null ? null : Number.parseInt(appIdTemp),
@@ -47,12 +46,6 @@ const CaseDetail = (props) => {
   const formRef = useRef();
   const [apiList, setApiList] = useState([]);
   const [response, setResponse] = useState();
-  const [testEnvParams, setTestEnvParams] = useState([]);
-  const [demoEnvParams, setDemoEnvParams] = useState([]);
-  const [prodEnvParams, setProdEnvParams] = useState([]);
-  const [testAccountInTest, setTestAccountInTest] = useState();
-  const [testAccountInDemo, setTestAccountInDemo] = useState();
-  const [testAccountInProd, setTestAccountInProd] = useState();
   const [reqParams, setReqParams] = useState(null);
   const [assertsArray, setAssertsArray] = useState([]);
   const [reqHeaderArray, setReqHeaderArray] = useState([]);
@@ -69,6 +62,24 @@ const CaseDetail = (props) => {
   const formItemLayout = {
     labelCol: { span: 0 },
     wrapperCol: { span: 0 },
+  };
+
+  const appIdListData = (value) => {
+    envAppList({ appId: value }).then((result) => {
+      if (result.code === 200) {
+        const envData = result.data.map((item) => {
+          return {
+            value: item.envId,
+            label: item.envName,
+          };
+        });
+        setEnv(envData);
+
+        if (envData.length > 0) {
+          setCurEnv(envData[0].value);
+        }
+      }
+    });
   };
 
   const appEncryptInfoData = (value) => {
@@ -108,7 +119,6 @@ const CaseDetail = (props) => {
           setApiList(
             result.data.map((item) => ({
               value: item.id,
-              // label: item.name,
               label: item.path,
               method: item.method,
               path: item.path,
@@ -164,15 +174,11 @@ const CaseDetail = (props) => {
         setCurAppId(res.data.appId);
         setCurApiId(res.data.apiId);
         handleClickApiName(res.data.apiId);
-        setTestEnvParams(genEnvVarArray(res.data.envVariables, '1'));
-        setDemoEnvParams(genEnvVarArray(res.data.envVariables, '2'));
-        setProdEnvParams(genEnvVarArray(res.data.envVariables, '3'));
-        setTestAccountInTest(getTestAccount(res.data.envVariables, '1'));
-        setTestAccountInDemo(getTestAccount(res.data.envVariables, '2'));
-        setTestAccountInProd(getTestAccount(res.data.envVariables, '3'));
+
         setAssertsArray(genAssertsArray(res));
         setReqHeaderArray(jsonToArray(res.data.requestHeaders));
         setReqParams(JSON.stringify(JSONbig.parse(requestParams), null, 4));
+        appIdListData(res.data.appId);
       });
     } else {
       props.setIsEdit(true);
@@ -276,11 +282,41 @@ const CaseDetail = (props) => {
     }
   };
 
+  // 更新环境参数
+  const updateEnvParams = (envId, newParams) => {
+    setEnvData((prev) => ({
+      ...prev,
+      [envId]: {
+        ...prev[envId],
+        params: newParams,
+      },
+    }));
+  };
+
+  // 更新测试账号
+  const updateTestAccount = (envId, newTestAccount) => {
+    setEnvData((prev) => ({
+      ...prev,
+      [envId]: {
+        ...prev[envId],
+        testAccount: newTestAccount,
+      },
+    }));
+  };
+
   // 点击保存或修改
   const handleFinish = (values) => {
     if (props.isEdit) {
       const urlParams = new URL(window.location.href).searchParams;
       const check = checkRequestJson(reqParams);
+
+      const inputParams = Object.keys(envData).reduce((acc, envId) => {
+        acc[envId] = {
+          params: envData[envId].params,
+          testAccount: envData[envId].testAccount,
+        };
+        return acc;
+      }, {});
 
       if (urlParams.get('id') && check) {
         save({
@@ -293,14 +329,7 @@ const CaseDetail = (props) => {
           requestHeaders: genRequestHeadersJSON(),
           requestParams: reqParams,
           assertsArray: genAssertsArrayJSON(),
-          envVariables: genJsonEnvVar(
-            testEnvParams,
-            testAccountInTest,
-            demoEnvParams,
-            testAccountInDemo,
-            prodEnvParams,
-            testAccountInProd,
-          ),
+          envVariables: inputParams,
         }).then((res) => {
           if (res.code === 200) {
             props.setIsEdit(false);
@@ -317,14 +346,7 @@ const CaseDetail = (props) => {
           requestHeaders: genRequestHeadersJSON(),
           requestParams: reqParams,
           assertsArray: genAssertsArrayJSON(),
-          envVariables: genJsonEnvVar(
-            testEnvParams,
-            testAccountInTest,
-            demoEnvParams,
-            testAccountInDemo,
-            prodEnvParams,
-            testAccountInProd,
-          ),
+          envVariables: inputParams,
         }).then((res) => {
           if (res.code === 200) {
             setId(res.data.id);
@@ -395,6 +417,7 @@ const CaseDetail = (props) => {
               setCurAppId(e);
               setCurApiId();
               appEncryptInfoData(e);
+              appIdListData(e);
               formRef?.current?.setFieldsValue({
                 apiId: null,
               });
@@ -483,22 +506,13 @@ const CaseDetail = (props) => {
             </ProCard.TabPane>
           </ProCard>
         </ProForm.Group>
-
         <EnvVar
-          isAppid={curAppId}
           isEdit={props.isEdit}
-          testEnvParams={testEnvParams}
-          setTestEnvParams={setTestEnvParams}
-          demoEnvParams={demoEnvParams}
-          setDemoEnvParams={setDemoEnvParams}
-          prodEnvParams={prodEnvParams}
-          setProdEnvParams={setProdEnvParams}
-          testAccountInTest={testAccountInTest}
-          setTestAccountInTest={setTestAccountInTest}
-          testAccountInDemo={testAccountInDemo}
-          setTestAccountInDemo={setTestAccountInDemo}
-          testAccountInProd={testAccountInProd}
-          setTestAccountInProd={setTestAccountInProd}
+          envData={env}
+          envParams={envData}
+          curEnv={curEnv}
+          updateEnvParams={updateEnvParams}
+          updateTestAccount={updateTestAccount}
         />
       </ProForm>
     </div>
