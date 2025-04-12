@@ -4,7 +4,7 @@ import {
   currentUser as queryCurrentUser,
 } from '@/services/ant-design-pro/api';
 import { list as listAllApp } from '@/services/application';
-
+import { listPage } from '@/services/project';
 import { type Settings as LayoutSettings, WaterMark } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';

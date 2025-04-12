@@ -446,7 +446,11 @@ const CaseDetail = (props) => {
             size="small"
             title="设置用例参数"
           >
-            <ProCard.TabPane key="requestParams" tab="请求参数">
+            <ProCard.TabPane
+              key="requestParams"
+              tab="请求参数"
+              style={{ width: '204vh', maxWidth: '100%' }}
+            >
               <ReqParam
                 isEdit={props.isEdit}
                 reqParams={reqParams}
