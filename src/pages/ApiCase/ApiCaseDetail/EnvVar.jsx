@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-04-12 12:28:22
+ * @LastEditTime: 2025-04-12 14:17:07
  * @Description:
  */
 import { envAppList } from '@/services/envConfig';
@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import EnvVarComponent from './EnvVarComponent';
 
 const EnvVar = (props) => {
+  console.log('EnvVar props: ', props);
   const [curEnv, setCurEnv] = useState(null);
   const [envListName, setEnvListName] = useState([]);
   const [env, setEnv] = useState([]);
@@ -19,7 +20,7 @@ const EnvVar = (props) => {
     if (props.isAppid) {
       appIdListData(props.isAppid);
     }
-  }, []);
+  }, [props.isEdit, props.isAppid]);
 
   const appIdListData = (value) => {
     envAppList({ appId: value }).then((result) => {
@@ -69,6 +70,7 @@ const EnvVar = (props) => {
         title="设置用例入参"
         bordered={true}
       >
+        {console.log('env----->', env)}
         {env.map((item) => (
           <ProCard.TabPane key={item.key} tab={item.label}>
             <EnvVarComponent

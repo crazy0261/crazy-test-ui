@@ -4,7 +4,6 @@ import {
   currentUser as queryCurrentUser,
 } from '@/services/ant-design-pro/api';
 import { list as listAllApp } from '@/services/application';
-import { listAllEnvName, listPage } from '@/services/project';
 
 import { type Settings as LayoutSettings, WaterMark } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -31,21 +30,6 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
   fetchProjectList?: () => Promise<{ value: number; label: string }[]>;
 }> {
-  const fetchEnvList = async (): Promise<{ value: number; label: string }[] | undefined> => {
-    try {
-      const envList: { value: number; label: string }[] = [];
-      await listAllEnvName().then((result: any) => {
-        if (result.code === 200) {
-          result.data.map((item: any) => envList.push({ value: item.id, label: item.name }));
-        }
-      });
-      return envList;
-    } catch (error) {
-      // history.push(loginPath);
-    }
-    return undefined;
-  };
-
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser(localStorage.getItem('account'));
@@ -105,7 +89,6 @@ export async function getInitialState(): Promise<{
     const userList = await fetchUserList();
     const projectList = await fetchProjectList();
     const appList = await fetchAppList();
-    const envList = await fetchEnvList();
     return {
       fetchUserInfo,
       currentUser,
@@ -113,7 +96,6 @@ export async function getInitialState(): Promise<{
       projectList,
       userList,
       appList,
-      envList,
       x: null,
       settings: defaultSettings as Partial<LayoutSettings>,
     };

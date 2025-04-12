@@ -9,7 +9,7 @@ import {
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Modal as model, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import AddOrUpdateTestAccountManagement from './AddOrUpdateTestAccountManagement';
+import AddOrUpdateTestAccountManagement from './EditTestAccount';
 import RelateCaseList from './RelateCaseList';
 
 /**

@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-20 21:47:49
- * @LastEditTime: 2025-04-12 12:59:16
+ * @LastEditTime: 2025-04-12 13:34:03
  * @Description:
  */
 import { get, post } from '../../utils/requestUtil';
@@ -24,4 +24,9 @@ export async function deleteTestAccount(body) {
 /** 单个账号生成token */
 export async function createToken(body) {
   return post('/crazy/test/account/token', body);
+}
+
+/** 获取指定环境账号 */
+export async function queryEnvTestAccount(body) {
+  return post('/crazy/test/account/query/env', body);
 }
