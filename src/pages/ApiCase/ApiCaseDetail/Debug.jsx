@@ -1,18 +1,18 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-04-12 13:01:15
+ * @LastEditTime: 2025-04-13 02:46:23
  * @Description:
  */
-import { genEnvVarArray, getTestAccount, trimEnvParams } from '@/common';
-import { updateSelectEnvId } from '@/services/ant-design-pro/api.ts';
+import { genEnvVarArray, getTestAccount } from '@/common';
 import { debug as debugApiTestcase, queryById as queryApiCaseById } from '@/services/apiCase';
 // import { queryById as queryMulCaseById } from '@/services/mulTestcase/index.js';
 // import { debug as debugMulTestcase } from '@/services/mulTestcaseResult';
+import { envAppList } from '@/services/envConfig';
 import { Button, Form, message, Modal, Radio, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import EnvVarComponent from './EnvVarComponent';
+import DebugEnvVarComponen from './DebugEnvVarComponen';
 
 const Debug = (props) => {
   const [form] = Form.useForm();
@@ -20,26 +20,56 @@ const Debug = (props) => {
   const testcaseId = parseInt(urlParams.get('id'));
   const [noDomian, setNoDomian] = useState(false);
   const { initialState } = useModel('@@initialState');
-  const [curEnvId, setCurEnvId] = useState(initialState?.currentUser?.selectEnvId ?? 1);
+  // const [curEnvId, setCurEnvId] = useState(initialState?.currentUser?.selectEnvId ?? 1);
   const [isExecModalOpen, setIsExecModalOpen] = useState(false);
   const [tempReqParams, setTempReqParams] = useState({}); // 临时请求参数
   const [tempTestAccount, setTempTestAccount] = useState({}); // 临时测试账号
   const [isExecButtonLoading, setIsExecButtonLoading] = useState(false);
   const [isModalExecButtonLoading, setIsModalExecButtonLoading] = useState(false);
   const [isModelExecButtonDisable, setIsModelExecButtonDisable] = useState(false);
+  const [curEnv, setCurEnv] = useState(null);
+  const [env, setEnv] = useState([]);
+  const [testAccount, setTestAccount] = useState(null);
+  const [dataSource, setDataSource] = useState([]);
+  const [isForminit, setIsForminit] = useState(false);
+
+  useEffect(() => {
+    if (props.appId !== null) {
+      appIdListData(props.appId);
+    }
+    if (props.envData && (props.curEnv !== null || curEnv !== null)) {
+      const curIndex = props.curEnv !== null ? props.curEnv : curEnv !== null ? props.curEnv : null;
+      setTestAccount(props.envData[curIndex]?.testAccount);
+    }
+    setDataSource(props.envData[curEnv]?.params || []);
+  }, [isExecModalOpen, props.envData, curEnv]);
+
+  const appIdListData = (value) => {
+    envAppList({ appId: value }).then((result) => {
+      if (result.code === 200) {
+        const envData = result.data.map((item) => {
+          return {
+            value: item.envId,
+            label: item.envName,
+          };
+        });
+        setEnv(envData);
+
+        if (envData.length > 0) {
+          setCurEnv(envData[0].value);
+        }
+      }
+    });
+  };
 
   const execMulCase = () => {
     setIsModalExecButtonLoading(true);
-    let envVar = {};
-    let envVarInEnv = {};
-    envVarInEnv['envVariables'] = trimEnvParams(tempReqParams);
-    envVarInEnv['testaccountID'] = tempTestAccount;
-    envVar[curEnvId] = envVarInEnv;
-    if (props.caseType === 'processCase') {
+    if (props.caseType === 'apiTestcase') {
       debugApiTestcase({
         id: testcaseId,
-        envId: curEnvId,
-        inputParams: JSON.stringify(envVar),
+        envId: curEnv,
+        inputParams: dataSource,
+        testAccount: testAccount,
       }).then((res) => {
         setIsModalExecButtonLoading(false);
         if (res.code === 200) {
@@ -67,6 +97,7 @@ const Debug = (props) => {
   };
   const handleCancel = () => {
     setIsExecModalOpen(false);
+    setIsForminit(!isForminit);
   };
 
   // useEffect(() => {
@@ -93,10 +124,10 @@ const Debug = (props) => {
   //   }
   // }, [curEnvId, testcaseId]);
 
-  const handleEnv = (e) => {
-    setCurEnvId(e.target.value);
-    updateSelectEnvId({ id: e.target.value });
-  };
+  // const handleEnv = (e) => {
+  //   setCurEnvId(e.target.value);
+  //   updateSelectEnvId({ id: e.target.value });
+  // };
 
   useEffect(() => {
     if (isExecModalOpen) {
@@ -110,17 +141,16 @@ const Debug = (props) => {
       } else if (props.caseType === 'apiTestcase') {
         setIsModelExecButtonDisable(true);
         queryApiCaseById({ id: props.caseId }).then((res) => {
-          console.log('queryApiCaseById--->', res);
           // todo 默认为1 ，后改更改环境
-          setTempReqParams(genEnvVarArray(res.data.envVariables, curEnvId));
-          setTempTestAccount(getTestAccount(res.data.envVariables, curEnvId));
+          setTempReqParams(genEnvVarArray(res.data.envVariables, curEnv));
+          setTempTestAccount(getTestAccount(res.data.envVariables, curEnv));
           setIsModelExecButtonDisable(false);
         });
       } else {
         message.error('不支持的用例类型：' + props.caseType);
       }
     }
-  }, [curEnvId]);
+  }, [curEnv]);
 
   // 场景用例，点击执行弹出执行弹框
   const handleClickExec = (e) => {
@@ -137,9 +167,8 @@ const Debug = (props) => {
           //   });
         } else if (props.caseType === 'apiTestcase') {
           queryApiCaseById({ id: props.caseId }).then((res) => {
-            console.log('queryApiCaseById----->', res);
-            setTempReqParams(genEnvVarArray(res.data.envVariables, curEnvId));
-            setTempTestAccount(getTestAccount(res.data.envVariables, curEnvId));
+            setTempReqParams(genEnvVarArray(res.data.envVariables, curEnv));
+            setTempTestAccount(getTestAccount(res.data.envVariables, curEnv));
             setIsExecModalOpen(true);
             setIsExecButtonLoading(false);
           });
@@ -184,8 +213,8 @@ const Debug = (props) => {
           环境：
           <Radio.Group
             name="radiogroup"
-            defaultValue={curEnvId}
-            onChange={(e) => handleEnv(e)}
+            defaultValue={curEnv !== null ? curEnv : props.curEnv}
+            onChange={(e) => setCurEnv(e.target.value)}
             optionType="button"
             buttonStyle="solid"
             style={{
@@ -193,21 +222,28 @@ const Debug = (props) => {
               marginBottom: 10,
             }}
           >
-            <Radio value={1}>测试环境</Radio>
-            <Radio value={2}>demo环境</Radio>
-            <Radio value={3}>生产环境</Radio>
+            {env.map((env) => (
+              <Radio key={env.value} value={env.value}>
+                {env.label}
+              </Radio>
+            ))}
           </Radio.Group>
         </div>
         <Spin spinning={isModelExecButtonDisable} tip="Loading...">
-          <EnvVarComponent
-            dataSource={tempReqParams}
-            setDataSource={setTempReqParams}
-            setTestAccount={setTempTestAccount}
-            testAccount={tempTestAccount}
-            isEdit={true}
-            syncEnvVar={null}
-            needTestAccount={true}
-          />
+          {curEnv && (
+            <DebugEnvVarComponen
+              isExecModalOpen={isExecModalOpen}
+              setTestAccount={(newTestAccount) => setTestAccount(newTestAccount)}
+              testAccount={testAccount}
+              isEdit={true}
+              needTestAccount={true}
+              envData={props.envData}
+              curEnv={curEnv !== null ? curEnv : props.curEnv}
+              dataSource={dataSource}
+              isForminit={isForminit}
+              setDataSource={(value) => setDataSource(value)}
+            />
+          )}
         </Spin>
       </Modal>
     </div>

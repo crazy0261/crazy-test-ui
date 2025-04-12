@@ -77,6 +77,7 @@ const CaseDetail = (props) => {
 
         if (envData.length > 0) {
           setCurEnv(envData[0].value);
+          props.setCurEnv(envData[0].value);
         }
       }
     });
@@ -167,6 +168,8 @@ const CaseDetail = (props) => {
           creatorName: res.data.creatorName,
         });
         props.setTestcaseName(res.data.name);
+        props.setEnvData(JSON.parse(res.data.envVariables));
+        setEnvData(JSON.parse(res.data.envVariables));
         setResponse(res);
         setMethod(res.data.method);
         setPath(res.data.path);
@@ -179,6 +182,7 @@ const CaseDetail = (props) => {
         setReqHeaderArray(jsonToArray(res.data.requestHeaders));
         setReqParams(JSON.stringify(JSONbig.parse(requestParams), null, 4));
         appIdListData(res.data.appId);
+        props.setAppid(res.data.appId);
       });
     } else {
       props.setIsEdit(true);
@@ -310,6 +314,7 @@ const CaseDetail = (props) => {
       const urlParams = new URL(window.location.href).searchParams;
       const check = checkRequestJson(reqParams);
 
+      props.setEnvData(envData);
       const inputParams = Object.keys(envData).reduce((acc, envId) => {
         acc[envId] = {
           params: envData[envId].params,

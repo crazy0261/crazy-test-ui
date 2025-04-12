@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-03-28 15:39:16
+ * @LastEditTime: 2025-04-12 23:11:41
  * @Description: 接口用例详情
  */
 import ExecLog from '@/pages/Common/ExecLog';
@@ -22,6 +22,9 @@ const App = () => {
   const [domain, setDomain] = useState('-');
   const [envName, setEnvName] = useState();
   const [isExecLogModalOpen, setIsExecLogModalOpen] = useState(false);
+  const [appId, setAppid] = useState(null);
+  const [curEnv, setCurEnv] = useState(null);
+  const [envData, setEnvData] = useState({});
 
   const contentStyle = {
     minHeight: 100,
@@ -33,6 +36,7 @@ const App = () => {
     lineHeight: '100px',
     backgroundColor: 'transparent',
   };
+
   return (
     <div>
       <Space
@@ -52,6 +56,9 @@ const App = () => {
                 setTestcaseId={setTestcaseId}
                 setTestcaseName={setTestcaseName}
                 domain={domain}
+                setAppid={setAppid}
+                setEnvData={setEnvData}
+                setCurEnv={setCurEnv}
               />
             </Content>
             <Sider style={siderStyle} width="40%" theme="light">
@@ -63,6 +70,9 @@ const App = () => {
                   setDebugResult={setDebugResult}
                   setDomain={setDomain}
                   setEnvName={setEnvName}
+                  appId={appId}
+                  envData={envData}
+                  curEnv={curEnv}
                 />
               </div>
               {!isEdit && (
