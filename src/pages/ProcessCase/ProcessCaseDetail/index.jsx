@@ -1,4 +1,3 @@
-import Debug from '@/pages/ApiCase/ApiCaseDetail/Debug';
 import ExecLog from '@/pages/ProcessCase/ExecLog';
 import { detail, save } from '@/services/processCase';
 import { ClockCircleTwoTone } from '@ant-design/icons';
@@ -145,8 +144,9 @@ const App = () => {
               }}
             />
           </Tooltip>
-          {/* <Debug caseType="mulTestcase" isEdit={false} caseId={isDebug ? caseId : id} /> */}
-          <Debug caseType="processCase" isEdit={false} caseId={isDebug ? caseId : id} />
+
+          {/* todo 后续调试再完善 */}
+          {/* <Debug caseType="processCase" isEdit={false} caseId={isDebug ? caseId : id} /> */}
 
           {!isDebug && (
             <>
