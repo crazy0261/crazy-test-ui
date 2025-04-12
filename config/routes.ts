@@ -55,14 +55,14 @@ export default [
     path: '/task',
     name: '任务管理',
     icon: 'FieldTimeOutlined',
-    component: './TaskManagement',
+    component: './Task',
   },
   {
     path: '/task/detail',
-    component: './TaskManagement/TaskManagementDetail',
+    component: './Task/TaskDetail',
   },
   {
-    path: '/taskManagement/result/*',
+    path: '/task/result/*',
     // component: './Schedule/ScheduleResult',
   },
 
@@ -74,12 +74,12 @@ export default [
       {
         path: '/application/list',
         name: '应用列表',
-        component: './ApplicationManagement',
+        component: './Application',
       },
       {
-        path: '/application/apimanagement',
+        path: '/application/api',
         name: '接口管理',
-        component: './ApiManagement',
+        component: './Api',
       },
     ],
   },
@@ -104,9 +104,9 @@ export default [
         component: './System/Domain',
       },
       {
-        path: '/system/testAccountManagement',
+        path: '/system/testAccount',
         name: '账号设置',
-        component: './System/TestAccountManagement',
+        component: './System/TestAccount',
       },
       {
         path: '/system/encrypt',
@@ -116,7 +116,7 @@ export default [
       {
         path: '/system/project',
         name: '项目设置',
-        component: './System/ProjectManagement',
+        component: './System/Project',
       },
     ],
   },

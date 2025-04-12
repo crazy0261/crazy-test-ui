@@ -1,4 +1,4 @@
-import { listAll } from '@/services/applicationManagement';
+import { listAll } from '@/services/application';
 import { save } from '@/services/encrypt';
 import { envAppList } from '@/services/envConfig';
 import { Button, Form, Input, message, Modal, Select } from 'antd';

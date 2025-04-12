@@ -1,4 +1,4 @@
-import { list as appList } from '@/services/applicationManagement';
+import { list as appList } from '@/services/application';
 // import { listAll as listAllDomain } from '@/services/config/domainInfo';
 import { del, list } from '@/services/envConfig';
 import {

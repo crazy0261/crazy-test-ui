@@ -1,32 +1,40 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-03-27 23:43:12
+ * @LastEditTime: 2025-04-12 12:28:22
  * @Description:
  */
-import { list } from '@/services/envConfig';
+import { envAppList } from '@/services/envConfig';
 import { ProCard } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import EnvVarComponent from './EnvVarComponent';
 
 const EnvVar = (props) => {
-  const [curEnv, setCurEnv] = useState('testEnv');
+  const [curEnv, setCurEnv] = useState(null);
   const [envListName, setEnvListName] = useState([]);
+  const [env, setEnv] = useState([]);
 
   useEffect(() => {
-    envList();
+    if (props.isAppid) {
+      appIdListData(props.isAppid);
+    }
   }, []);
 
-  // todo 后期改造动态
-  const envList = () => {
-    list({ current: 1, pageSize: 1000 }).then((result) => {
-      if (result.code === 200 && result.data.length > 0) {
-        setEnvListName(
-          result?.data?.map((item) => {
-            return item.name;
-          }),
-        );
+  const appIdListData = (value) => {
+    envAppList({ appId: value }).then((result) => {
+      if (result.code === 200) {
+        const envData = result.data.map((item) => {
+          return {
+            key: item.envId,
+            label: item.envName,
+          };
+        });
+        setEnv(envData);
+
+        if (envData.length > 0) {
+          setCurEnv(envData[0].key);
+        }
       }
     });
   };
@@ -61,39 +69,20 @@ const EnvVar = (props) => {
         title="设置用例入参"
         bordered={true}
       >
-        <ProCard.TabPane key="testEnv" tab="测试环境">
-          <EnvVarComponent
-            dataSource={props.testEnvParams}
-            setDataSource={props.setTestEnvParams}
-            setTestAccount={props.setTestAccountInTest}
-            testAccount={props.testAccountInTest}
-            isEdit={props.isEdit}
-            syncEnvVar={syncEnvVar}
-            needTestAccount={true}
-          />
-        </ProCard.TabPane>
-        <ProCard.TabPane key="demoEnv" tab="Demo环境">
-          <EnvVarComponent
-            dataSource={props.demoEnvParams}
-            setDataSource={props.setDemoEnvParams}
-            setTestAccount={props.setTestAccountInDemo}
-            testAccount={props.testAccountInDemo}
-            isEdit={props.isEdit}
-            syncEnvVar={syncEnvVar}
-            needTestAccount={true}
-          />
-        </ProCard.TabPane>
-        <ProCard.TabPane key="prodEnv" tab="生产环境">
-          <EnvVarComponent
-            dataSource={props.prodEnvParams}
-            setDataSource={props.setProdEnvParams}
-            setTestAccount={props.setTestAccountInProd}
-            testAccount={props.testAccountInProd}
-            isEdit={props.isEdit}
-            syncEnvVar={syncEnvVar}
-            needTestAccount={true}
-          />
-        </ProCard.TabPane>
+        {env.map((item) => (
+          <ProCard.TabPane key={item.key} tab={item.label}>
+            <EnvVarComponent
+              envId={item.key}
+              dataSource={props.testEnvParams}
+              setDataSource={props.setTestEnvParams}
+              setTestAccount={props.setTestAccountInTest}
+              testAccount={props.testAccountInTest}
+              isEdit={props.isEdit}
+              syncEnvVar={syncEnvVar}
+              needTestAccount={true}
+            />
+          </ProCard.TabPane>
+        ))}
       </ProCard>
     </div>
   );

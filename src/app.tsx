@@ -3,8 +3,8 @@ import {
   listAll as listAllUser,
   currentUser as queryCurrentUser,
 } from '@/services/ant-design-pro/api';
-import { list as listAllApp } from '@/services/applicationManagement';
-import { listAllEnvName, listPage } from '@/services/projectManagement';
+import { list as listAllApp } from '@/services/application';
+import { listAllEnvName, listPage } from '@/services/project';
 
 import { type Settings as LayoutSettings, WaterMark } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';

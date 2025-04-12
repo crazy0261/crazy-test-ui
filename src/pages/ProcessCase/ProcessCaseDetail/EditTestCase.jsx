@@ -2,10 +2,10 @@
 import { priorityList } from '../../../common';
 // import { modify, queryById } from '@/services/mulTestcase';
 // import { queryById as queryExecResult } from '@/services/mulTestcaseResult';
+import EnvVar from '@/pages/ApiCase/ApiCaseDetail/EnvVar';
 import { ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Drawer } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import CaseVar from '../../ApiCase/ApiCaseDetail/CaseVar';
 
 // 开始节点编辑页
 const EditTestCase = (props) => {
@@ -193,7 +193,7 @@ const EditTestCase = (props) => {
             />
           </ProForm.Group>
           <ProForm.Group>
-            <CaseVar
+            <EnvVar
               isEdit={isEdit}
               testEnvParams={testEnvParams}
               setTestEnvParams={setTestEnvParams}

@@ -1,4 +1,4 @@
-import { listAll } from '@/services/applicationManagement';
+import { listAll } from '@/services/application';
 import { save, testConnect } from '@/services/dataSource';
 import { envAppList } from '@/services/envConfig';
 import { Button, Form, Input, InputNumber, message, Modal, Select, Tabs } from 'antd';

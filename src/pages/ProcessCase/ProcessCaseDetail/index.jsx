@@ -131,7 +131,9 @@ const App = () => {
           <Tooltip title="点击开始节点，修改用例名">
             <b style={{ marginRight: 30 }}>用例名：{caseName}</b>
           </Tooltip>
-          {isDebug && <b style={{ marginRight: 30 }}>执行环境：{envName}</b>}
+          {/* {isDebug && <b style={{ marginRight: 30 }}>执行环境：{envName}</b>} */}
+          <b style={{ marginRight: 30 }}>执行环境：{envName}</b>
+
           <Tooltip title="执行记录">
             <Button
               style={{ marginRight: 10 }}
@@ -143,7 +145,9 @@ const App = () => {
               }}
             />
           </Tooltip>
-          <Debug caseType="mulTestcase" isEdit={false} caseId={isDebug ? caseId : id} />
+          {/* <Debug caseType="mulTestcase" isEdit={false} caseId={isDebug ? caseId : id} /> */}
+          <Debug caseType="processCase" isEdit={false} caseId={isDebug ? caseId : id} />
+
           {!isDebug && (
             <>
               <Button disabled={isDebug} type="primary" onClick={() => handleSave()}>

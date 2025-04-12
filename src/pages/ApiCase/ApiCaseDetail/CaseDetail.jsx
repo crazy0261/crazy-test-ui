@@ -1,7 +1,7 @@
 import { priorityList } from '@/common';
+import { list as listApiManagement, queryApiById } from '@/services/api';
 import { queryById, save } from '@/services/apiCase';
-import { list as listApiManagement, queryApiById } from '@/services/apiManagement';
-import { list } from '@/services/applicationManagement';
+import { list } from '@/services/application';
 import { listPage } from '@/services/domain';
 // import { listAll } from '@/services/config/secretManage';
 import { genEnvVarArray, genJsonEnvVar, getTestAccount, jsonToArray } from '@/common';

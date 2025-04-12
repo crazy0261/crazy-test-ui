@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-15 16:41:19
+ * @LastEditTime: 2025-04-12 13:01:15
+ * @Description:
+ */
 import { genEnvVarArray, getTestAccount, trimEnvParams } from '@/common';
 import { updateSelectEnvId } from '@/services/ant-design-pro/api.ts';
 import { debug as debugApiTestcase, queryById as queryApiCaseById } from '@/services/apiCase';
@@ -29,7 +35,7 @@ const Debug = (props) => {
     envVarInEnv['envVariables'] = trimEnvParams(tempReqParams);
     envVarInEnv['testaccountID'] = tempTestAccount;
     envVar[curEnvId] = envVarInEnv;
-    if (props.caseType === 'apiTestcase') {
+    if (props.caseType === 'processCase') {
       debugApiTestcase({
         id: testcaseId,
         envId: curEnvId,
@@ -94,7 +100,7 @@ const Debug = (props) => {
 
   useEffect(() => {
     if (isExecModalOpen) {
-      if (props.caseType === 'mulTestcase') {
+      if (props.caseType === 'processCase') {
         setIsModelExecButtonDisable(true);
         // queryMulCaseById({ id: props.caseId }).then((res) => {
         //   setTempReqParams(genEnvVarArray(res.data.inputParams, curEnvId));
@@ -118,11 +124,11 @@ const Debug = (props) => {
 
   // 场景用例，点击执行弹出执行弹框
   const handleClickExec = (e) => {
-    setIsExecButtonLoading(true);
+    // setIsExecButtonLoading(true);
     form
       .validateFields()
       .then((res) => {
-        if (props.caseType === 'mulTestcase') {
+        if (props.caseType === 'peocessCase') {
           //   queryMulCaseById({ id: props.caseId }).then((res) => {
           //     setTempReqParams(genEnvVarArray(res.data.inputParams, curEnvId));
           //     setTempTestAccount(getTestAccount(res.data.inputParams, curEnvId));

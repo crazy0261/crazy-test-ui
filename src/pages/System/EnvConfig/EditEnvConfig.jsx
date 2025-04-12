@@ -1,5 +1,5 @@
 import SetReqHeader from '@/pages/ApiCase/ApiCaseDetail/ReqHeader';
-import { list } from '@/services/applicationManagement';
+import { list } from '@/services/application';
 import { listPage as domainlist } from '@/services/domain';
 import { queryById, save } from '@/services/envConfig';
 import {
