@@ -2,7 +2,7 @@ import CaseVar from '@/pages/ApiCase/ApiCaseDetail/CaseVar';
 import CommonVar from '@/pages/ApiCase/ApiCaseDetail/CommonVar';
 import EnvVarComponent from '@/pages/ApiCase/ApiCaseDetail/EnvVarComponent';
 // import { queryLastSucOneByCase } from '@/services/mulTestcaseResult';
-import { arrayToJson } from '@/common';
+import { arrayToJson, jsonToArray } from '@/common';
 import { processSubList } from '@/services/processCase';
 import { porcessNodeDetail, porcessNodeSave } from '@/services/processCaseNode';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';

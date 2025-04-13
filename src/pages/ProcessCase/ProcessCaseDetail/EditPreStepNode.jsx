@@ -22,7 +22,7 @@ const EditPreStepNode = (props) => {
   useEffect(() => {
     if (props.open === true) {
       if (props.curNodeId !== undefined && props.curNodeId !== null) {
-        setNodeInfo(caseId, props.curNodeId, false);
+        setNodeInfo(props.curNodeId, false);
       } else {
         console.log('props.curNodeId = ', props.curNodeId);
         console.log('props.curNodeId !== undefined ', props.curNodeId !== undefined);
@@ -31,8 +31,8 @@ const EditPreStepNode = (props) => {
     }
   }, [props.open, props.curNodeId]);
 
-  function setNodeInfo(caseId, nodeId, isCopy) {
-    porcessNodeDetail({ caseId: caseId, nodeId: nodeId }).then((res) => {
+  function setNodeInfo(nodeId, isCopy) {
+    porcessNodeDetail({ id: nodeId }).then((res) => {
       if (res.code === 200) {
         setResponse(res);
         if (isCopy === false) {
@@ -107,7 +107,7 @@ const EditPreStepNode = (props) => {
   };
 
   const handlePase = () => {
-    setNodeInfo(caseId, props.copyNodeId, true);
+    setNodeInfo(props.copyNodeId, true);
   };
 
   const handleCopy = () => {

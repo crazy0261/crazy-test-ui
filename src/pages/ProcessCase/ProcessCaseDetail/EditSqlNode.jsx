@@ -1,9 +1,11 @@
-// import CaseVar from '@/pages/ApiTestCaseDetail/CaseVar';
-// import CommonVar from '@/pages/ApiTestCaseDetail/CommonVar';
-// import EnvVarComponent from '@/pages/ApiTestCaseDetail/EnvVarComponent';
-// import SetAssert from '@/pages/ApiTestCaseDetail/SetAssert';
-// import { listAll as listAllDataSource } from '@/services/config/dataSource';
-// import { addOrMod, queryNodeInfo } from '@/services/mulTestcase';
+import { arrayToJson, jsonToArray } from '@/common';
+import Assert from '@/pages/ApiCase/ApiCaseDetail/Assert';
+import CaseVar from '@/pages/ApiCase/ApiCaseDetail/CaseVar';
+import CommonVar from '@/pages/ApiCase/ApiCaseDetail/CommonVar';
+import EnvVarComponent from '@/pages/ApiCase/ApiCaseDetail/EnvVarComponent';
+import { listAll } from '@/services/application';
+import { getAppList } from '@/services/dataSource';
+import { porcessNodeDetail, porcessNodeSave } from '@/services/processCaseNode';
 import {
   ProCard,
   ProForm,
@@ -27,6 +29,8 @@ const EditSqlNode = (props) => {
   const [activeTab, setActiveTab] = useState(['sql']);
   const [response, setResponse] = useState();
   const [outputParams, setOutputParams] = useState([]);
+  const [appEnum, setAppEnum] = useState([]);
+  const [appIdCurrent, setAppIdCurrent] = useState(null);
 
   // 节点发生变化时，查询节点详情
   useEffect(() => {
@@ -36,45 +40,70 @@ const EditSqlNode = (props) => {
       props.curNodeId !== null &&
       props.curNodeId !== ''
     ) {
-      setNodeInfo(caseId, props.curNodeId, false);
+      setNodeInfo(props.curNodeId, false);
     }
   }, [props.open, props.curNodeId]);
 
+  const appData = () => {
+    listAll().then((result) => {
+      if (result.code === 200) {
+        const appEnumData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppEnum(appEnumData);
+      }
+    });
+  };
+
   // 查询当前节点信息
-  function setNodeInfo(caseId, nodeId, isCopy) {
-    // queryNodeInfo({ caseId: caseId, nodeId: nodeId }).then((res) => {
-    //   if (res.code === 200) {
-    //     setResponse(res);
-    //     setAssertsArray(genAssertsArray(res.data.assertsArray));
-    //     setOutputParams(jsonToArray(res.data.outputParams));
-    //     if (isCopy === false) {
-    //       if (res.data.id === null) {
-    //         setIsEdit(true);
-    //       } else {
-    //         setIsEdit(false);
-    //       }
-    //     }
-    //     formRef?.current?.setFieldsValue({
-    //       name: res.data.name,
-    //       dataSourceId: res.data.dataSourceId,
-    //       sqlScript: res.data.sqlScript,
-    //     });
-    //   }
-    // });
+  function setNodeInfo(nodeId, isCopy) {
+    porcessNodeDetail({ id: nodeId }).then((res) => {
+      if (res.code === 200 && res.data !== null) {
+        setResponse(res);
+        setAssertsArray(genAssertsArray(res.data.assertsArray));
+        setOutputParams(jsonToArray(res.data.outputParams));
+        if (isCopy === false) {
+          if (res.data.id === null) {
+            setIsEdit(true);
+          } else {
+            setIsEdit(false);
+          }
+        }
+        formRef?.current?.setFieldsValue({
+          name: res.data.name,
+          appId: res.data.appId,
+          dataSourceId: res.data.dataSourceId,
+          sqlScript: res.data.sqlScript,
+        });
+
+        if (res.data.appId !== null) {
+          appIdListData(res.data.appId);
+        }
+      }
+    });
   }
+
+  const appIdListData = (value) => {
+    getAppList({ appId: value }).then((result) => {
+      if (result.code === 200) {
+        const envData = result.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setDataSourceList(envData);
+        setAppIdCurrent(value);
+      }
+    });
+  };
 
   // 首次进入页面，查询数据源列表
   useEffect(() => {
-    // listAllDataSource().then((result) => {
-    //   if (result.code === 200) {
-    //     setDataSourceList(
-    //       result.data.map((item) => ({
-    //         value: item.id,
-    //         label: item.name,
-    //       })),
-    //     );
-    //   }
-    // });
+    appData();
   }, []);
 
   function genAssertsArrayJSON() {
@@ -99,30 +128,31 @@ const EditSqlNode = (props) => {
 
   // 点击保存或修改
   const handleFinish = (values) => {
-    // if (isEdit) {
-    //   for (let i = 0; i < props.nodes.length; i++) {
-    //     props.nodes[i]['data']['borderColor'] = 'black';
-    //   }
-    //   props.align();
-    //   handleNameChange(values.name);
-    //   addOrMod({
-    //     id: props.curNodeId,
-    //     testcaseId: caseId,
-    //     dataSourceId: values.dataSourceId,
-    //     sqlScript: values.sqlScript,
-    //     assertsArray: genAssertsArrayJSON(),
-    //     outputParams: arrayToJson(outputParams),
-    //     nodes: props.nodes,
-    //     edges: props.edges,
-    //   }).then((res) => {
-    //     if (res.code === 200) {
-    //       setIsEdit(false);
-    //       message.success('修改成功');
-    //     }
-    //   });
-    // } else {
-    //   setIsEdit(true);
-    // }
+    if (isEdit) {
+      for (let i = 0; i < props.nodes.length; i++) {
+        props.nodes[i]['data']['borderColor'] = 'black';
+      }
+      props.align();
+      handleNameChange(values.name);
+      porcessNodeSave({
+        id: Number(props.curNodeId),
+        caseId: caseId,
+        dataSourceId: values.dataSourceId,
+        sqlScript: values.sqlScript,
+        assertsArray: genAssertsArrayJSON(),
+        outputParams: arrayToJson(outputParams),
+        nodes: props.nodes,
+        edges: props.edges,
+        appId: appIdCurrent,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
+    } else {
+      setIsEdit(true);
+    }
   };
 
   const formItemLayout = {
@@ -148,7 +178,7 @@ const EditSqlNode = (props) => {
   };
 
   const handlePase = () => {
-    setNodeInfo(caseId, props.copyNodeId, true);
+    setNodeInfo(props.copyNodeId, true);
   };
 
   const handleCopy = () => {
@@ -217,6 +247,16 @@ const EditSqlNode = (props) => {
             disabled={!isEdit}
           />
           <ProFormSelect
+            options={appEnum}
+            width="sm"
+            name="appId"
+            label="应用"
+            rules={[{ required: isEdit }]}
+            disabled={!isEdit}
+            onChange={appIdListData}
+            initialValue={appIdCurrent}
+          />
+          <ProFormSelect
             showSearch
             options={dataSourceList}
             name="dataSourceId"
@@ -261,13 +301,13 @@ const EditSqlNode = (props) => {
               />
             </ProCard.TabPane>
             <ProCard.TabPane key="assertsArray" tab="断言">
-              {/* <SetAssert
+              <Assert
                 isEdit={isEdit}
                 enableEdit={enableEdit}
                 dataSource={assertsArray}
                 setDataSource={setAssertsArray}
                 nodeId={props.curNodeId}
-              /> */}
+              />
             </ProCard.TabPane>
           </ProCard>
           <ProForm.Group>
@@ -278,21 +318,21 @@ const EditSqlNode = (props) => {
               bordered={true}
             >
               <ProCard.TabPane key="setOutput" tab="设置节点出参">
-                {/* <EnvVarComponent
+                <EnvVarComponent
                   dataSource={outputParams}
                   setDataSource={setOutputParams}
                   isEdit={isEdit}
                   needTestAccount={false}
                   valueName="JSONPath"
                   keyName="变量名"
-                /> */}
+                />
               </ProCard.TabPane>
             </ProCard>
           </ProForm.Group>
         </ProForm>
       </Drawer>
-      {/* <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
-      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} /> */}
+      <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
+      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} />
     </>
   );
 };
