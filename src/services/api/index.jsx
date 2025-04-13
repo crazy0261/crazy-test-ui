@@ -1,3 +1,9 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-03-13 23:07:03
+ * @LastEditTime: 2025-04-13 18:01:06
+ * @Description:
+ */
 import { request } from '@umijs/max';
 import { get, post } from '../../utils/requestUtil';
 
@@ -75,4 +81,9 @@ export async function cURLApiImport(body) {
 /** swagger导入 */
 export async function swaggerApiImport(body) {
   return post('/crazy/api/management/swagger/import', body);
+}
+
+/** 应用下所有用例 */
+export async function appApiList(params) {
+  return get('/crazy/api/management/app/list', params);
 }

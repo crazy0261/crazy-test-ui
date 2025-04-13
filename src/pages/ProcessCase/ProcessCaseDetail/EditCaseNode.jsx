@@ -2,23 +2,21 @@ import Assert from '@/pages/ApiCase/ApiCaseDetail/Assert';
 import EnvVarComponent from '@/pages/ApiCase/ApiCaseDetail/EnvVarComponent';
 import ReqHeader from '@/pages/ApiCase/ApiCaseDetail/ReqHeader';
 import ReqParam from '@/pages/ApiCase/ApiCaseDetail/ReqParam';
-import { arrayToJson } from '../../../common';
-// import {
-//   listAllByAppId as listAllApiByAppId,
-//   queryById as queryApiById,
-// } from '@/services/apiManage';
-// import { listAll } from '@/services/config/secretManage';
-// import { addOrMod, queryNodeInfo } from '@/services/mulTestcase';
+import { appApiList, queryApiById } from '@/services/api';
+import { listAll } from '@/services/application';
+import { getAppIds } from '@/services/encrypt';
+import { porcessNodeDetail, porcessNodeSave } from '@/services/processCaseNode';
 import { ArrowsAltOutlined, ShrinkOutlined } from '@ant-design/icons';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, Drawer, message, Radio, Space, Tooltip } from 'antd';
+import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
+import { arrayToJson, jsonToArray } from '../../../common';
 
 // 用例节点编辑页
 const EditCaseNode = (props) => {
   const { initialState } = useModel('@@initialState');
-  const { appList } = initialState || {};
   const [curAppId, setCurAppId] = useState();
   const [curApiId, setCurApiId] = useState();
   const [apiList, setApiList] = useState([]);
@@ -31,6 +29,7 @@ const EditCaseNode = (props) => {
   const [activeTab, setActiveTab] = useState(['requestParams']);
   const [response, setResponse] = useState();
   const [secretList, setSecretList] = useState([]);
+  const [appList, setAppList] = useState([]);
 
   const urlParams = new URL(window.location.href).searchParams;
   const caseId = urlParams.get('id');
@@ -41,6 +40,24 @@ const EditCaseNode = (props) => {
   const defaultDrawerWidth = 800;
   const largeDrawerWidth = 1200;
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
+
+  const applicationList = () => {
+    listAll().then((res) => {
+      if (res.code === 200 && res.data) {
+        const applicationData = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setAppList(applicationData);
+      }
+    });
+  };
+
+  useEffect(() => {
+    applicationList();
+  }, [curAppId]);
 
   // 生成JSON格式请求头头
   function genRequestHeadersJSON() {
@@ -73,48 +90,47 @@ const EditCaseNode = (props) => {
       props.curNodeId !== null &&
       props.curNodeId !== ''
     ) {
-      setNodeInfo(caseId, props.curNodeId, false);
+      setNodeInfo(props.curNodeId, false);
     }
   }, [props.open, props.curNodeId]);
 
-  function setNodeInfo(caseId, nodeId, isCopy) {
-    // console.log('查询用例节点详情，nodeId='+nodeId)
-    // queryNodeInfo({ caseId: caseId, nodeId: nodeId }).then((res) => {
-    //   if (res.code === 200) {
-    //     if (isCopy === false) {
-    //       if (res.data.id === null) {
-    //         setIsEdit(true);
-    //       } else {
-    //         setIsEdit(false);
-    //       }
-    //     }
-    //     formRef?.current?.setFieldsValue({
-    //       name: res.data.name,
-    //       appId: res.data.appId,
-    //       apiId: res.data.apiId,
-    //       secretId: res.data.secretId,
-    //     });
-    //     const requestParams = res.data.requestParams;
-    //     if (
-    //       requestParams !== undefined &&
-    //       requestParams !== null &&
-    //       requestParams !== ''
-    //       // Object.keys(JSONbig.parse(requestParams)).length > 0
-    //     ) {
-    //       setReqParams(JSON.stringify(JSONbig.parse(requestParams), null, 4));
-    //       handleClickApiName(res.data.apiId, false);
-    //     } else {
-    //       setReqParams();
-    //       handleClickApiName(res.data.apiId, true);
-    //     }
-    //     setResponse(res);
-    //     setCurAppId(res.data.appId);
-    //     setCurApiId(res.data.apiId);
-    //     setReqHeaderArray(jsonToArray(res.data.requestHeaders));
-    //     setAssertsArray(genAssertsArray(res.data.assertsArray));
-    //     setOutputParams(jsonToArray(res.data.outputParams));
-    //   }
-    // });
+  function setNodeInfo(nodeId, isCopy) {
+    porcessNodeDetail({ id: nodeId }).then((res) => {
+      if (res.code === 200 && res.data !== null) {
+        if (isCopy === false) {
+          if (res.data === null || res.data.id === null) {
+            setIsEdit(true);
+          } else {
+            setIsEdit(false);
+          }
+        }
+        formRef?.current?.setFieldsValue({
+          name: res.data.name,
+          appId: res.data.appId,
+          apiId: res.data.apiId,
+          secretId: res.data.secretId,
+        });
+        const requestParams = res.data.requestParams;
+        if (
+          requestParams !== undefined &&
+          requestParams !== null &&
+          requestParams !== ''
+          // Object.keys(JSONbig.parse(requestParams)).length > 0
+        ) {
+          setReqParams(JSON.stringify(JSONbig.parse(requestParams), null, 4));
+          handleClickApiName(res.data.apiId, false);
+        } else {
+          setReqParams();
+          handleClickApiName(res.data.apiId, true);
+        }
+        setResponse(res);
+        setCurAppId(res.data.appId);
+        setCurApiId(res.data.apiId);
+        setReqHeaderArray(jsonToArray(res.data.requestHeaders));
+        setAssertsArray(genAssertsArray(res.data.assertsArray));
+        setOutputParams(jsonToArray(res.data.outputParams));
+      }
+    });
   }
 
   // 生成断言Array
@@ -133,56 +149,55 @@ const EditCaseNode = (props) => {
 
   // 选择接口名时，更新method和path
   function handleClickApiName(apiId, isSetReqParam) {
-    // if (apiId !== undefined && apiId !== null) {
-    //   queryApiById({ id: apiId }).then((res) => {
-    //     if (res.code === 200) {
-    //       const curName = formRef?.current?.getFieldsValue().name;
-    //       console.log('curName=', curName);
-    //       if (curName === undefined || curName === null || curName === 'TestCaseNode node') {
-    //         formRef?.current?.setFieldsValue({
-    //           name: res.data.name,
-    //         });
-    //         handleNameChange(res.data.name);
-    //       }
-    //       setMethod(res.data.method);
-    //       setPath(res.data.path);
-    //       setRequestParamsTemp(res.data.requestParams);
-    //       if (
-    //         isSetReqParam === true &&
-    //         res.data.requestParams !== undefined &&
-    //         res.data.requestParams !== null
-    //       ) {
-    //         const reqTempJson = JSONbig.parse(res.data.requestParams);
-    //         let json = {};
-    //         for (let key of Object.keys(reqTempJson)) {
-    //           json[key] = '';
-    //         }
-    //         setReqParams(JSON.stringify(JSONbig.parse(JSON.stringify(json)), null, 4));
-    //       }
-    //     }
-    //   });
-    // }
+    if (apiId !== undefined && apiId !== null) {
+      queryApiById({ id: apiId }).then((res) => {
+        if (res.code === 200) {
+          const curName = formRef?.current?.getFieldsValue().name;
+          if (curName === undefined || curName === null || curName === 'TestCaseNode node') {
+            formRef?.current?.setFieldsValue({
+              name: res.data.name,
+            });
+            handleNameChange(res.data.name);
+          }
+          setMethod(res.data.method);
+          setPath(res.data.path);
+          setRequestParamsTemp(res.data.requestParams);
+          if (
+            isSetReqParam === true &&
+            res.data.requestParams !== undefined &&
+            res.data.requestParams !== null
+          ) {
+            const reqTempJson = JSONbig.parse(res.data.requestParams);
+            let json = {};
+            for (let key of Object.keys(reqTempJson)) {
+              json[key] = '';
+            }
+            setReqParams(JSON.stringify(JSONbig.parse(JSON.stringify(json)), null, 4));
+          }
+        }
+      });
+    }
   }
 
   // 查询接口列表
   const queryApiList = () => {
-    // if (curAppId !== undefined && curAppId !== '' && curAppId !== null) {
-    //   listAllApiByAppId({ appId: curAppId + '' }).then((result) => {
-    //     if (result.code === 200) {
-    //       setApiList(
-    //         result.data.map((item) => ({
-    //           value: item.id,
-    //           label: item.path,
-    //           method: item.method,
-    //           path: item.path,
-    //           requestParams: item.requestParams,
-    //         })),
-    //       );
-    //     } else {
-    //       message.error('查询接口列表失败');
-    //     }
-    //   });
-    // }
+    if (curAppId !== undefined && curAppId !== '' && curAppId !== null) {
+      appApiList({ appId: curAppId }).then((result) => {
+        if (result.code === 200) {
+          setApiList(
+            result.data.map((item) => ({
+              value: item.id,
+              label: item.path,
+              method: item.method,
+              path: item.path,
+              requestParams: item.requestParams,
+            })),
+          );
+        } else {
+          message.error('查询接口列表失败');
+        }
+      });
+    }
   };
 
   const handleNameChange = (value) => {
@@ -201,50 +216,48 @@ const EditCaseNode = (props) => {
       }
       handleNameChange(values.name);
       props.align();
-      // addOrMod({
-      //   id: props.curNodeId,
-      //   testcaseId: caseId,
-      //   appId: values.appId,
-      //   apiId: values.apiId,
-      //   secretId: values.secretId,
-      //   requestHeaders: genRequestHeadersJSON(),
-      //   requestParams: reqParams,
-      //   assertsArray: genAssertsArrayJSON(),
-      //   outputParams: arrayToJson(outputParams),
-      //   nodes: props.nodes,
-      //   edges: props.edges,
-      // }).then((res) => {
-      //   if (res.code === 200) {
-      //     setIsEdit(false);
-      //     message.success('修改成功');
-      //   }
-      // });
+      porcessNodeSave({
+        id: props.curNodeId,
+        caseId: caseId,
+        appId: values.appId,
+        apiId: values.apiId,
+        secretId: values.secretId,
+        requestHeaders: genRequestHeadersJSON(),
+        requestParams: reqParams,
+        assertsArray: genAssertsArrayJSON(),
+        outputParams: arrayToJson(outputParams),
+        nodes: props.nodes,
+        edges: props.edges,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
     } else {
       setIsEdit(true);
     }
   };
 
-  // const formItemLayout = {
-  //   labelCol: { span: 0 },
-  //   wrapperCol: { span: 0 },
-  // };
-
   // 首次进入页面
   useEffect(() => {
-    queryAllSecret();
-  }, []);
+    if (curAppId !== null) {
+      queryAllSecret(curAppId);
+    }
+  }, [curAppId]);
 
-  const queryAllSecret = () => {
-    // listAll().then((result) => {
-    //   if (result.code === 200) {
-    //     setSecretList(
-    //       result.data.map((item) => ({
-    //         value: item.id,
-    //         label: item.name,
-    //       })),
-    //     );
-    //   }
-    // });
+  const queryAllSecret = (value) => {
+    getAppIds({ appId: value }).then((res) => {
+      if (res.code === 200) {
+        const data = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setSecretList(data);
+      }
+    });
   };
 
   const onClose = () => {
@@ -258,7 +271,7 @@ const EditCaseNode = (props) => {
   };
 
   const handlePase = () => {
-    setNodeInfo(caseId, props.copyNodeId, true);
+    setNodeInfo(props.copyNodeId, true);
     setIsEdit(true);
   };
 
@@ -274,7 +287,7 @@ const EditCaseNode = (props) => {
   return (
     <>
       <Drawer
-        title="编辑节点"
+        title="编辑用例节点"
         width={drawerWidth}
         onClose={onClose}
         open={props.open}
@@ -328,7 +341,6 @@ const EditCaseNode = (props) => {
               submitText: isEdit ? '保存' : '编辑',
             },
           }}
-          // {...formItemLayout}
           layout={'LAYOUT_TYPE_HORIZONTAL'}
           onFinish={(e) => handleFinish(e)}
         >
@@ -401,14 +413,22 @@ const EditCaseNode = (props) => {
                   requestParamsTemp={requestParamsTemp}
                 />
               </ProCard.TabPane>
-              <ProCard.TabPane key="requestHeaders" tab="请求头">
+              <ProCard.TabPane
+                key="requestHeaders"
+                tab="请求头"
+                style={{ width: '204vh', maxWidth: '100%' }}
+              >
                 <ReqHeader
                   isEdit={isEdit}
                   dataSource={reqHeaderArray}
                   setDataSource={setReqHeaderArray}
                 />
               </ProCard.TabPane>
-              <ProCard.TabPane key="assertsArray" tab="断言">
+              <ProCard.TabPane
+                key="assertsArray"
+                tab="断言"
+                style={{ width: '204vh', maxWidth: '100%' }}
+              >
                 <Assert
                   isEdit={isEdit}
                   enableEdit={enableEdit}
@@ -425,7 +445,6 @@ const EditCaseNode = (props) => {
               tabs={{ type: 'card' }}
               style={{ marginBottom: 10, width: '770px', maxWidth: '100%' }}
               size="small"
-              // title="设置用例出参"
               bordered={true}
             >
               <ProCard.TabPane key="setOutput" tab="设置节点出参">

@@ -1,7 +1,7 @@
-// import CaseVar from '@/pages/ApiTestCaseDetail/CaseVar';
-// import CommonVar from '@/pages/ApiTestCaseDetail/CommonVar';
-// import SetAssert from '@/pages/ApiTestCaseDetail/SetAssert';
-// import { addOrMod, queryNodeInfo } from '@/services/mulTestcase';
+import Assert from '@/pages/ApiCase/ApiCaseDetail/Assert';
+import CaseVar from '@/pages/ApiCase/ApiCaseDetail/CaseVar';
+import CommonVar from '@/pages/ApiCase/ApiCaseDetail/CommonVar';
+import { porcessNodeDetail, porcessNodeSave } from '@/services/processCaseNode';
 import { ProCard, ProForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Drawer, message, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -32,24 +32,24 @@ const EditPreStepNode = (props) => {
   }, [props.open, props.curNodeId]);
 
   function setNodeInfo(caseId, nodeId, isCopy) {
-    // queryNodeInfo({ caseId: caseId, nodeId: nodeId }).then((res) => {
-    //   if (res.code === 200) {
-    //     setResponse(res);
-    //     if (isCopy === false) {
-    //       if (res.data.id === null) {
-    //         setIsEdit(true);
-    //       } else {
-    //         setIsEdit(false);
-    //       }
-    //     }
-    //     formRef?.current?.setFieldsValue({
-    //       name: res.data.name,
-    //       groovyKey: res.data.groovyKey,
-    //       groovyScript: res.data.groovyScript,
-    //     });
-    //     setAssertsArray(genAssertsArray(res.data.assertsArray));
-    //   }
-    // });
+    porcessNodeDetail({ caseId: caseId, nodeId: nodeId }).then((res) => {
+      if (res.code === 200) {
+        setResponse(res);
+        if (isCopy === false) {
+          if (res.data.id === null) {
+            setIsEdit(true);
+          } else {
+            setIsEdit(false);
+          }
+        }
+        formRef?.current?.setFieldsValue({
+          name: res.data.name,
+          groovyKey: res.data.groovyKey,
+          groovyScript: res.data.groovyScript,
+        });
+        setAssertsArray(genAssertsArray(res.data.assertsArray));
+      }
+    });
   }
 
   const enableEdit = () => {
@@ -58,28 +58,29 @@ const EditPreStepNode = (props) => {
 
   // 点击保存或修改
   const handleFinish = (values) => {
-    // if (isEdit) {
-    //   for (let i = 0; i < props.nodes.length; i++) {
-    //     props.nodes[i]['data']['borderColor'] = 'black';
-    //   }
-    //   props.align();
-    //   addOrMod({
-    //     id: props.curNodeId,
-    //     testcaseId: caseId,
-    //     groovyKey: values.groovyKey,
-    //     groovyScript: values.groovyScript,
-    //     assertsArray: genAssertsArrayJSON(),
-    //     nodes: props.nodes,
-    //     edges: props.edges,
-    //   }).then((res) => {
-    //     if (res.code === 200) {
-    //       setIsEdit(false);
-    //       message.success('修改成功');
-    //     }
-    //   });
-    // } else {
-    //   setIsEdit(true);
-    // }
+    console.log('handleFinish', values);
+    if (isEdit) {
+      for (let i = 0; i < props.nodes.length; i++) {
+        props.nodes[i]['data']['borderColor'] = 'black';
+      }
+      props.align();
+      porcessNodeSave({
+        id: Number(props.curNodeId),
+        caseId: caseId,
+        groovyKey: values.groovyKey,
+        groovyScript: values.groovyScript,
+        assertsArray: genAssertsArrayJSON(),
+        nodes: props.nodes,
+        edges: props.edges,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
+    } else {
+      setIsEdit(true);
+    }
   };
 
   const formItemLayout = {
@@ -137,7 +138,7 @@ const EditPreStepNode = (props) => {
   return (
     <>
       <Drawer
-        title="编辑节点"
+        title="编辑前置节点"
         width={800}
         onClose={onClose}
         open={props.open}
@@ -180,7 +181,7 @@ const EditPreStepNode = (props) => {
               submitText: isEdit ? '保存' : '编辑',
             },
           }}
-          {...formItemLayout}
+          // {...formItemLayout}
           layout={'LAYOUT_TYPE_HORIZONTAL'}
           onFinish={(e) => handleFinish(e)}
         >
@@ -236,19 +237,19 @@ const EditPreStepNode = (props) => {
               />
             </ProCard.TabPane>
             <ProCard.TabPane key="assertsArray" tab="断言">
-              {/* <SetAssert
+              <Assert
                 isEdit={isEdit}
                 enableEdit={enableEdit}
                 dataSource={assertsArray}
                 setDataSource={setAssertsArray}
                 nodeId={props.curNodeId}
-              /> */}
+              />
             </ProCard.TabPane>
           </ProCard>
         </ProForm>
       </Drawer>
-      {/* <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
-      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} /> */}
+      <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
+      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} />
     </>
   );
 };
