@@ -85,23 +85,6 @@ const RecordList = () => {
               history.push('/schedule/result/' + scheduleId + '/' + record.scheduleBatchId);
             }}
           />
-          {/* <Tooltip key="show1" title="中断">
-            <Button
-              icon={<StopTwoTone />}
-              size={'small'}
-              onClick={() => {
-                interrupt({ id: scheduleId, scheduleBatchId: record.scheduleBatchId }).then(
-                  (res) => {
-                    console.log('res=', res);
-                    if (res.code === 200) {
-                      message.success('已中断');
-                      actionRef.current.reload();
-                    }
-                  },
-                );
-              }}
-            />
-          </Tooltip> */}
         </div>,
       ],
     },
