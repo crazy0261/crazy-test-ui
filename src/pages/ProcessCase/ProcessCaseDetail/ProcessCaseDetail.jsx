@@ -161,7 +161,6 @@ const ProcessCaseDetail = (props) => {
 
   // 点击节点连接线
   const onEdgeClick = (e, edge) => {
-    // console.log('点击连接线', edge); // edge拿不到完整的数据?
     for (let i = 0; i < props.nodes.length; i++) {
       if (
         props.nodes[i]['id'] === edge.source &&

@@ -1,6 +1,6 @@
-// import { modify, queryById } from '@/services/mulTestcase';
+import { detail, save } from '@/services/processCase';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
-import { Drawer } from 'antd';
+import { Drawer, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 // 编辑边
@@ -12,50 +12,50 @@ const EditEdge = (props) => {
 
   // 节点发生变化时，查询节点详情
   useEffect(() => {
-    // if (props.open === true && props.curEdgeId !== undefined && props.curEdgeId !== null) {
-    //   queryById({ id: caseId }).then((res) => {
-    //     if (res.code === 200) {
-    //       if (res.data.id === null) {
-    //         setIsEdit(true);
-    //       } else {
-    //         setIsEdit(false);
-    //       }
-    //       const edgeArray = res?.data?.edgeArray;
-    //       if (edgeArray !== null && edgeArray !== undefined) {
-    //         for (let i = 0; i < edgeArray.length; i++) {
-    //           if (edgeArray[i]['id'] === props.curEdgeId) {
-    //             formRef?.current?.setFieldsValue({
-    //               name: edgeArray[i]['label'],
-    //             });
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     }
-    //   });
-    // }
+    if (props.open === true && props.curEdgeId !== undefined && props.curEdgeId !== null) {
+      detail({ id: caseId }).then((res) => {
+        if (res.code === 200) {
+          if (res.data.id === null) {
+            setIsEdit(true);
+          } else {
+            setIsEdit(false);
+          }
+          const edgeArray = res?.data?.edgesArray;
+          if (edgeArray !== null && edgeArray !== undefined) {
+            for (let i = 0; i < edgeArray.length; i++) {
+              if (edgeArray[i]['id'] === props.curEdgeId) {
+                formRef?.current?.setFieldsValue({
+                  name: edgeArray[i]['label'],
+                });
+                break;
+              }
+            }
+          }
+        }
+      });
+    }
   }, [props.open, props.curEdgeId]);
 
   // 点击保存或修改
   const handleFinish = (values) => {
-    // if (isEdit) {
-    //   for (let i = 0; i < props.nodes.length; i++) {
-    //     props.nodes[i]['data']['borderColor'] = 'black';
-    //   }
-    //   props.align();
-    //   modify({
-    //     id: caseId,
-    //     nodes: props.nodes,
-    //     edges: props.edges,
-    //   }).then((res) => {
-    //     if (res.code === 200) {
-    //       setIsEdit(false);
-    //       message.success('修改成功');
-    //     }
-    //   });
-    // } else {
-    //   setIsEdit(true);
-    // }
+    if (isEdit) {
+      for (let i = 0; i < props.nodes.length; i++) {
+        props.nodes[i]['data']['borderColor'] = 'black';
+      }
+      props.align();
+      save({
+        id: caseId,
+        nodes: props.nodes,
+        edges: props.edges,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
+    } else {
+      setIsEdit(true);
+    }
   };
 
   const formItemLayout = {
@@ -89,7 +89,6 @@ const EditEdge = (props) => {
               submitText: isEdit ? '保存' : '编辑',
             },
           }}
-          {...formItemLayout}
           layout={'LAYOUT_TYPE_HORIZONTAL'}
           onFinish={(e) => handleFinish(e)}
         >

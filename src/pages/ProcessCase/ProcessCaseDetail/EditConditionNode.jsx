@@ -1,6 +1,6 @@
-// import CaseVar from '@/pages/ApiTestCaseDetail/CaseVar';
-// import CommonVar from '@/pages/ApiTestCaseDetail/CommonVar';
-// import { addOrMod, queryNodeInfo } from '@/services/mulTestcase';
+import CaseVar from '@/pages/ApiCase/ApiCaseDetail/CaseVar';
+import CommonVar from '@/pages/ApiCase/ApiCaseDetail/CommonVar';
+import { porcessNodeDetail, porcessNodeSave } from '@/services/processCaseNode';
 import { ProForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Drawer, message, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -18,7 +18,7 @@ const EditConditionNode = (props) => {
   useEffect(() => {
     if (props.open === true) {
       if (props.curNodeId !== undefined && props.curNodeId !== null) {
-        setNodeInfo(caseId, props.curNodeId, false);
+        setNodeInfo(props.curNodeId, false);
       } else {
         console.log('props.curNodeId = ', props.curNodeId);
         console.log('props.curNodeId !== undefined ', props.curNodeId !== undefined);
@@ -27,23 +27,23 @@ const EditConditionNode = (props) => {
     }
   }, [props.open, props.curNodeId]);
 
-  function setNodeInfo(caseId, nodeId, isCopy) {
-    // queryNodeInfo({ caseId: caseId, nodeId: nodeId }).then((res) => {
-    //   if (res.code === 200) {
-    //     if (isCopy === false) {
-    //       if (res.data.id === null) {
-    //         setIsEdit(true);
-    //       } else {
-    //         setIsEdit(false);
-    //       }
-    //     }
-    //     formRef?.current?.setFieldsValue({
-    //       name: res.data.name,
-    //       groovyKey: res.data.groovyKey,
-    //       groovyScript: res.data.groovyScript,
-    //     });
-    //   }
-    // });
+  function setNodeInfo(nodeId, isCopy) {
+    porcessNodeDetail({ id: nodeId }).then((res) => {
+      if (res.code === 200) {
+        if (isCopy === false) {
+          if (res.data.id === null) {
+            setIsEdit(true);
+          } else {
+            setIsEdit(false);
+          }
+        }
+        formRef?.current?.setFieldsValue({
+          name: res.data.name,
+          groovyKey: res.data.groovyKey,
+          groovyScript: res.data.groovyScript,
+        });
+      }
+    });
   }
 
   // 点击保存或修改
@@ -53,29 +53,23 @@ const EditConditionNode = (props) => {
         props.nodes[i]['data']['borderColor'] = 'black';
       }
       props.align();
-      // addOrMod({
-      //   id: props.curNodeId,
-      //   testcaseId: caseId,
-      //   groovyKey: values.groovyKey,
-      //   groovyScript: values.groovyScript,
-      //   nodes: props.nodes,
-      //   edges: props.edges,
-      // }).then((res) => {
-      //   if (res.code === 200) {
-      //     setIsEdit(false);
-      //     message.success('修改成功');
-      //   }
-      // });
+      porcessNodeSave({
+        id: props.curNodeId,
+        caseId: caseId,
+        groovyKey: values.groovyKey,
+        groovyScript: values.groovyScript,
+        nodes: props.nodes,
+        edges: props.edges,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
     } else {
       setIsEdit(true);
     }
   };
-
-  const formItemLayout = {
-    labelCol: { span: 0 },
-    wrapperCol: { span: 0 },
-  };
-
   const onClose = () => {
     for (let i = 0; i < props.nodes.length; i++) {
       if (props.nodes[i]['id'] === props.curNodeId) {
@@ -95,7 +89,7 @@ const EditConditionNode = (props) => {
   };
 
   const handlePase = () => {
-    setNodeInfo(caseId, props.copyNodeId, true);
+    setNodeInfo(props.copyNodeId, true);
   };
 
   const handleCopy = () => {
@@ -106,7 +100,7 @@ const EditConditionNode = (props) => {
   return (
     <>
       <Drawer
-        title="编辑节点"
+        title="编辑条件节点"
         width={800}
         onClose={onClose}
         open={props.open}
@@ -149,7 +143,6 @@ const EditConditionNode = (props) => {
               submitText: isEdit ? '保存' : '编辑',
             },
           }}
-          {...formItemLayout}
           layout={'LAYOUT_TYPE_HORIZONTAL'}
           onFinish={(e) => handleFinish(e)}
         >
@@ -194,8 +187,8 @@ const EditConditionNode = (props) => {
           />
         </ProForm>
       </Drawer>
-      {/* <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
-      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} /> */}
+      <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
+      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} />
     </>
   );
 };
