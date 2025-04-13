@@ -1,8 +1,10 @@
-// import CaseVar from '@/pages/ApiTestCaseDetail/CaseVar';
-// import CommonVar from '@/pages/ApiTestCaseDetail/CommonVar';
-// import EnvVarComponent from '@/pages/ApiTestCaseDetail/EnvVarComponent';
-// import { addOrMod, listAll, queryNodeInfo } from '@/services/mulTestcase';
+import CaseVar from '@/pages/ApiCase/ApiCaseDetail/CaseVar';
+import CommonVar from '@/pages/ApiCase/ApiCaseDetail/CommonVar';
+import EnvVarComponent from '@/pages/ApiCase/ApiCaseDetail/EnvVarComponent';
 // import { queryLastSucOneByCase } from '@/services/mulTestcaseResult';
+import { arrayToJson } from '@/common';
+import { processSubList } from '@/services/processCase';
+import { porcessNodeDetail, porcessNodeSave } from '@/services/processCaseNode';
 import { ProCard, ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Button, Drawer, Form, message, Space, Tooltip, Typography } from 'antd';
 import JSONbig from 'json-bigint';
@@ -29,77 +31,72 @@ const EditSubProcess = (props) => {
       props.curNodeId !== null &&
       props.curNodeId !== ''
     ) {
-      setNodeInfo(caseId, props.curNodeId, false);
+      setNodeInfo(props.curNodeId, false);
     }
   }, [props.open, props.curNodeId]);
 
-  function setNodeInfo(caseId, nodeId, isCopy) {
-    // queryNodeInfo({ caseId: caseId, nodeId: nodeId }).then((res) => {
-    //   if (res.code === 200) {
-    //     if (isCopy === false) {
-    //       if (res.data.id === null) {
-    //         setIsEdit(true);
-    //       } else {
-    //         setIsEdit(false);
-    //       }
-    //     }
-    //     formRef?.current?.setFieldsValue({
-    //       name: res.data.name,
-    //       subCaseId: res.data.subCaseId,
-    //     });
-    //     setInputParams(jsonToArray(res.data.inputParams));
-    //     if (res.data.subCaseId !== null) {
-    //       handleCaseChange(res.data.subCaseId);
-    //     }
-    //   }
-    // });
+  function setNodeInfo(nodeId, isCopy) {
+    porcessNodeDetail({ id: nodeId }).then((res) => {
+      if (res.code === 200 && res.data !== null) {
+        if (isCopy === false) {
+          if (res.data.id === null) {
+            setIsEdit(true);
+          } else {
+            setIsEdit(false);
+          }
+        }
+        formRef?.current?.setFieldsValue({
+          name: res.data.name,
+          subCaseId: res.data.subCaseId,
+        });
+        setInputParams(jsonToArray(res.data.inputParams));
+        if (res.data.subCaseId !== null) {
+          handleCaseChange(res.data.subCaseId);
+        }
+      }
+    });
   }
 
   // 首次进入页面，查询场景用例列表
   useEffect(() => {
-    // listAll().then((result) => {
-    //   if (result.code === 200) {
-    //     setMulCaseList(
-    //       result.data
-    //         .filter((item) => item.id !== parseInt(caseId))
-    //         .map((item) => ({
-    //           value: item.id,
-    //           label: item.name,
-    //         })),
-    //     );
-    //   }
-    // });
+    processSubList().then((result) => {
+      if (result.code === 200) {
+        setMulCaseList(
+          result.data
+            .filter((item) => item.id !== parseInt(caseId))
+            .map((item) => ({
+              value: item.id,
+              label: item.name,
+            })),
+        );
+      }
+    });
   }, []);
 
   // 点击保存或修改
   const handleFinish = (values) => {
-    // if (isEdit) {
-    //   for (let i = 0; i < props.nodes.length; i++) {
-    //     props.nodes[i]['data']['borderColor'] = 'black';
-    //   }
-    //   props.align();
-    //   handleNameChange(values.name);
-    //   addOrMod({
-    //     id: props.curNodeId,
-    //     testcaseId: caseId,
-    //     subCaseId: values.subCaseId,
-    //     inputParams: arrayToJson(inputParams),
-    //     nodes: props.nodes,
-    //     edges: props.edges,
-    //   }).then((res) => {
-    //     if (res.code === 200) {
-    //       setIsEdit(false);
-    //       message.success('修改成功');
-    //     }
-    //   });
-    // } else {
-    //   setIsEdit(true);
-    // }
-  };
-
-  const formItemLayout = {
-    labelCol: { span: 0 },
-    wrapperCol: { span: 0 },
+    if (isEdit) {
+      for (let i = 0; i < props.nodes.length; i++) {
+        props.nodes[i]['data']['borderColor'] = 'black';
+      }
+      props.align();
+      handleNameChange(values.name);
+      porcessNodeSave({
+        id: Number(props.curNodeId),
+        caseId: caseId,
+        subCaseId: values.subCaseId,
+        inputParams: arrayToJson(inputParams),
+        nodes: props.nodes,
+        edges: props.edges,
+      }).then((res) => {
+        if (res.code === 200) {
+          setIsEdit(false);
+          message.success('修改成功');
+        }
+      });
+    } else {
+      setIsEdit(true);
+    }
   };
 
   const onClose = () => {
@@ -119,6 +116,7 @@ const EditSubProcess = (props) => {
     }
   };
 
+  // 子流程最近一次执行成功的出参：
   const handleCaseChange = (e) => {
     // queryLastSucOneByCase({ caseId: e }).then((res) => {
     //   if (res.code === 200) {
@@ -138,14 +136,14 @@ const EditSubProcess = (props) => {
   const handleClickDetail = () => {
     const subCaseId = formRef?.current?.getFieldsValue('subCaseId')?.subCaseId;
     if (subCaseId !== null && subCaseId !== undefined) {
-      window.open('/mulTestCase/detail?id=' + subCaseId);
+      window.open('/case/proces/detail?id=' + subCaseId);
     } else {
       message.error('请选择子流程');
     }
   };
 
   const handlePase = () => {
-    setNodeInfo(caseId, props.copyNodeId, true);
+    setNodeInfo(props.copyNodeId, true);
   };
 
   const handleCopy = () => {
@@ -199,7 +197,6 @@ const EditSubProcess = (props) => {
               submitText: isEdit ? '保存' : '编辑',
             },
           }}
-          // {...formItemLayout}
           layout={'LAYOUT_TYPE_HORIZONTAL'}
           onFinish={(e) => handleFinish(e)}
         >
@@ -250,12 +247,12 @@ const EditSubProcess = (props) => {
               >
                 公共变量
               </Button>
-              {/* <EnvVarComponent
+              <EnvVarComponent
                 dataSource={inputParams}
                 setDataSource={setInputParams}
                 isEdit={isEdit}
                 needTestAccount={false}
-              /> */}
+              />
             </ProCard.TabPane>
             <ProCard.TabPane key="output" tab="子流程出参">
               <Form.Item
@@ -291,8 +288,8 @@ const EditSubProcess = (props) => {
           </ProCard>
         </ProForm>
       </Drawer>
-      {/* <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
-      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} /> */}
+      <CommonVar isModalOpen={commonVarModalOpen} setIsModalOpen={setCommonVarModalOpen} />
+      <CaseVar isModalOpen={caseVarModalOpen} setIsModalOpen={setCaseVarModalOpen} />
     </>
   );
 };

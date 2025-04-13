@@ -1,14 +1,15 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-04-10 21:15:17
- * @Description:  公共变量信息
+ * @LastEditTime: 2025-04-13 19:30:09
+ * @Description: 公共变量信息
  */
 import { ProTable } from '@ant-design/pro-components';
 import { Modal } from 'antd';
+import { useEffect, useState } from 'react';
 
 const CommonVar = (props) => {
-  const tableListDataSource = [
+  const [tableListDataSource, setTableListDataSource] = useState([
     {
       describe: '当前时间戳(毫秒)',
       commonVar: '${__timestamp__}',
@@ -35,7 +36,7 @@ const CommonVar = (props) => {
       example:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWQiOjEsIm5hbWUiOiLnrqHnkIblkZgiLCJ0ZW5hbnRJZCI6IjEiLCJpZCI6MSwiZXhwIjoxNzQzMDk4NzkzLCJpYXQiOjE3NDMwODQzOTMsImFjY291bnQiOiJhZG1pbiJ9.uRRdNzalx-cHKtx6oiUHu071fNUHYJ1p-h9cX0LdHxs',
     },
-  ];
+  ]);
 
   const columns = [
     {
@@ -56,9 +57,62 @@ const CommonVar = (props) => {
     },
   ];
 
+  // 动态生成当前时间并更新数据源
+  useEffect(() => {
+    const now = new Date(); // 获取当前时间
+
+    // 更新时间戳（毫秒）
+    const timestamp = now.getTime();
+
+    // 更新时间戳（秒）
+    const timestampSecond = Math.floor(now.getTime() / 1000);
+
+    // 更新当前时间（格式化）
+    const currentTime = now
+      .toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      .replace(/\//g, '-'); // 替换 / 为 -
+
+    // 更新当前日期（格式化）
+    const currentDate = now
+      .toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      })
+      .replace(/\//g, '-'); // 替换 / 为 -
+
+    // 更新数据源
+    const updatedDataSource = tableListDataSource.map((item) => {
+      switch (item.commonVar) {
+        case '${__timestamp__}':
+          return { ...item, example: timestamp.toString() };
+        case '${__timestamp_second__}':
+          return { ...item, example: timestampSecond.toString() };
+        case '${__current_time__}':
+          return { ...item, example: currentTime };
+        case '${__current_date__}':
+          return { ...item, example: currentDate };
+        default:
+          return item;
+      }
+    });
+
+    // 更新状态
+    setTableListDataSource(updatedDataSource);
+  }, []); // 仅在组件第一次渲染时执行
+
   const handleOk = () => {
     props.setIsModalOpen(false);
   };
+
   const handleCancel = () => {
     props.setIsModalOpen(false);
   };
@@ -74,12 +128,7 @@ const CommonVar = (props) => {
       >
         <ProTable
           columns={columns}
-          request={(params, sorter, filter) => {
-            return Promise.resolve({
-              data: tableListDataSource,
-              success: true,
-            });
-          }}
+          dataSource={tableListDataSource} // 使用动态更新的数据源
           rowKey="key"
           options={false}
           search={false}
@@ -89,4 +138,5 @@ const CommonVar = (props) => {
     </div>
   );
 };
+
 export default CommonVar;

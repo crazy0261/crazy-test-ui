@@ -44,3 +44,8 @@ export async function del(body) {
 export async function detail(params) {
   return get('/crazy/process/case/detail', params);
 }
+
+/** 子流程 */
+export async function processSubList(params) {
+  return get('/crazy/process/case/sub', params);
+}
