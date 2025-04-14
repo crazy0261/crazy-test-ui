@@ -114,7 +114,7 @@ const ProcessCaseDetail = (props) => {
     }
     console.log('node?.type-------->', node?.type);
     console.log('isDebug-------->', isDebug);
-    if (node?.type === 'StartNode' || node?.type === 'EndNode') {
+    if (node?.type === 'StartNode') {
       if (isDebug) {
         setMulcaseResultOpen(true);
       } else {
