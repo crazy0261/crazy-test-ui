@@ -1,15 +1,15 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-13 23:07:03
- * @LastEditTime: 2025-04-13 18:01:06
+ * @LastEditTime: 2025-04-17 01:19:48
  * @Description:
  */
 import { request } from '@umijs/max';
 import { get, post } from '../../utils/requestUtil';
 
 /** 分页查询接口列表 */
-export async function list(body) {
-  return post('/crazy/api/management/list', body);
+export async function list(params) {
+  return get('/crazy/api/management/list', params);
 }
 
 /** 保存 */
