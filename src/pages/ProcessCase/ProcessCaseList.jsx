@@ -333,11 +333,7 @@ const ProcessCaseList = (props) => {
         actionRef={props.actionRef}
         cardBordered
         request={async (params = {}, sort, filter) => {
-          if (props.selectedKeys === null || props.selectedKeys === undefined) {
-            messageApi.info('请先选择左侧的树节点');
-          } else {
-            return list({ ...params, treeKey: props.selectedKeys, current: props.currentPage });
-          }
+          return list({ ...params, treeKey: props.selectedKeys, current: props.currentPage });
         }}
         scroll={{ x: 1000 }}
         rowKey="id"

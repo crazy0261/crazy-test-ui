@@ -120,27 +120,28 @@ export default [
       },
     ],
   },
+  // {
+  //   path: '/dataPool',
+  //   name: '数据池',
+  //   icon: 'CloudOutlined',
+  //   routes: [
+  //     {
+  //       path: '/dataPool/rule',
+  //       name: '数据库池',
+  //       // component: './DataPool/Rule',
+  //     },
+  //     {
+  //       path: '/dataPool/myData',
+  //       name: '我的数据',
+  //       // component: './DataPool/MyData',
+  //     },
+  //   ],
+  // },
   {
-    path: '/dataPool',
-    name: '数据池',
-    icon: 'CloudOutlined',
-    routes: [
-      {
-        path: '/dataPool/rule',
-        name: '数据库池',
-        // component: './DataPool/Rule',
-      },
-      {
-        path: '/dataPool/myData',
-        name: '我的数据',
-        // component: './DataPool/MyData',
-      },
-    ],
-  },
-  {
-    path: '/dataMarket',
+    path: '/charts',
     name: '数据大盘',
     icon: 'LineChartOutlined',
+    component: './Charts',
   },
   {
     path: '/userAccount',
