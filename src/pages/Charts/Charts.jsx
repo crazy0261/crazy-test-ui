@@ -1,6 +1,6 @@
 import { Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
 import { PageContainer, ProCard, ProTable, StatisticCard } from '@ant-design/pro-components';
-import { Button, Col, Collapse, DatePicker, Row, Select, Space, Tag, Tooltip } from 'antd';
+import { Button, Col, Collapse, DatePicker, Row, Space, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 const { RangePicker } = DatePicker;
@@ -61,9 +61,11 @@ const mockData = {
 
   // 未断言用例
   unassertedCases: [
-    { user: '张三', count: 15 },
-    { user: '李四', count: 8 },
-    { user: '王五', count: 5 },
+    { user: '张三', count: 150 },
+    { user: '李四', count: 80 },
+    { user: '王五', count: 50 },
+    { user: '王五1', count: 25 },
+    { user: '王五2', count: 10 },
   ],
   unassertedDetails: [
     { id: 'C001', name: '登录接口测试', service: '用户服务', creator: '张三' },
@@ -104,7 +106,10 @@ const mockData = {
 
 const Charts = () => {
   const [range, setRange] = useState(['2023-06-01', '2023-06-03']);
-  const [service, setService] = useState();
+
+  const renderUserDistribution = (value) => {
+    console.log('renderUserDistribution---->', value);
+  };
 
   // 核心指标配置
   const metrics = [
@@ -130,17 +135,10 @@ const Charts = () => {
         <Space>
           <RangePicker
             value={[dayjs(range[0]), dayjs(range[1])]}
-            onChange={(_, dateStrings) => setRange(dateStrings)}
-          />
-          <Select
-            placeholder="选择服务"
-            style={{ width: 200 }}
-            options={[
-              { label: '用户服务', value: 'user' },
-              { label: '订单服务', value: 'order' },
-            ]}
-            value={service}
-            onChange={setService}
+            onChange={
+              (_, dateStrings) => renderUserDistribution(dateStrings)
+              // setRange(dateStrings)
+            }
           />
           <Button type="primary">刷新</Button>
         </Space>
@@ -326,7 +324,7 @@ const Charts = () => {
         </Panel>
 
         {/* 未断言用例 */}
-        <Panel header="未断言用例TOP5" key="2">
+        <Panel header="未断言用例 TOP 5" key="2">
           <Row gutter={16}>
             <Col span={8}>
               <Funnel
@@ -334,8 +332,9 @@ const Charts = () => {
                 xField="user"
                 yField="count"
                 conversionTag={{ formatter: (v) => `${v.count}个` }}
-                color={['#1890FF', '#40A9FF', '#69C0FF', '#006EDC', '#0052D9']}
                 height={300}
+                dynamicHeight={true}
+                legend={false}
               />
             </Col>
             <Col span={16}>
@@ -360,7 +359,7 @@ const Charts = () => {
         </Panel>
 
         {/* 失败用例 */}
-        <Panel header="近三天用例失败TOP5" key="3">
+        <Panel header="近三天用例失败 TOP 10" key="3">
           <Row gutter={16}>
             <Col span={8}>
               <Bar
