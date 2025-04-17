@@ -1,25 +1,22 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-04-17 20:39:14
+ * @LastEditTime: 2025-04-17 23:43:16
+ * @Description: 数据大盘
+ */
+
+import { coreIndicatorsDetail } from '@/services/charts';
 import { Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard, ProTable, StatisticCard } from '@ant-design/pro-components';
 import { Button, Col, Collapse, DatePicker, Row, Space, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
 // 模拟数据
 const mockData = {
-  // 核心指标
-  metrics: {
-    userCount: 1243,
-    appCount: 28,
-    apiCount: 356,
-    totalCases: 4821,
-    apiCases: 3520,
-    sceneCases: 1301,
-    successRate: 2.5,
-    bugCount: 12,
-  },
-
   // 人员分布
   userDistribution: [
     { user: '张三', type: '接口用例', value: 124 },
@@ -51,13 +48,6 @@ const mockData = {
     { date: '6/5', 接口用例: 132, 场景用例: 45 },
     { date: '6/6', 接口用例: 101, 场景用例: 28 },
   ],
-
-  // 覆盖率
-  coverage: {
-    total: 356,
-    covered: 294,
-    rate: 0.825,
-  },
 
   // 未断言用例
   unassertedCases: [
@@ -106,22 +96,35 @@ const mockData = {
 
 const Charts = () => {
   const [range, setRange] = useState(['2023-06-01', '2023-06-03']);
+  const [metrics, setMetrics] = useState([]);
+  const [coverage, setCoverage] = useState({});
 
   const renderUserDistribution = (value) => {
     console.log('renderUserDistribution---->', value);
   };
 
-  // 核心指标配置
-  const metrics = [
-    { title: '用户数', value: mockData.metrics.userCount },
-    { title: '应用数', value: mockData.metrics.appCount },
-    { title: '接口数', value: mockData.metrics.apiCount },
-    { title: 'BUG数', value: mockData.metrics.bugCount },
-    { title: '总用例数', value: mockData.metrics.totalCases },
-    { title: '接口用例', value: mockData.metrics.apiCases },
-    { title: '场景用例', value: mockData.metrics.sceneCases },
-    { title: '成功率', value: `${mockData.metrics.successRate}%` },
-  ];
+  useEffect(() => {
+    coreIndicatorsDetail().then((res) => {
+      if (res.code === 200) {
+        const data = res.data;
+        setMetrics([
+          { title: '用户数', value: data.userCount },
+          { title: '应用数', value: data.appCount },
+          { title: '接口数', value: data.apiCount },
+          { title: 'BUG数', value: data.bugCount },
+          { title: '总用例数', value: data.caseCount },
+          { title: '接口用例', value: data.apiCaseCount },
+          { title: '场景用例', value: data.processCaseCount },
+          { title: '成功率', value: `${data.caseSuccessRate * 100}%` },
+        ]);
+        setCoverage({
+          coverageIsApiCount: data.coverageIsApiCount,
+          coverageNotApiCount: data.coverageNotApiCount,
+          coverageApiRate: data.coverageApiRate,
+        });
+      }
+    });
+  }, []);
 
   return (
     <PageContainer
@@ -145,7 +148,19 @@ const Charts = () => {
       </ProCard>
 
       {/* 核心指标 */}
-      <ProCard title="核心指标" gutter={16} style={{ marginTop: 16 }} bordered>
+      <ProCard
+        title={
+          <span>
+            核心指标
+            <Tooltip title="统计截止当前时间数据">
+              <QuestionCircleOutlined style={{ marginLeft: 8 }} />
+            </Tooltip>
+          </span>
+        }
+        gutter={16}
+        style={{ marginTop: 16 }}
+        bordered
+      >
         <Row gutter={16}>
           {metrics.map((item, index) => (
             <Col xs={24} sm={12} md={8} lg={6} key={index} style={{ textAlign: 'center' }}>
@@ -178,7 +193,7 @@ const Charts = () => {
         <Col span={8}>
           <ProCard title="接口覆盖率" bordered>
             <Gauge
-              percent={mockData.coverage.rate}
+              percent={coverage.coverageApiRate}
               range={{ color: ['#FF4D4F', '#FAAD14', '#52C41A'] }}
               indicator={{
                 pointer: { style: { stroke: '#1890FF' } },
@@ -196,8 +211,8 @@ const Charts = () => {
               <Col span={12}>
                 <StatisticCard
                   statistic={{
-                    title: '总接口数',
-                    value: mockData.coverage.total,
+                    title: '已覆盖接口',
+                    value: coverage.coverageIsApiCount,
                   }}
                   style={{ textAlign: 'center' }}
                 />
@@ -206,7 +221,7 @@ const Charts = () => {
                 <StatisticCard
                   statistic={{
                     title: '未覆盖接口',
-                    value: mockData.coverage.total - mockData.coverage.covered,
+                    value: coverage.coverageNotApiCount,
                   }}
                 />
               </Col>
