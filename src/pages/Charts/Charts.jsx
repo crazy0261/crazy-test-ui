@@ -16,7 +16,7 @@ const mockData = {
     totalCases: 4821,
     apiCases: 3520,
     sceneCases: 1301,
-    successRate: 92.5,
+    successRate: 2.5,
     bugCount: 12,
   },
 
@@ -108,14 +108,14 @@ const Charts = () => {
 
   // 核心指标配置
   const metrics = [
-    { title: '用户数', value: mockData.metrics.userCount, trend: 'up' },
-    { title: '应用数', value: mockData.metrics.appCount, trend: 'down' },
-    { title: '接口数', value: mockData.metrics.apiCount, trend: 'up' },
-    { title: 'BUG数', value: `${mockData.metrics.bugCount}`, trend: '' },
-    { title: '总用例数', value: mockData.metrics.totalCases, trend: 'down' },
-    { title: '接口用例', value: mockData.metrics.apiCases, trend: 'up' },
-    { title: '场景用例', value: mockData.metrics.sceneCases, trend: 'down' },
-    { title: '成功率', value: `${mockData.metrics.successRate}%`, trend: 'up' },
+    { title: '用户数', value: mockData.metrics.userCount },
+    { title: '应用数', value: mockData.metrics.appCount },
+    { title: '接口数', value: mockData.metrics.apiCount },
+    { title: 'BUG数', value: mockData.metrics.bugCount },
+    { title: '总用例数', value: mockData.metrics.totalCases },
+    { title: '接口用例', value: mockData.metrics.apiCases },
+    { title: '场景用例', value: mockData.metrics.sceneCases },
+    { title: '成功率', value: `${mockData.metrics.successRate}%` },
   ];
 
   return (
@@ -155,7 +155,19 @@ const Charts = () => {
                 statistic={{
                   title: item.title,
                   value: item.value,
-                  trend: item.trend === 'up' ? 'up' : item.trend === 'down' ? 'down' : '',
+                  valueStyle:
+                    item.title === '成功率' && typeof item.value === 'string'
+                      ? {
+                          color:
+                            parseFloat(item.value) < 80
+                              ? 'red'
+                              : parseFloat(item.value) >= 80
+                              ? 'green'
+                              : 'black',
+                        }
+                      : item.title === 'BUG数'
+                      ? { color: 'red' }
+                      : {},
                 }}
               />
             </Col>
@@ -357,6 +369,8 @@ const Charts = () => {
                 yField="user"
                 color="#FF4D4F"
                 height={300}
+                minBarWidth={20}
+                maxBarWidth={20}
               />
             </Col>
             <Col span={16}>
