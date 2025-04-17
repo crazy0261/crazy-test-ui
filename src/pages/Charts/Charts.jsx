@@ -191,7 +191,17 @@ const Charts = () => {
       {/* 趋势与覆盖率 */}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={8}>
-          <ProCard title="接口覆盖率" bordered>
+          <ProCard
+            title={
+              <span>
+                接口覆盖率
+                <Tooltip title="统计截止当前时间数据">
+                  <QuestionCircleOutlined style={{ marginLeft: 8 }} />
+                </Tooltip>
+              </span>
+            }
+            bordered
+          >
             <Gauge
               percent={coverage.coverageApiRate}
               range={{ color: ['#FF4D4F', '#FAAD14', '#52C41A'] }}
