@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 02:04:52
+ * @LastEditTime: 2025-04-19 02:06:58
  * @Description: 数据大盘
  */
 
@@ -286,7 +286,7 @@ const Charts = () => {
           </ProCard>
         </Col>
         <Col span={16}>
-          <ProCard title="用例趋势图" bordered tooltip="统计累计每日数据">
+          <ProCard title="用例趋势图" bordered tooltip="统计累计数据">
             <DualAxes
               data={[trendData, trendData]}
               xField="date"
