@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 01:57:32
+ * @LastEditTime: 2025-04-19 02:04:52
  * @Description: 数据大盘
  */
 
@@ -78,17 +78,16 @@ const Charts = () => {
   const renderUserDistribution = (value) => {
     const dataTime = value.map((item) => dayjs(item));
     setRange(dataTime);
-    requestData({ startTime: dataTime[0], endTime: dataTime[1] });
+    renderTrendData();
   };
 
   const requestData = (value) => {
     // 请求接口
   };
 
-  const renderTrendData = (value) => {
-    const dataTime = value.map((item) => dayjs(item));
-    setRange(dataTime);
-    requestData({ startTime: dataTime[0], endTime: dataTime[1] });
+  const renderTrendData = () => {
+    const dataTime = range.map((item) => dayjs(item).format('YYYY-MM-DD'));
+    caseDetail({ startTime: dataTime[0], endTime: dataTime[1] });
   };
 
   // 点击事件处理函数
