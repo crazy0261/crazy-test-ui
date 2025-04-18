@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 02:06:58
+ * @LastEditTime: 2025-04-19 02:20:06
  * @Description: 数据大盘
  */
 
@@ -63,7 +63,7 @@ const mockData = {
 };
 
 const Charts = () => {
-  const [range, setRange] = useState([dayjs().subtract(70, 'd'), dayjs()]);
+  const [range, setRange] = useState([dayjs().subtract(7, 'd'), dayjs()]);
   const [metrics, setMetrics] = useState([]);
   const [coverage, setCoverage] = useState({});
   const [userDistribution, setUserDistribution] = useState([]);
