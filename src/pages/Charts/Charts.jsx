@@ -1,14 +1,14 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-17 23:43:16
+ * @LastEditTime: 2025-04-18 19:38:09
  * @Description: 数据大盘
  */
 
 import { coreIndicatorsDetail } from '@/services/charts';
 import { Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard, ProTable, StatisticCard } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { Button, Col, Collapse, DatePicker, Row, Space, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -95,12 +95,53 @@ const mockData = {
 };
 
 const Charts = () => {
-  const [range, setRange] = useState(['2023-06-01', '2023-06-03']);
+  const [range, setRange] = useState([dayjs().subtract(7, 'd'), dayjs()]);
   const [metrics, setMetrics] = useState([]);
   const [coverage, setCoverage] = useState({});
 
+  const dateRange = [
+    { label: '最近7天', value: [dayjs().subtract(7, 'd'), dayjs()] },
+    { label: '最近14天', value: [dayjs().subtract(14, 'd'), dayjs()] },
+    { label: '最近30天', value: [dayjs().subtract(30, 'd'), dayjs()] },
+    { label: '最近90天', value: [dayjs().subtract(90, 'd'), dayjs()] },
+  ];
   const renderUserDistribution = (value) => {
-    console.log('renderUserDistribution---->', value);
+    const dataTime = value.map((item) => dayjs(item));
+    setRange(dataTime);
+    requestData({ startTime: dataTime[0], endTime: dataTime[1] });
+  };
+
+  const requestData = (value) => {
+    // 请求接口
+  };
+
+  const renderTrendData = (value) => {
+    const dataTime = value.map((item) => dayjs(item));
+    setRange(dataTime);
+    requestData({ startTime: dataTime[0], endTime: dataTime[1] });
+  };
+
+  // 点击事件处理函数
+  const handleCardClick = (title) => {
+    switch (title) {
+      case '用户数':
+        history.push('/userAccount');
+        break;
+      case '应用数':
+        history.push('/application/list');
+        break;
+      case '接口数':
+        history.push('/application/api');
+        break;
+      case '接口用例':
+        history.push('/case/api');
+        break;
+      case '场景用例':
+        history.push('/case/proces');
+        break;
+      default:
+        break;
+    }
   };
 
   useEffect(() => {
@@ -111,11 +152,11 @@ const Charts = () => {
           { title: '用户数', value: data.userCount },
           { title: '应用数', value: data.appCount },
           { title: '接口数', value: data.apiCount },
-          { title: 'BUG数', value: data.bugCount },
           { title: '总用例数', value: data.caseCount },
           { title: '接口用例', value: data.apiCaseCount },
           { title: '场景用例', value: data.processCaseCount },
           { title: '成功率', value: `${data.caseSuccessRate * 100}%` },
+          { title: 'BUG数', value: data.bugCount },
         ]);
         setCoverage({
           coverageIsApiCount: data.coverageIsApiCount,
@@ -137,36 +178,43 @@ const Charts = () => {
       <ProCard>
         <Space>
           <RangePicker
-            value={[dayjs(range[0]), dayjs(range[1])]}
-            onChange={
-              (_, dateStrings) => renderUserDistribution(dateStrings)
-              // setRange(dateStrings)
-            }
+            value={range}
+            onChange={(_, dateStrings) => renderUserDistribution(dateStrings)}
           />
-          <Button type="primary">刷新</Button>
+          <Button type="primary" onClick={renderTrendData}>
+            刷新
+          </Button>
         </Space>
       </ProCard>
 
       {/* 核心指标 */}
       <ProCard
-        title={
-          <span>
-            核心指标
-            <Tooltip title="统计截止当前时间数据">
-              <QuestionCircleOutlined style={{ marginLeft: 8 }} />
-            </Tooltip>
-          </span>
-        }
+        title="核心指标"
+        tooltip="统计截止当前时间数据"
         gutter={16}
         style={{ marginTop: 16 }}
         bordered
       >
         <Row gutter={16}>
           {metrics.map((item, index) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={index} style={{ textAlign: 'center' }}>
+            <Col xs={32} sm={12} md={8} lg={3} key={index} style={{ textAlign: 'center' }}>
               <StatisticCard
+                onClick={() => handleCardClick(item.title)}
+                style={{ cursor: 'pointer' }}
                 statistic={{
-                  title: item.title,
+                  title: (
+                    <span
+                      style={{
+                        color: ['用户数', '应用数', '接口数', '接口用例', '场景用例'].includes(
+                          item.title,
+                        )
+                          ? 'blue'
+                          : 'inherit', // 默认颜色
+                      }}
+                    >
+                      {item.title}
+                    </span>
+                  ),
                   value: item.value,
                   valueStyle:
                     item.title === '成功率' && typeof item.value === 'string'
@@ -191,17 +239,7 @@ const Charts = () => {
       {/* 趋势与覆盖率 */}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={8}>
-          <ProCard
-            title={
-              <span>
-                接口覆盖率
-                <Tooltip title="统计截止当前时间数据">
-                  <QuestionCircleOutlined style={{ marginLeft: 8 }} />
-                </Tooltip>
-              </span>
-            }
-            bordered
-          >
+          <ProCard title="接口覆盖率" tooltip="统计截止当前时间数据" bordered>
             <Gauge
               percent={coverage.coverageApiRate}
               range={{ color: ['#FF4D4F', '#FAAD14', '#52C41A'] }}
@@ -239,7 +277,7 @@ const Charts = () => {
           </ProCard>
         </Col>
         <Col span={16}>
-          <ProCard title="每日用例新增趋势" bordered>
+          <ProCard title="用例趋势图" bordered tooltip="统计累计每日数据">
             <DualAxes
               data={[mockData.trendData, mockData.trendData]}
               xField="date"
