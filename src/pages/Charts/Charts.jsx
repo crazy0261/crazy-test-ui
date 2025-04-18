@@ -1,11 +1,11 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-18 19:38:09
+ * @LastEditTime: 2025-04-19 01:57:32
  * @Description: 数据大盘
  */
 
-import { coreIndicatorsDetail } from '@/services/charts';
+import { caseDetail, coreIndicatorsDetail } from '@/services/charts';
 import { Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
 import { PageContainer, ProCard, ProTable, StatisticCard } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
@@ -17,38 +17,6 @@ const { Panel } = Collapse;
 
 // 模拟数据
 const mockData = {
-  // 人员分布
-  userDistribution: [
-    { user: '张三', type: '接口用例', value: 124 },
-    { user: '张三', type: '场景用例', value: 32 },
-    { user: '李四', type: '接口用例', value: 98 },
-    { user: '李四', type: '场景用例', value: 45 },
-    { user: '王五', type: '接口用例', value: 76 },
-    { user: '王五', type: '场景用例', value: 12 },
-    { user: '王五1', type: '接口用例', value: 76 },
-    { user: '王五1', type: '场景用例', value: 12 },
-    { user: '王五2', type: '接口用例', value: 76 },
-    { user: '王五2', type: '场景用例', value: 12 },
-    { user: '王五3', type: '接口用例', value: 76 },
-    { user: '王五3', type: '场景用例', value: 12 },
-    { user: '王五4', type: '接口用例', value: 76 },
-    { user: '王五4', type: '场景用例', value: 12 },
-    { user: '王五5', type: '接口用例', value: 76 },
-    { user: '王五5', type: '场景用例', value: 12 },
-    { user: '王五6', type: '接口用例', value: 76 },
-    { user: '王五6', type: '场景用例', value: 12 },
-  ],
-
-  // 趋势数据
-  trendData: [
-    { date: '6/1', 接口用例: 120, 场景用例: 32 },
-    { date: '6/2', 接口用例: 132, 场景用例: 45 },
-    { date: '6/3', 接口用例: 101, 场景用例: 28 },
-    { date: '6/4', 接口用例: 10, 场景用例: 32 },
-    { date: '6/5', 接口用例: 132, 场景用例: 45 },
-    { date: '6/6', 接口用例: 101, 场景用例: 28 },
-  ],
-
   // 未断言用例
   unassertedCases: [
     { user: '张三', count: 150 },
@@ -95,9 +63,11 @@ const mockData = {
 };
 
 const Charts = () => {
-  const [range, setRange] = useState([dayjs().subtract(7, 'd'), dayjs()]);
+  const [range, setRange] = useState([dayjs().subtract(70, 'd'), dayjs()]);
   const [metrics, setMetrics] = useState([]);
   const [coverage, setCoverage] = useState({});
+  const [userDistribution, setUserDistribution] = useState([]);
+  const [trendData, setTrendData] = useState([]);
 
   const dateRange = [
     { label: '最近7天', value: [dayjs().subtract(7, 'd'), dayjs()] },
@@ -143,6 +113,27 @@ const Charts = () => {
         break;
     }
   };
+  const caseTrend = () => {
+    const dataTime = range.map((item) => dayjs(item).format('YYYY-MM-DD'));
+    caseDetail({ startTime: dataTime[0], endTime: dataTime[1] }).then((res) => {
+      if (res.code === 200) {
+        const data = res.data.trendData.flatMap((item) => {
+          return [
+            {
+              date: item.date,
+              接口用例: item.apiCaseNum,
+              场景用例: item.processCaseNum,
+            },
+          ];
+        });
+        setTrendData(data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    caseTrend();
+  }, []);
 
   useEffect(() => {
     coreIndicatorsDetail().then((res) => {
@@ -158,11 +149,28 @@ const Charts = () => {
           { title: '成功率', value: `${data.caseSuccessRate * 100}%` },
           { title: 'BUG数', value: data.bugCount },
         ]);
+
         setCoverage({
           coverageIsApiCount: data.coverageIsApiCount,
           coverageNotApiCount: data.coverageNotApiCount,
           coverageApiRate: data.coverageApiRate,
         });
+
+        const userDistributionEntities = res.data.userDistributionEntities.flatMap((item) => {
+          return [
+            {
+              user: item.userName,
+              type: '接口用例',
+              value: item.apiCaseNum,
+            },
+            {
+              user: item.userName,
+              type: '场景用例',
+              value: item.processCaseNum,
+            },
+          ];
+        });
+        setUserDistribution(userDistributionEntities);
       }
     });
   }, []);
@@ -178,6 +186,8 @@ const Charts = () => {
       <ProCard>
         <Space>
           <RangePicker
+            presets={dateRange}
+            allowClear={false}
             value={range}
             onChange={(_, dateStrings) => renderUserDistribution(dateStrings)}
           />
@@ -279,7 +289,7 @@ const Charts = () => {
         <Col span={16}>
           <ProCard title="用例趋势图" bordered tooltip="统计累计每日数据">
             <DualAxes
-              data={[mockData.trendData, mockData.trendData]}
+              data={[trendData, trendData]}
               xField="date"
               yField={['接口用例', '场景用例']}
               geometryOptions={[
@@ -295,7 +305,7 @@ const Charts = () => {
       {/* 人员分布 */}
       <ProCard title="人员用例分布" style={{ marginTop: 16 }} bordered>
         <Column
-          data={mockData.userDistribution}
+          data={userDistribution}
           xField="user"
           yField="value"
           seriesField="type"

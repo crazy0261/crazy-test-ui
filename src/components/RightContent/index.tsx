@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-27 22:05:55
- * @LastEditTime: 2025-04-05 14:28:12
+ * @LastEditTime: 2025-04-19 02:02:10
  * @Description:
  */
 import { updateSelectProjectId } from '@/services/ant-design-pro/api';
@@ -12,7 +12,7 @@ export type SiderTheme = 'light' | 'dark';
 
 export const Question = () => {
   const { initialState } = useModel('@@initialState');
-  const defaultProject = initialState?.currentUser?.selectProject;
+  const defaultProject = initialState?.currentUser?.projectId;
   const projectList = initialState?.projectList?.map((item: any) => ({
     value: item.id,
     label: item.name,
