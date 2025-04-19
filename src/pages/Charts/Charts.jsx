@@ -1,12 +1,12 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 15:33:56
+ * @LastEditTime: 2025-04-19 16:38:11
  * @Description: 数据大盘
  */
 
 import { caseDetail, coreIndicatorsDetail } from '@/services/charts';
-import { Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
+import { Area, Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
 import { PageContainer, ProCard, ProTable, StatisticCard } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Button, Col, Collapse, DatePicker, Row, Space, Tag, Tooltip } from 'antd';
@@ -68,6 +68,7 @@ const Charts = () => {
   const [userDistribution, setUserDistribution] = useState([]);
   const [trendData, setTrendData] = useState([]);
   const [caseSuccessRate, setCaseSuccessRate] = useState({});
+  const [caseSuccessRatetrendData, setCaseSuccessRatetrendData] = useState([]);
 
   const dateRange = [
     { label: '最近7天', value: [dayjs().subtract(7, 'd'), dayjs()] },
@@ -122,6 +123,16 @@ const Charts = () => {
           ];
         });
         setTrendData(data);
+
+        const caseSuccessRatetrend = res.data.caseSuccessRateData.flatMap((item) => {
+          return [
+            {
+              Date: item.date,
+              成功率: item.scales,
+            },
+          ];
+        });
+        setCaseSuccessRatetrendData(caseSuccessRatetrend);
       }
     });
   };
@@ -332,14 +343,19 @@ const Charts = () => {
         </Col>
         <Col span={16}>
           <ProCard title="成功率趋势图" bordered tooltip="统计累计数据">
-            <DualAxes
-              data={[trendData, trendData]}
-              xField="date"
-              yField={['接口用例', '场景用例']}
-              geometryOptions={[
-                { geometry: 'line', smooth: true },
-                { geometry: 'line', smooth: true },
-              ]}
+            <Area
+              data={caseSuccessRatetrendData}
+              xField="Date"
+              yField="成功率"
+              xAxis={{
+                range: [0, 1],
+                tickCount: 5,
+              }}
+              areaStyle={() => {
+                return {
+                  fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
+                };
+              }}
               height={310}
             />
           </ProCard>
