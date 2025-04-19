@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 16:38:11
+ * @LastEditTime: 2025-04-19 16:50:32
  * @Description: 数据大盘
  */
 
@@ -239,65 +239,6 @@ const Charts = () => {
         </Row>
       </ProCard>
 
-      {/* 趋势与覆盖率 */}
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col span={8}>
-          <ProCard title="接口覆盖率" tooltip="统计截止全部数据" bordered>
-            <Gauge
-              percent={coverage.coverageApiRate}
-              range={{
-                ticks: [0, 3 / 10, 4 / 5, 1],
-                color: ['#F4664A', '#FAAD14', '#30BF78'],
-              }}
-              indicator={{
-                pointer: { style: { stroke: '#1890FF' } },
-                pin: { style: { stroke: '#1890FF' } },
-              }}
-              height={200}
-              statistic={{
-                content: {
-                  style: { fontSize: '24px' },
-                  formatter: ({ percent }) => `${(percent * 100).toFixed(1)}%`,
-                },
-              }}
-            />
-            <Row gutter={16} style={{ marginTop: 16 }}>
-              <Col span={12}>
-                <StatisticCard
-                  statistic={{
-                    title: '已覆盖接口',
-                    value: coverage.coverageIsApiCount,
-                  }}
-                  style={{ textAlign: 'center' }}
-                />
-              </Col>
-              <Col span={12}>
-                <StatisticCard
-                  statistic={{
-                    title: '未覆盖接口',
-                    value: coverage.coverageNotApiCount,
-                  }}
-                />
-              </Col>
-            </Row>
-          </ProCard>
-        </Col>
-        <Col span={16}>
-          <ProCard title="用例趋势图" bordered tooltip="统计累计数据">
-            <DualAxes
-              data={[trendData, trendData]}
-              xField="date"
-              yField={['接口用例', '场景用例']}
-              geometryOptions={[
-                { geometry: 'line', smooth: true },
-                { geometry: 'line', smooth: true },
-              ]}
-              height={310}
-            />
-          </ProCard>
-        </Col>
-      </Row>
-
       {/* 用例成功率 */}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={8}>
@@ -342,7 +283,7 @@ const Charts = () => {
           </ProCard>
         </Col>
         <Col span={16}>
-          <ProCard title="成功率趋势图" bordered tooltip="统计累计数据">
+          <ProCard title="成功率趋势图" bordered tooltip="统计累计数据 T-1">
             <Area
               data={caseSuccessRatetrendData}
               xField="Date"
@@ -356,6 +297,65 @@ const Charts = () => {
                   fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff',
                 };
               }}
+              height={310}
+            />
+          </ProCard>
+        </Col>
+      </Row>
+
+      {/* 趋势与覆盖率 */}
+      <Row gutter={16} style={{ marginTop: 16 }}>
+        <Col span={8}>
+          <ProCard title="接口覆盖率" tooltip="统计截止全部数据" bordered>
+            <Gauge
+              percent={coverage.coverageApiRate}
+              range={{
+                ticks: [0, 3 / 10, 4 / 5, 1],
+                color: ['#F4664A', '#FAAD14', '#30BF78'],
+              }}
+              indicator={{
+                pointer: { style: { stroke: '#1890FF' } },
+                pin: { style: { stroke: '#1890FF' } },
+              }}
+              height={200}
+              statistic={{
+                content: {
+                  style: { fontSize: '24px' },
+                  formatter: ({ percent }) => `${(percent * 100).toFixed(1)}%`,
+                },
+              }}
+            />
+            <Row gutter={16} style={{ marginTop: 16 }}>
+              <Col span={12}>
+                <StatisticCard
+                  statistic={{
+                    title: '已覆盖接口',
+                    value: coverage.coverageIsApiCount,
+                  }}
+                  style={{ textAlign: 'center' }}
+                />
+              </Col>
+              <Col span={12}>
+                <StatisticCard
+                  statistic={{
+                    title: '未覆盖接口',
+                    value: coverage.coverageNotApiCount,
+                  }}
+                />
+              </Col>
+            </Row>
+          </ProCard>
+        </Col>
+        <Col span={16}>
+          <ProCard title="用例趋势图" bordered tooltip="统计累计数据 T-1">
+            <DualAxes
+              data={[trendData, trendData]}
+              xField="date"
+              yField={['接口用例', '场景用例']}
+              geometryOptions={[
+                { geometry: 'line', smooth: true },
+                { geometry: 'line', smooth: true },
+              ]}
               height={310}
             />
           </ProCard>
