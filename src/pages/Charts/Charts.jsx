@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 11:24:13
+ * @LastEditTime: 2025-04-19 11:58:14
  * @Description: 数据大盘
  */
 
@@ -13,7 +13,6 @@ import { Button, Col, Collapse, DatePicker, Row, Space, Tag, Tooltip } from 'ant
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 const { RangePicker } = DatePicker;
-const { Panel } = Collapse;
 
 // 模拟数据
 const mockData = {

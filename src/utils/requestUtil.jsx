@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-15 15:48:09
- * @LastEditTime: 2025-04-07 22:14:40
+ * @LastEditTime: 2025-04-19 12:28:05
  * @Description: 请求方式封装
  */
 import { request } from '@umijs/max';
