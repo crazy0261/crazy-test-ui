@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { useEffect, useState } from 'react';
 
 const DebugEnvVarComponen = (props) => {
+  console.log('DebugEnvVarComponen--->', props);
   const {
     dataSource,
     setDataSource,
@@ -15,7 +16,6 @@ const DebugEnvVarComponen = (props) => {
   } = props;
 
   const [testAccountList, setTestAccountList] = useState([]);
-  const [editableKeys, setEditableRowKeys] = useState(() => dataSource.map((item) => item.id));
 
   // 查询测试账号列表
   const queryTestAccountList = () => {
@@ -29,7 +29,6 @@ const DebugEnvVarComponen = (props) => {
   };
 
   useEffect(() => {
-    setEditableRowKeys(dataSource.map((item) => item.id));
     setDataSource(dataSource);
   }, [isForminit]);
 
@@ -98,14 +97,12 @@ const DebugEnvVarComponen = (props) => {
         }}
         editable={{
           type: 'multiple',
-          editableKeys,
           actionRender: (row, config, defaultDoms) => {
             return [defaultDoms.delete];
           },
           onValuesChange: (record, recordList) => {
             setDataSource(recordList);
           },
-          onChange: setEditableRowKeys,
         }}
       />
     </div>

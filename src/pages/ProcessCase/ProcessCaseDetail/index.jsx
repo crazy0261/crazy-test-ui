@@ -38,6 +38,7 @@ const App = () => {
   const [isExecLogModalOpen, setIsExecLogModalOpen] = useState(false);
   const urlParams = new URL(window.location.href).searchParams;
   const id = urlParams.get('id');
+  const [isEdit, setIsEdit] = useState(false);
 
   const processCaseData = () => {
     detail({ id: id }).then((res) => {
@@ -51,7 +52,6 @@ const App = () => {
 
   useEffect(() => {
     processCaseData();
-    console.log('useEffect---->');
     if (isDebug) {
     }
   }, []);
@@ -147,7 +147,7 @@ const App = () => {
           </Tooltip>
 
           {/* todo 后续调试再完善 */}
-          <Debug caseType="processCase" isEdit={false} caseId={isDebug ? caseId : id} />
+          <Debug caseType="processCase" isEdit={isEdit} caseId={id} />
 
           {!isDebug && (
             <>

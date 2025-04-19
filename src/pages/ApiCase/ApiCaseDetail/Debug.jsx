@@ -1,18 +1,17 @@
 /*
  * @Author: Menghui
- * @Date: 2025-03-15 16:41:19
- * @LastEditTime: 2025-04-14 23:53:35
+ * @Date: 2025-04-16 02:07:27
+ * @LastEditTime: 2025-04-19 23:46:58
  * @Description:
  */
+
 import { genEnvVarArray, getTestAccount } from '@/common';
 import { debug as debugApiTestcase, queryById as queryApiCaseById } from '@/services/apiCase';
-// import { queryById as queryMulCaseById } from '@/services/mulTestcase/index.js';
-// import { debug as debugMulTestcase } from '@/services/mulTestcaseResult';
 import { envAppList } from '@/services/envConfig';
-import { detail } from '@/services/processCase';
+import { debugProcessCase, detail, detail as processDetail } from '@/services/processCase';
 import { Button, Form, message, Modal, Radio, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import DebugEnvVarComponen from './DebugEnvVarComponen';
+import DebugEnvVarComponen from '../../ProcessCase/ProcessCaseDetail/DebugEnvVarComponen';
 
 const Debug = (props) => {
   console.log('Debug', props);
@@ -20,7 +19,6 @@ const Debug = (props) => {
   const urlParams = new URL(window.location.href).searchParams;
   const testcaseId = parseInt(urlParams.get('id'));
   const [noDomian, setNoDomian] = useState(false);
-  const [curEnvId, setCurEnvId] = useState(null);
   const [isExecModalOpen, setIsExecModalOpen] = useState(false);
   const [tempReqParams, setTempReqParams] = useState({}); // 临时请求参数
   const [tempTestAccount, setTempTestAccount] = useState({}); // 临时测试账号
@@ -34,6 +32,19 @@ const Debug = (props) => {
   const [curEnv, setCurEnv] = useState(null);
   const [inputParams, setInputParams] = useState({});
 
+  const processCaseData = (value) => {
+    processDetail({ id: value }).then((res) => {
+      if (res.code === 200) {
+        const params = res.data?.inputParamsJson;
+        // const key = Object.keys(params);
+        // const numkey = key.map((key) => parseInt(key, 10));
+        // const minKey = Math.min(...numkey);
+        setDataSource(params.curEnv);
+        setTestAccount(params.curEnv?.testAccount);
+      }
+    });
+  };
+
   useEffect(() => {
     if (props.appId !== null) {
       appIdListData(props.appId);
@@ -46,6 +57,12 @@ const Debug = (props) => {
       setDataSource(props.envData[curEnv]?.params || []);
     }
   }, [isExecModalOpen, props.envData, curEnv]);
+
+  useEffect(() => {
+    if (props.caseType === 'processCase') {
+      processCaseData(props.caseId);
+    }
+  }, []);
 
   const appIdListData = (value) => {
     envAppList({ appId: value }).then((result) => {
@@ -82,24 +99,22 @@ const Debug = (props) => {
         }
       });
     } else {
-      console.log('mulTestcaseId-->', props.caseId);
-      console.log('envNameId-->', curEnvId);
-      // console.log('inputParams-->', JSON.stringify(envVar));
-      console.log('mulTestcaseId-->', props.caseId);
-      // debugMulTestcase({
-      //   mulTestcaseId: props.caseId,
-      //   envNameId: curEnvId,
-      //   inputParams: JSON.stringify(envVar),
-      // }).then((res) => {
-      //   setIsModalExecButtonLoading(false);
-      //   if (res.code === 200) {
-      //     window.open('/mulTestCase/detail/debug?id=' + res.data, '_self');
-      //     message.success('开始执行用例');
-      //     setIsExecModalOpen(false);
-      //   } else {
-      //     message.error(res);
-      //   }
-      // });
+      console.log('debugProcessCase');
+      debugProcessCase({
+        id: props.caseId,
+        envId: curEnv,
+        testAccount: testAccount,
+        inputParams: dataSource,
+      }).then((res) => {
+        setIsModalExecButtonLoading(false);
+        if (res.code === 200) {
+          // window.open('/mulTestCase/detail/debug?id=' + res.data, '_self');
+          message.success('开始执行用例');
+          setIsExecModalOpen(false);
+        } else {
+          message.error(res);
+        }
+      });
     }
   };
   const handleCancel = () => {

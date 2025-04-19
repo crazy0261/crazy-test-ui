@@ -49,3 +49,8 @@ export async function detail(params) {
 export async function processSubList(params) {
   return get('/crazy/process/case/sub', params);
 }
+
+/** 调试 */
+export async function debugProcessCase(body) {
+  return post('/crazy/process/case/debug', body);
+}
