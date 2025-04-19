@@ -13,7 +13,6 @@ const CaseResult = (props) => {
   const [requestParams, setRequestParams] = useState({});
   const [reqUrl, setReqUrl] = useState(null);
   const [pass, setPass] = useState(true);
-  const [isCreateBugOpen, setIsCreateBugOpen] = useState(false);
   const [startExecTime, setStartExecTime] = useState();
   const [execTime, setExecTime] = useState();
   const [execEnvName, setExecEnvName] = useState('-');
