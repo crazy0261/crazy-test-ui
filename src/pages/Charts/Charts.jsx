@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 11:58:14
+ * @LastEditTime: 2025-04-19 15:33:56
  * @Description: 数据大盘
  */
 
@@ -67,6 +67,7 @@ const Charts = () => {
   const [coverage, setCoverage] = useState({});
   const [userDistribution, setUserDistribution] = useState([]);
   const [trendData, setTrendData] = useState([]);
+  const [caseSuccessRate, setCaseSuccessRate] = useState({});
 
   const dateRange = [
     { label: '最近7天', value: [dayjs().subtract(7, 'd'), dayjs()] },
@@ -140,14 +141,19 @@ const Charts = () => {
           { title: '总用例数', value: data.caseCount },
           { title: '接口用例', value: data.apiCaseCount },
           { title: '场景用例', value: data.processCaseCount },
-          { title: '成功率', value: `${data.caseSuccessRate * 100}%` },
-          { title: 'BUG数', value: data.bugCount },
+          // { title: 'BUG数', value: data.bugCount },
         ]);
 
         setCoverage({
           coverageIsApiCount: data.coverageIsApiCount,
           coverageNotApiCount: data.coverageNotApiCount,
           coverageApiRate: data.coverageApiRate,
+        });
+
+        setCaseSuccessRate({
+          caseSuccessRate: data.caseSuccessRate,
+          sumCaseSuccessCount: data.sumCaseSuccessCount,
+          sumCaseFailureCount: data.suCaseFailureCount,
         });
 
         const userDistributionEntities = res.data.userDistributionEntities.flatMap((item) => {
@@ -170,12 +176,7 @@ const Charts = () => {
   }, []);
 
   return (
-    <PageContainer
-      header={{
-        // title: '测试平台数据大盘',
-        breadcrumb: {},
-      }}
-    >
+    <PageContainer>
       {/* 筛选区 */}
       <ProCard>
         <Space>
@@ -194,14 +195,14 @@ const Charts = () => {
       {/* 核心指标 */}
       <ProCard
         title="核心指标"
-        tooltip="统计截止当前时间数据"
+        tooltip="统计截止全部数据"
         gutter={16}
         style={{ marginTop: 16 }}
         bordered
       >
         <Row gutter={16}>
           {metrics.map((item, index) => (
-            <Col xs={32} sm={12} md={8} lg={3} key={index} style={{ textAlign: 'center' }}>
+            <Col xs={24} sm={12} md={8} lg={4} key={index} style={{ textAlign: 'center' }}>
               <StatisticCard
                 onClick={() => handleCardClick(item.title)}
                 style={{ cursor: 'pointer' }}
@@ -220,19 +221,6 @@ const Charts = () => {
                     </span>
                   ),
                   value: item.value,
-                  valueStyle:
-                    item.title === '成功率' && typeof item.value === 'string'
-                      ? {
-                          color:
-                            parseFloat(item.value) < 80
-                              ? 'red'
-                              : parseFloat(item.value) >= 80
-                              ? 'green'
-                              : 'black',
-                        }
-                      : item.title === 'BUG数'
-                      ? { color: 'red' }
-                      : {},
                 }}
               />
             </Col>
@@ -243,10 +231,13 @@ const Charts = () => {
       {/* 趋势与覆盖率 */}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={8}>
-          <ProCard title="接口覆盖率" tooltip="统计截止当前时间数据" bordered>
+          <ProCard title="接口覆盖率" tooltip="统计截止全部数据" bordered>
             <Gauge
               percent={coverage.coverageApiRate}
-              range={{ color: ['#FF4D4F', '#FAAD14', '#52C41A'] }}
+              range={{
+                ticks: [0, 3 / 10, 4 / 5, 1],
+                color: ['#F4664A', '#FAAD14', '#30BF78'],
+              }}
               indicator={{
                 pointer: { style: { stroke: '#1890FF' } },
                 pin: { style: { stroke: '#1890FF' } },
@@ -282,6 +273,65 @@ const Charts = () => {
         </Col>
         <Col span={16}>
           <ProCard title="用例趋势图" bordered tooltip="统计累计数据">
+            <DualAxes
+              data={[trendData, trendData]}
+              xField="date"
+              yField={['接口用例', '场景用例']}
+              geometryOptions={[
+                { geometry: 'line', smooth: true },
+                { geometry: 'line', smooth: true },
+              ]}
+              height={310}
+            />
+          </ProCard>
+        </Col>
+      </Row>
+
+      {/* 用例成功率 */}
+      <Row gutter={16} style={{ marginTop: 16 }}>
+        <Col span={8}>
+          <ProCard title="用例成功率" tooltip="全部数据最新成功率" bordered>
+            <Gauge
+              percent={caseSuccessRate.caseSuccessRate}
+              range={{
+                ticks: [0, 3 / 10, 4 / 5, 1],
+                color: ['#F4664A', '#FAAD14', '#30BF78'],
+              }}
+              indicator={{
+                pointer: { style: { stroke: '#1890FF' } },
+                pin: { style: { stroke: '#1890FF' } },
+              }}
+              height={200}
+              statistic={{
+                content: {
+                  style: { fontSize: '24px' },
+                  formatter: ({ percent }) => `${(percent * 100).toFixed(1)}%`,
+                },
+              }}
+            />
+            <Row gutter={16} style={{ marginTop: 16 }}>
+              <Col span={12}>
+                <StatisticCard
+                  statistic={{
+                    title: '成功数',
+                    value: caseSuccessRate.sumCaseSuccessCount,
+                  }}
+                  style={{ textAlign: 'center' }}
+                />
+              </Col>
+              <Col span={12}>
+                <StatisticCard
+                  statistic={{
+                    title: '失败数',
+                    value: caseSuccessRate.sumCaseFailureCount,
+                  }}
+                />
+              </Col>
+            </Row>
+          </ProCard>
+        </Col>
+        <Col span={16}>
+          <ProCard title="成功率趋势图" bordered tooltip="统计累计数据">
             <DualAxes
               data={[trendData, trendData]}
               xField="date"
