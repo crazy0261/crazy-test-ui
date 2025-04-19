@@ -1,10 +1,9 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-13 23:07:03
- * @LastEditTime: 2025-04-17 01:19:48
+ * @LastEditTime: 2025-04-19 10:38:41
  * @Description:
  */
-import { request } from '@umijs/max';
 import { get, post } from '../../utils/requestUtil';
 
 /** 分页查询接口列表 */
@@ -35,17 +34,6 @@ export async function disable(body) {
 /** 上架接口 */
 export async function enable(boday) {
   return post('/crazy/api/management/batch/update/up', boday);
-}
-
-/** 查询关联用例 */
-export async function queryRelateCase(options) {
-  return request('/api/apimanage/queryRelateCase', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: options,
-  });
 }
 
 /** 批量删除接口 */

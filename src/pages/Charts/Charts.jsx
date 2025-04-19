@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 02:20:06
+ * @LastEditTime: 2025-04-19 11:24:13
  * @Description: 数据大盘
  */
 
@@ -79,10 +79,6 @@ const Charts = () => {
     const dataTime = value.map((item) => dayjs(item));
     setRange(dataTime);
     renderTrendData();
-  };
-
-  const requestData = (value) => {
-    // 请求接口
   };
 
   const renderTrendData = () => {
@@ -320,161 +316,172 @@ const Charts = () => {
       </ProCard>
 
       {/* 问题追踪 */}
-      <Collapse defaultActiveKey={['1', '2', '3']} style={{ marginTop: 16 }}>
-        {/* 未加入定时任务 */}
-        <Panel header="用例未加定时任务" key="1">
-          <Row gutter={16}>
-            <Col span={8}>
-              <Pie
-                data={mockData.unscheduledCases}
-                angleField="value"
-                colorField="type"
-                radius={0.8}
-                innerRadius={0.6}
-                height={300}
-                label={{
-                  type: 'inner',
-                  offset: '-50%',
-                  content: ({ percent }) => {
-                    const value = parseFloat(percent) * 100;
-                    return `${value % 1 === 0 ? value : value.toFixed(1)}%`;
-                  },
-                  style: {
-                    fill: '#fff',
-                    fontSize: 14,
-                    textAlign: 'center',
-                  },
-                }}
-                tooltip={{
-                  fields: ['user', 'type', 'value', 'percent'],
-                  formatter: (datum) => ({
-                    name: `${datum.type}`,
-                    value: `${datum.value}`,
-                  }),
-                }}
-                statistic={{
-                  title: {
-                    style: { color: 'rgba(7, 7, 7, 0.85)' },
-                    content: '用例数',
-                  },
-                  content: {
-                    style: { color: 'rgba(7, 7, 7, 0.85)', fontSize: 20 },
-                    content: `${mockData.unscheduledCases.reduce(
-                      (sum, item) => sum + item.value,
-                      0,
-                    )}`,
-                  },
-                }}
-                interactions={[{ type: 'element-selected' }, { type: 'element-active' }]}
-              />
-            </Col>
-            <Col span={16}>
-              <ProTable
-                columns={[
-                  { title: '用例ID', dataIndex: 'id' },
-                  { title: '用例名称', dataIndex: 'name' },
-                  {
-                    title: '类型',
-                    dataIndex: 'type',
-                    render: (type) => (
-                      <Tag color={type === '接口用例' ? '#096DD9' : '#1890FF'}>{type}</Tag>
-                    ),
-                  },
-                  { title: '负责人', dataIndex: 'owner' },
-                  {
-                    title: '操作',
-                    render: () => <a>设置定时</a>,
-                  },
-                ]}
-                dataSource={mockData.unscheduledDetails}
-                rowKey="id"
-                search={false}
-                pagination={false}
-              />
-            </Col>
-          </Row>
-        </Panel>
-
-        {/* 未断言用例 */}
-        <Panel header="未断言用例 TOP 5" key="2">
-          <Row gutter={16}>
-            <Col span={8}>
-              <Funnel
-                data={mockData.unassertedCases}
-                xField="user"
-                yField="count"
-                conversionTag={{ formatter: (v) => `${v.count}个` }}
-                height={300}
-                dynamicHeight={true}
-                legend={false}
-              />
-            </Col>
-            <Col span={16}>
-              <ProTable
-                columns={[
-                  { title: '用例ID', dataIndex: 'id' },
-                  { title: '用例名称', dataIndex: 'name' },
-                  { title: '所属服务', dataIndex: 'service' },
-                  { title: '创建人', dataIndex: 'creator' },
-                  {
-                    title: '操作',
-                    render: () => <a>添加断言</a>,
-                  },
-                ]}
-                dataSource={mockData.unassertedDetails}
-                rowKey="id"
-                search={false}
-                pagination={false}
-              />
-            </Col>
-          </Row>
-        </Panel>
-
-        {/* 失败用例 */}
-        <Panel header="近三天用例失败 TOP 10" key="3">
-          <Row gutter={16}>
-            <Col span={8}>
-              <Bar
-                data={mockData.failedCases}
-                xField="个数"
-                yField="user"
-                color="#FF4D4F"
-                height={300}
-                minBarWidth={20}
-                maxBarWidth={20}
-              />
-            </Col>
-            <Col span={16}>
-              <ProTable
-                columns={[
-                  { title: '用例ID', dataIndex: 'id' },
-                  { title: '用例名称', dataIndex: 'name' },
-                  {
-                    title: '错误信息',
-                    dataIndex: 'error',
-                    render: (error) => (
-                      <Tooltip title={error}>
-                        <span style={{ color: '#FF4D4F' }}>
-                          {error.length > 20 ? `${error.substring(0, 20)}...` : error}
-                        </span>
-                      </Tooltip>
-                    ),
-                  },
-                  { title: '失败时间', dataIndex: 'time' },
-                  {
-                    title: '操作',
-                    render: () => <a>立即重跑</a>,
-                  },
-                ]}
-                dataSource={mockData.failedDetails}
-                rowKey="id"
-                search={false}
-                pagination={false}
-              />
-            </Col>
-          </Row>
-        </Panel>
-      </Collapse>
+      <Collapse
+        defaultActiveKey={['1', '2', '3']}
+        style={{ marginTop: 16 }}
+        items={[
+          {
+            key: '1',
+            label: '用例未加定时任务',
+            children: (
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Pie
+                    data={mockData.unscheduledCases}
+                    angleField="value"
+                    colorField="type"
+                    radius={0.8}
+                    innerRadius={0.6}
+                    height={300}
+                    label={{
+                      type: 'inner',
+                      offset: '-50%',
+                      content: ({ percent }) => {
+                        const value = parseFloat(percent) * 100;
+                        return `${value % 1 === 0 ? value : value.toFixed(1)}%`;
+                      },
+                      style: {
+                        fill: '#fff',
+                        fontSize: 14,
+                        textAlign: 'center',
+                      },
+                    }}
+                    tooltip={{
+                      fields: ['user', 'type', 'value', 'percent'],
+                      formatter: (datum) => ({
+                        name: `${datum.type}`,
+                        value: `${datum.value}`,
+                      }),
+                    }}
+                    statistic={{
+                      title: {
+                        style: { color: 'rgba(7, 7, 7, 0.85)' },
+                        content: '用例数',
+                      },
+                      content: {
+                        style: { color: 'rgba(7, 7, 7, 0.85)', fontSize: 20 },
+                        content: `${mockData.unscheduledCases.reduce(
+                          (sum, item) => sum + item.value,
+                          0,
+                        )}`,
+                      },
+                    }}
+                    interactions={[{ type: 'element-selected' }, { type: 'element-active' }]}
+                  />
+                </Col>
+                <Col span={16}>
+                  <ProTable
+                    columns={[
+                      { title: '用例ID', dataIndex: 'id' },
+                      { title: '用例名称', dataIndex: 'name' },
+                      {
+                        title: '类型',
+                        dataIndex: 'type',
+                        render: (type) => (
+                          <Tag color={type === '接口用例' ? '#096DD9' : '#1890FF'}>{type}</Tag>
+                        ),
+                      },
+                      { title: '负责人', dataIndex: 'owner' },
+                      {
+                        title: '操作',
+                        render: () => <a>设置定时</a>,
+                      },
+                    ]}
+                    dataSource={mockData.unscheduledDetails}
+                    rowKey="id"
+                    search={false}
+                    pagination={false}
+                  />
+                </Col>
+              </Row>
+            ),
+          },
+          {
+            key: '2',
+            label: '未断言用例 TOP 5',
+            children: (
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Funnel
+                    data={mockData.unassertedCases}
+                    xField="user"
+                    yField="count"
+                    conversionTag={{ formatter: (v) => `${v.count}个` }}
+                    height={300}
+                    dynamicHeight={true}
+                    legend={false}
+                  />
+                </Col>
+                <Col span={16}>
+                  <ProTable
+                    columns={[
+                      { title: '用例ID', dataIndex: 'id' },
+                      { title: '用例名称', dataIndex: 'name' },
+                      { title: '所属服务', dataIndex: 'service' },
+                      { title: '创建人', dataIndex: 'creator' },
+                      {
+                        title: '操作',
+                        render: () => <a>添加断言</a>,
+                      },
+                    ]}
+                    dataSource={mockData.unassertedDetails}
+                    rowKey="id"
+                    search={false}
+                    pagination={false}
+                  />
+                </Col>
+              </Row>
+            ),
+          },
+          {
+            key: '3',
+            label: '近三天用例失败 TOP 10',
+            children: (
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Bar
+                    data={mockData.failedCases}
+                    xField="个数"
+                    yField="user"
+                    color="#FF4D4F"
+                    height={300}
+                    minBarWidth={20}
+                    maxBarWidth={20}
+                  />
+                </Col>
+                <Col span={16}>
+                  <ProTable
+                    columns={[
+                      { title: '用例ID', dataIndex: 'id' },
+                      { title: '用例名称', dataIndex: 'name' },
+                      {
+                        title: '错误信息',
+                        dataIndex: 'error',
+                        render: (error) => (
+                          <Tooltip title={error}>
+                            <span style={{ color: '#FF4D4F' }}>
+                              {error.length > 20 ? `${error.substring(0, 20)}...` : error}
+                            </span>
+                          </Tooltip>
+                        ),
+                      },
+                      { title: '失败时间', dataIndex: 'time' },
+                      {
+                        title: '操作',
+                        render: () => <a>立即重跑</a>,
+                      },
+                    ]}
+                    dataSource={mockData.failedDetails}
+                    rowKey="id"
+                    search={false}
+                    pagination={false}
+                  />
+                </Col>
+              </Row>
+            ),
+          },
+        ]}
+      />
     </PageContainer>
   );
 };

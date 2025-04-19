@@ -43,7 +43,7 @@ export async function getInitialState(): Promise<{
   const fetchUserList = async (): Promise<{ value: number; label: string }[] | undefined> => {
     try {
       const userList: { value: number; label: string }[] = [];
-      await listAllUser({}).then((result) => {
+      await listAllUser().then((result) => {
         if (result.code === 200) {
           result.data.map((item: any) => userList.push({ value: item.id, label: item.name }));
         }
