@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 17:02:20
+ * @LastEditTime: 2025-04-19 17:08:06
  * @Description: 数据大盘
  */
 
@@ -242,7 +242,7 @@ const Charts = () => {
       {/* 用例成功率 */}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={8}>
-          <ProCard title="用例成功率" tooltip="全部数据最新成功率" bordered>
+          <ProCard title="用例成功率" tooltip="统计全部数据最新成功率" bordered>
             <Gauge
               percent={caseSuccessRate.caseSuccessRate}
               range={{
