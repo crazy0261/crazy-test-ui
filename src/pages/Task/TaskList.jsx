@@ -45,7 +45,7 @@ const TaskList = () => {
       width: 100,
       valueEnum: {
         API_CASE: { text: '接口用例' },
-        MUL_CASE: { text: '场景用例' },
+        PROCESS_CASE: { text: '场景用例' },
       },
     },
     {

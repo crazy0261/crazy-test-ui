@@ -62,7 +62,7 @@ export const caseTypeEnum = [
     label: '接口用例',
   },
   {
-    value: 'MUL_CASE',
+    value: 'PROCESS_CASE',
     label: '场景用例',
   },
 ];

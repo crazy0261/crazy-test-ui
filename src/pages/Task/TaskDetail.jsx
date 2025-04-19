@@ -1,11 +1,11 @@
-import { envSortList, listAllEnvName } from '@/services/envConfig';
+import { envSortList } from '@/services/envConfig';
 import { queryById, save } from '@/services/task';
 import { ProForm, ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-components';
 import { Breadcrumb, Button, Drawer, Layout, message, Space } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import RecordList from './RecordList';
 import SelectApiTestCase from './SelectApiTestCase';
-import SelectMulTestCase from './SelectMulTestCase';
+import SelectMulTestCase from './SelectProcessCase';
 
 // 定时任务新建、编辑、执行记录
 const TaskDetail = () => {
@@ -45,7 +45,7 @@ const TaskDetail = () => {
       label: '接口用例',
     },
     {
-      value: 'MUL_CASE',
+      value: 'PROCESS_CASE',
       label: '场景用例',
     },
   ];
@@ -70,16 +70,6 @@ const TaskDetail = () => {
     setOpen(false);
   };
 
-  const requestEnvNameEnum = () => {
-    listAllEnvName().then((result) => {
-      if (result.code === 200) {
-        setEnvNameEnum(result.data.map((item) => ({ value: item.id + '', label: item.name })));
-      } else {
-        message.error('查询环境名称列表失败');
-      }
-    });
-  };
-
   const requestScheduleDetail = () => {
     if (scheduleId) {
       queryById({ id: scheduleId }).then((res) => {
@@ -94,8 +84,8 @@ const TaskDetail = () => {
             cron: res.data.cron,
             enable: res.data.enable,
             remark: res.data.remark,
-            testcaseType: res.data.testcaseType,
             isAllCase: res.data.isAllCase,
+            testcaseType: res.data.testcaseType,
           });
           setTestcaseType(res.data.testcaseType);
         }
@@ -111,7 +101,6 @@ const TaskDetail = () => {
   }, [isSaved]);
 
   useEffect(() => {
-    requestEnvNameEnum();
     requestScheduleDetail();
   }, []);
 
@@ -123,7 +112,7 @@ const TaskDetail = () => {
       if (scheduleId) {
         save({
           ...values,
-          testcaseList: JSON.stringify(selectedCaseIds),
+          testcaseList: selectedCaseIds,
           id: Number(scheduleId),
         }).then((res) => {
           if (res.code === 200) {
@@ -170,7 +159,7 @@ const TaskDetail = () => {
             setSelectedCaseIds={setSelectedCaseIds}
           />
         )}
-        {testcaseType === 'MUL_CASE' && (
+        {testcaseType === 'PROCESS_CASE' && (
           <SelectMulTestCase
             setOpen={setOpen}
             selectedCaseIds={selectedCaseIds}

@@ -1,5 +1,5 @@
 import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-// import { list } from '@/services/mulTestcase';
+import { list } from '@/services/processCase';
 import { ProTable } from '@ant-design/pro-components';
 import { Select, Space } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -7,8 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 /**
  * 定时任务-选择场景用例
  */
-const SelectMulTestCase = (props) => {
-  const [appEnum, setAppEnum] = useState([]);
+const SelectProcessTestCase = (props) => {
   const [ownerEnum, setOwnerEnum] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   let cancleRowKeys = []; // 取消选择的项目
@@ -66,15 +65,15 @@ const SelectMulTestCase = (props) => {
       },
     },
     {
-      title: '作者',
-      dataIndex: 'creatorName',
+      title: '负责人',
+      dataIndex: 'ownerName',
       ellipsis: true,
       width: 100,
       search: false,
     },
     {
-      title: '作者',
-      dataIndex: 'creatorId',
+      title: '负责人',
+      dataIndex: 'ownerId',
       search: true,
       hideInTable: true,
       // colSize: 0.6,
@@ -114,9 +113,9 @@ const SelectMulTestCase = (props) => {
         columns={columns}
         actionRef={actionRef}
         cardBordered
-        // request={async (params = {}, sort, filter) => {
-        //   return list({ ...params, isSubProcess: 0 });
-        // }}
+        request={async (params = {}, sort, filter) => {
+          return list({ ...params, isSubProcess: 0 });
+        }}
         editable={{
           type: 'multiple',
         }}
@@ -184,4 +183,4 @@ const SelectMulTestCase = (props) => {
   );
 };
 
-export default SelectMulTestCase;
+export default SelectProcessTestCase;
