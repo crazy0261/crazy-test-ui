@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 16:50:32
+ * @LastEditTime: 2025-04-19 17:02:20
  * @Description: 数据大盘
  */
 
@@ -116,7 +116,7 @@ const Charts = () => {
         const data = res.data.trendData.flatMap((item) => {
           return [
             {
-              date: item.date,
+              date: dayjs(item.date).format('MM-DD'),
               接口用例: item.apiCaseNum,
               场景用例: item.processCaseNum,
             },
@@ -127,7 +127,7 @@ const Charts = () => {
         const caseSuccessRatetrend = res.data.caseSuccessRateData.flatMap((item) => {
           return [
             {
-              Date: item.date,
+              Date: dayjs(item.date).format('MM-DD'),
               成功率: item.scales,
             },
           ];
