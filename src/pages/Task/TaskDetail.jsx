@@ -1,4 +1,4 @@
-import { listAllEnvName } from '@/services/envConfig';
+import { envSortList, listAllEnvName } from '@/services/envConfig';
 import { queryById, save } from '@/services/task';
 import { ProForm, ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-components';
 import { Breadcrumb, Button, Drawer, Layout, message, Space } from 'antd';
@@ -12,7 +12,6 @@ const TaskDetail = () => {
   const { Header, Content } = Layout;
   const formRef = useRef();
   const [selectedCaseIds, setSelectedCaseIds] = useState([]);
-  const [envNameEnum, setEnvNameEnum] = useState([]);
   const [open, setOpen] = useState(false);
   const path = window.location.search;
   const scheduleId = new URLSearchParams(path).get('id');
@@ -20,6 +19,25 @@ const TaskDetail = () => {
   const [testcaseType, setTestcaseType] = useState(null);
   const [isAllTestCase, setIsAllTestCase] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [envSortListData, setEnvSortListData] = useState([]);
+
+  const envSortData = () => {
+    envSortList().then((result) => {
+      if (result.code === 200) {
+        const data = result.data.map((item) => {
+          return {
+            value: item,
+            label: item,
+          };
+        });
+        setEnvSortListData(data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    envSortData();
+  }, []);
 
   const caseTypeEnum = [
     {
@@ -72,7 +90,7 @@ const TaskDetail = () => {
           }
           formRef?.current?.setFieldsValue({
             name: res.data.name,
-            env: res.data.env,
+            envSort: res.data.envSort,
             cron: res.data.cron,
             enable: res.data.enable,
             remark: res.data.remark,
@@ -226,10 +244,10 @@ const TaskDetail = () => {
               </ProForm.Group>
               <ProForm.Group>
                 <ProFormSelect
-                  options={envNameEnum}
-                  name="env"
+                  options={envSortListData}
+                  name="envSort"
                   width={130}
-                  label="执行环境"
+                  label="环境顺序"
                   rules={[{ required: true }]}
                   disabled={editDisabled}
                 />

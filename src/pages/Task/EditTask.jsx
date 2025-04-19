@@ -1,10 +1,11 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-28 17:00:21
- * @LastEditTime: 2025-03-31 14:06:13
+ * @LastEditTime: 2025-04-19 19:26:43
  * @Description: 任务编辑弹框
  */
 import { caseTypeEnum } from '@/common';
+import { envSortList } from '@/services/envConfig';
 import { save } from '@/services/task';
 import { Button, Form, Input, message, Modal, Select, Switch } from 'antd';
 import { useEffect, useState } from 'react';
@@ -16,6 +17,25 @@ const EditTask = (props) => {
   const [form] = Form.useForm();
   const { TextArea } = Input;
   const [isloading, setIsloading] = useState(false);
+  const [envSortListData, setEnvSortListData] = useState([]);
+
+  const envSortData = () => {
+    envSortList().then((result) => {
+      if (result.code === 200) {
+        const data = result.data.map((item) => {
+          return {
+            value: item,
+            label: item,
+          };
+        });
+        setEnvSortListData(data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    envSortData();
+  }, []);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
@@ -48,7 +68,7 @@ const EditTask = (props) => {
         name: props.recordData?.name,
         cron: props.recordData?.cron,
         testcaseType: props.recordData?.testcaseType,
-        env: props.recordData?.env,
+        envSort: props.recordData?.envSort,
         enable: props.recordData?.enable,
         remark: props.recordData?.remark,
       });
@@ -95,9 +115,8 @@ const EditTask = (props) => {
           <Form.Item name="testcaseType" label="用例类型" rules={[{ required: true }]}>
             <Select options={caseTypeEnum} placeholder="请输入任务名称" />
           </Form.Item>
-          <Form.Item name="env" label="执行环境" rules={[{ required: true }]}>
-            <Select options={caseTypeEnum} placeholder="请输入任务名称" />
-            {/* <Select placeholder="请选择环境" /> */}
+          <Form.Item name="envSort" label="环境顺序" rules={[{ required: true }]}>
+            <Select options={envSortListData} placeholder="请选择环境顺序" />
           </Form.Item>
           <Form.Item name="enable" label="是否开启" initialValue={true}>
             <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
