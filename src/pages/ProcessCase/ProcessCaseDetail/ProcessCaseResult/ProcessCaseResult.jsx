@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 23:53:14
- * @LastEditTime: 2025-04-20 17:30:01
+ * @LastEditTime: 2025-04-20 18:11:04
  * @Description:
  */
 import DebugEnvVarComponen from '@/pages/ProcessCase/ProcessCaseDetail/DebugEnvVarComponen';
@@ -47,10 +47,18 @@ const ProcessCaseResult = (props) => {
     height: 600,
   };
 
+  const statusConfig = {
+    SUCCESS: { color: 'green', text: '成功' },
+    FAILED: { color: 'red', text: '失败' },
+    TIMEOUT: { color: 'orange', text: '超时' },
+  };
+
   return (
     <Drawer title="用例执行结果" width={800} onClose={onClose} open={props.open}>
       <div>
-        <b style={{ color: color, marginRight: 30 }}>执行结果：{props.caseStatus}</b>
+        <b style={{ color: statusConfig[props.caseStatus].color, marginRight: 30 }}>
+          执行结果：{statusConfig[props.caseStatus].text}
+        </b>
         <ProCard
           tabs={{
             type: 'card',
