@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-16 02:07:27
- * @LastEditTime: 2025-04-20 18:38:50
+ * @LastEditTime: 2025-04-20 22:45:55
  * @Description:
  */
 
@@ -9,6 +9,7 @@ import { genEnvVarArray, getTestAccount } from '@/common';
 import { debug as debugApiTestcase, queryById as queryApiCaseById } from '@/services/apiCase';
 import { envAppList } from '@/services/envConfig';
 import { debugProcessCase, detail } from '@/services/processCase';
+import { history } from '@umijs/max';
 import { Button, Form, message, Modal, Radio, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import DebugEnvVarComponen from '../../ProcessCase/ProcessCaseDetail/DebugEnvVarComponen';
@@ -109,7 +110,7 @@ const Debug = (props) => {
         setIsModalExecButtonLoading(false);
         if (res.code === 200) {
           message.success('开始执行用例');
-          window.open('/case/proces/detail/debug?id=' + res.data, '_self');
+          history.push('/case/proces/detail/debug?id=' + res.data);
           setIsExecModalOpen(false);
         }
       });

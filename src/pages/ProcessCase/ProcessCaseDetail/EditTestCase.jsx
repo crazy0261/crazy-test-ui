@@ -4,12 +4,14 @@ import { envAppList } from '@/services/envConfig';
 import { detail, save } from '@/services/processCase';
 import { querResultById } from '@/services/processCaseRecord';
 import { ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
+import { useLocation } from '@umijs/max';
 import { Drawer, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { priorityList } from '../../../common';
 
 // 开始节点编辑页
 const EditTestCase = (props) => {
+  const location = useLocation();
   const urlParams = new URL(window.location.href).searchParams;
   const isDebug = window.location.href.indexOf('/debug') !== -1;
   const id = urlParams.get('id');
@@ -85,7 +87,13 @@ const EditTestCase = (props) => {
     if (!isDebug) {
       queryCaseDetail();
     }
-  }, []);
+  }, [isDebug, id]);
+
+  useEffect(() => {
+    if (isDebug) {
+      queryResult();
+    }
+  }, [location.search]);
 
   // 每隔1秒执行一次;
   useEffect(() => {
@@ -106,7 +114,7 @@ const EditTestCase = (props) => {
           resStatus = res.data.status;
           props.setCaseName(res.data.caseName);
           props.setEnvName(res.data.envSortId);
-          props.setCaseId(res.data.resultId);
+          props.setCaseId(res.data.caseId);
           props.setAccountId(res.data.accountId);
           props.setInputParams(
             res.data.inputParams && JSONbig.parse(res.data.inputParams)?.[res.data.envSort],

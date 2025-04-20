@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 23:53:14
- * @LastEditTime: 2025-04-20 18:32:22
+ * @LastEditTime: 2025-04-20 23:03:06
  * @Description:
  */
 import DebugEnvVarComponen from '@/pages/ProcessCase/ProcessCaseDetail/DebugEnvVarComponen';
@@ -48,10 +48,12 @@ const ProcessCaseResult = (props) => {
   };
 
   const statusConfig = {
-    INIT: { color: 'black', text: '待执行' },
+    INIT: { color: 'white', text: '初始化' },
+    RUNNING: { color: 'gray', text: '执行中' },
     SUCCESS: { color: 'green', text: '成功' },
     FAILED: { color: 'red', text: '失败' },
     TIMEOUT: { color: 'orange', text: '超时' },
+    IGNORE: { color: 'white', text: '忽略' },
   };
 
   return (
