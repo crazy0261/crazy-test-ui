@@ -88,12 +88,16 @@ const DebugEnvVarComponen = (props) => {
         rowKey="id"
         value={dataSource}
         onChange={setDataSource}
-        recordCreatorProps={{
-          newRecordType: 'dataSource',
-          record: () => ({
-            id: Date.now() + Math.floor(Math.random() * 9999) + 1000,
-          }),
-        }}
+        recordCreatorProps={
+          props.hide
+            ? false
+            : {
+                newRecordType: 'dataSource',
+                record: () => ({
+                  id: Date.now() + Math.floor(Math.random() * 9999) + 1000,
+                }),
+              }
+        }
         editable={{
           type: 'multiple',
           actionRender: (row, config, defaultDoms) => {

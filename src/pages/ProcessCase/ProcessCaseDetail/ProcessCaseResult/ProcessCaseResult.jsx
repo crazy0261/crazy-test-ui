@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 23:53:14
- * @LastEditTime: 2025-04-20 18:11:04
+ * @LastEditTime: 2025-04-20 18:32:22
  * @Description:
  */
 import DebugEnvVarComponen from '@/pages/ProcessCase/ProcessCaseDetail/DebugEnvVarComponen';
@@ -48,6 +48,7 @@ const ProcessCaseResult = (props) => {
   };
 
   const statusConfig = {
+    INIT: { color: 'black', text: '待执行' },
     SUCCESS: { color: 'green', text: '成功' },
     FAILED: { color: 'red', text: '失败' },
     TIMEOUT: { color: 'orange', text: '超时' },
@@ -56,7 +57,12 @@ const ProcessCaseResult = (props) => {
   return (
     <Drawer title="用例执行结果" width={800} onClose={onClose} open={props.open}>
       <div>
-        <b style={{ color: statusConfig[props.caseStatus].color, marginRight: 30 }}>
+        <b
+          style={{
+            color: props.caseStatus ? statusConfig[props.caseStatus].color : 'black',
+            marginRight: 30,
+          }}
+        >
           执行结果：{statusConfig[props.caseStatus].text}
         </b>
         <ProCard
@@ -72,6 +78,7 @@ const ProcessCaseResult = (props) => {
               testAccount={props.testAccount}
               isEdit={false}
               needTestAccount={true}
+              hide={true}
             />
           </ProCard.TabPane>
           <ProCard.TabPane key="tab2" tab="用例出参">
