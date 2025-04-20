@@ -3,7 +3,7 @@ import ExecLog from '@/pages/ProcessCase/ExecLog';
 import { detail, save } from '@/services/processCase';
 import { ClockCircleTwoTone } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Layout, Space, Tooltip, message } from 'antd';
+import { Button, Layout, message, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { useEdgesState, useNodesState } from 'reactflow';
 import ProcessCaseDetail from './ProcessCaseDetail';
@@ -146,7 +146,6 @@ const App = () => {
             />
           </Tooltip>
 
-          {/* todo 后续调试再完善 */}
           <Debug caseType="processCase" isEdit={isEdit} caseId={id} />
 
           {!isDebug && (
@@ -192,7 +191,7 @@ const App = () => {
         setOpen={setIsExecLogModalOpen}
         caseId={isDebug ? caseId : id}
         caseName={caseName}
-        caseType="mulCase"
+        caseType="procesCase"
       />
     </div>
   );

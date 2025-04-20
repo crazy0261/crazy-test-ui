@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-16 02:07:27
- * @LastEditTime: 2025-04-20 12:34:43
+ * @LastEditTime: 2025-04-20 18:38:50
  * @Description:
  */
 
@@ -110,7 +110,6 @@ const Debug = (props) => {
         if (res.code === 200) {
           message.success('开始执行用例');
           window.open('/case/proces/detail/debug?id=' + res.data, '_self');
-
           setIsExecModalOpen(false);
         }
       });
