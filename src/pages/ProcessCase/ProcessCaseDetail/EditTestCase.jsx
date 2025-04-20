@@ -105,7 +105,7 @@ const EditTestCase = (props) => {
           props.setCaseStatus(res.data.status);
           resStatus = res.data.status;
           props.setCaseName(res.data.caseName);
-          props.setEnvName(res.data.envName);
+          props.setEnvName(res.data.envSortId);
           props.setCaseId(res.data.resultId);
           props.setAccountId(res.data.accountId);
           props.setInputParams(

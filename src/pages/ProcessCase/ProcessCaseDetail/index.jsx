@@ -132,7 +132,7 @@ const App = () => {
           <Tooltip title="点击开始节点，修改用例名">
             <b style={{ marginRight: 30 }}>用例名：{caseName}</b>
           </Tooltip>
-          {isDebug && <b style={{ marginRight: 30 }}>执行环境：{envName}</b>}
+          {isDebug && <b style={{ marginRight: 30 }}>执行环境顺序：{envName}</b>}
 
           <Tooltip title="执行记录">
             <Button

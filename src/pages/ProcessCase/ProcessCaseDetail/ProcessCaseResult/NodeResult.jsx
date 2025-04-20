@@ -1,11 +1,11 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 23:53:02
- * @LastEditTime: 2025-04-01 00:04:16
+ * @LastEditTime: 2025-04-20 21:45:00
  * @Description:
  */
-// import CaseResult from '@/pages/ApiTestCaseDetail/CaseResult';
-// import { queryByResultIdAndNodeId } from '@/services/mulTestcaseResultNode';
+import CaseResult from '@/pages/ApiCase/ApiCaseDetail/CaseResult';
+import { processNodeResult } from '@/services/processCaseNodeResullt';
 import { Drawer, Form, InputNumber } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useState } from 'react';
@@ -21,25 +21,25 @@ const NodeResult = (props) => {
   const [curExecTimes, setCurExecTimes] = useState(0);
 
   useEffect(() => {
-    // if (props.open === true && props.curNodeId !== undefined && id !== undefined) {
-    //   queryByResultIdAndNodeId({ resultId: id, nodeId: props.curNodeId }).then((res) => {
-    //     if (res.code === 200 && res.data !== null && res.data.length > 0) {
-    //       setRes(res);
-    //       setMaxExecTimes(res.data.length);
-    //       setCurExecTimes(0);
-    //       if (res.data.length > 0) {
-    //         setDebugResult(JSONbig.parse(res.data[0]?.debugResult));
-    //         setOutputParams(JSONbig.parse(res.data[0]?.outputParams));
-    //       } else {
-    //         setDebugResult({});
-    //         setOutputParams({});
-    //       }
-    //     } else {
-    //       setDebugResult({});
-    //       setOutputParams({});
-    //     }
-    //   });
-    // }
+    if (props.open === true && props.curNodeId !== undefined && id !== undefined) {
+      processNodeResult({ resultId: id, nodeId: props.curNodeId }).then((res) => {
+        if (res.code === 200 && res.data !== null) {
+          setRes(res);
+          // setMaxExecTimes(res.data.length);
+          // setCurExecTimes(0);
+          if (res.data !== null) {
+            setDebugResult(JSONbig.parse(res.data.debugResult));
+            setOutputParams(JSONbig.parse(res.data.outputParams));
+          } else {
+            setDebugResult({});
+            setOutputParams({});
+          }
+        } else {
+          setDebugResult({});
+          setOutputParams({});
+        }
+      });
+    }
   }, [props.curNodeId, props.open]);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const NodeResult = (props) => {
           </Form.Item>
         </Form>
       )}
-      {/* <CaseResult debugResult={debugResult} outputParams={outputParams} /> */}
+      <CaseResult debugResult={debugResult} outputParams={outputParams} />
     </Drawer>
   );
 };

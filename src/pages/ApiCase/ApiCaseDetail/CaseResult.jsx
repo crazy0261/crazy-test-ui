@@ -19,6 +19,7 @@ const CaseResult = (props) => {
 
   useEffect(() => {
     const isPass = props.debugResult?.assertResultVo?.pass;
+
     if (isPass !== undefined) {
       setPass(isPass);
       if (isPass) {
@@ -68,7 +69,7 @@ const CaseResult = (props) => {
         {assertResultText !== '暂无' && (
           <div>
             <br />
-            <li>执行环境：{execEnvName}</li>
+            {/* <li>环境顺序：{execEnvName}</li> */}
             <li>执行时间：{startExecTime}</li>
             <li>执行耗时：{execTime} ms</li>
           </div>
