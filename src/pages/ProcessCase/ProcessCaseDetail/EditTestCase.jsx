@@ -1,12 +1,12 @@
-import { priorityList } from '../../../common';
-// import { queryById as queryExecResult } from '@/services/mulTestcaseResult';
 import EnvVar from '@/pages/ApiCase/ApiCaseDetail/EnvVar';
 import { listAll } from '@/services/application';
 import { envAppList } from '@/services/envConfig';
 import { detail, save } from '@/services/processCase';
+import { querResultById } from '@/services/processCaseRecord';
 import { ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Drawer, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { priorityList } from '../../../common';
 
 // 开始节点编辑页
 const EditTestCase = (props) => {
@@ -83,41 +83,46 @@ const EditTestCase = (props) => {
   useEffect(() => {
     appData();
     if (!isDebug) {
+      console.log('进入编辑页-->', isDebug);
       queryCaseDetail();
     }
   }, []);
 
-  // 每隔1秒执行一次
+  // 每隔1秒执行一次;
   useEffect(() => {
     const interval = setInterval(() => {
-      queryResult(resStatus);
+      if (isDebug && (resStatus === 'INIT' || resStatus === 'RUNNING')) {
+        queryResult(resStatus);
+      }
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
   // 用例结果页详情-
   function queryResult() {
-    // if (isDebug) {
-    //   if (resStatus === 'INIT' || resStatus === 'RUNNING') {
-    //     queryExecResult({ id: id }).then((res) => {
-    //       if (res.code === 200 && res.data !== null) {
-    //         props.setCaseStatus(res.data.status);
-    //         resStatus = res.data.status;
-    //         props.setCaseName(res.data.testcaseName);
-    //         props.setEnvName(res.data.envName);
-    //         props.setCaseId(res.data.testcaseId);
-    //         props.setInputParams(JSONbig.parse(res.data.inputParams)?.[res.data.envNameId]);
-    //         props.setOutputParams(JSONbig.parse(res.data.outputParams));
-    //         if (res.data.nodeArray !== null) {
-    //           props.setNodes(res.data.nodeArray);
-    //         }
-    //         if (res.data.edgeArray !== null) {
-    //           props.setEdges(res.data.edgeArray);
-    //         }
-    //       }
-    //     });
-    //   }
-    // }
+    if (isDebug) {
+      console.log('进入编辑页-->', resStatus);
+      querResultById({ resultId: id }).then((res) => {
+        if (res.code === 200 && res.data !== null) {
+          props.setCaseStatus(res.data.status);
+          resStatus = res.data.status;
+          console.log(res.data.status);
+          props.setCaseName(res.data.caseName);
+          props.setEnvName(res.data.envName);
+          props.setCaseId(res.data.resultId);
+          props.setInputParams(
+            res.data.inputParams && JSONbig.parse(res.data.inputParams)?.[res.data.envSort],
+          );
+          props.setOutputParams(res.data.outputParams && JSONbig.parse(res.data.outputParams));
+          if (res.data.nodeArray !== null) {
+            props.setNodes(res.data.nodeArray);
+          }
+          if (res.data.edgeArray !== null) {
+            props.setEdges(res.data.edgeArray);
+          }
+        }
+      });
+    }
   }
 
   // 用例编辑页详情
@@ -130,7 +135,11 @@ const EditTestCase = (props) => {
         setAppIdCurrent(res.data.appId);
         setIsSubProcess(res.data.isSubProcess);
         setEnvData(res.data.inputParamsJson);
-        appIdListData(res.data.appId);
+
+        if (res.data.appId !== null) {
+          appIdListData(res.data.appId);
+        }
+
         if (res.data.nodeArray !== null) {
           props.setNodes(res.data.nodeArray);
         }
@@ -177,11 +186,6 @@ const EditTestCase = (props) => {
     }
   };
 
-  // const formItemLayout = {
-  //   labelCol: { span: 0 },
-  //   wrapperCol: { span: 0 },
-  // };
-
   const onClose = () => {
     for (let i = 0; i < props.nodes.length; i++) {
       if (props.nodes[i]['id'] === props.curNodeId) {
@@ -204,7 +208,6 @@ const EditTestCase = (props) => {
               submitText: isEdit ? '保存' : '编辑',
             },
           }}
-          // {...formItemLayout}
           layout={'LAYOUT_TYPE_HORIZONTAL'}
           onFinish={(e) => handleFinish(e)}
         >
@@ -212,7 +215,7 @@ const EditTestCase = (props) => {
             name="name"
             label="用例名"
             rules={[{ required: isEdit }]}
-            disabled={!isEdit}
+            disabled={true}
             initialValue={name}
           />
           <ProForm.Group width="100%">

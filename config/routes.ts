@@ -46,7 +46,7 @@ export default [
         component: './ProcessCase',
       },
       {
-        path: '/case/proces/detail',
+        path: '/case/proces/detail/*',
         component: './ProcessCase/ProcessCaseDetail',
       },
     ],

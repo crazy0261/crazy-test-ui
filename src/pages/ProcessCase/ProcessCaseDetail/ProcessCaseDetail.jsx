@@ -112,8 +112,7 @@ const ProcessCaseDetail = (props) => {
         props.nodes[i]['data']['borderColor'] = 'orange';
       }
     }
-    console.log('node?.type-------->', node?.type);
-    console.log('isDebug-------->', isDebug);
+
     if (node?.type === 'StartNode') {
       if (isDebug) {
         setMulcaseResultOpen(true);

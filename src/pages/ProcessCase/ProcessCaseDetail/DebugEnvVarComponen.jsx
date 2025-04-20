@@ -4,7 +4,6 @@ import { message } from 'antd';
 import { useEffect, useState } from 'react';
 
 const DebugEnvVarComponen = (props) => {
-  console.log('DebugEnvVarComponen--->', props);
   const {
     dataSource,
     setDataSource,

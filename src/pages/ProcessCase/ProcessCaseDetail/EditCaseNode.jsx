@@ -153,7 +153,7 @@ const EditCaseNode = (props) => {
       queryApiById({ id: apiId }).then((res) => {
         if (res.code === 200) {
           const curName = formRef?.current?.getFieldsValue().name;
-          if (curName === undefined || curName === null || curName === 'TestCaseNode node') {
+          if (curName === undefined || curName === null || curName === 'TEST_CASE_NODE node') {
             formRef?.current?.setFieldsValue({
               name: res.data.name,
             });
@@ -241,7 +241,7 @@ const EditCaseNode = (props) => {
 
   // 首次进入页面
   useEffect(() => {
-    if (curAppId !== null) {
+    if (curAppId !== undefined && curAppId !== null) {
       queryAllSecret(curAppId);
     }
   }, [curAppId]);

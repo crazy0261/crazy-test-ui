@@ -115,6 +115,8 @@ export const errorConfig: RequestConfig = {
       } else if (data?.success === true && data?.code === 401) {
         message.error('验证已过期，请重新登录！');
         history.push('/user/login');
+      } else if (data?.code === 500) {
+        message.error('请求异常！');
       }
       return response;
     },

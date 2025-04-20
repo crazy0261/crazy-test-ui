@@ -2,6 +2,7 @@ import Debug from '@/pages/ApiCase/ApiCaseDetail/Debug';
 import ExecLog from '@/pages/ProcessCase/ExecLog';
 import { detail, save } from '@/services/processCase';
 import { ClockCircleTwoTone } from '@ant-design/icons';
+import { history } from '@umijs/max';
 import { Button, Layout, Space, Tooltip, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useEdgesState, useNodesState } from 'reactflow';
@@ -51,8 +52,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    processCaseData();
-    if (isDebug) {
+    if (!isDebug) {
+      processCaseData();
     }
   }, []);
 
@@ -131,8 +132,7 @@ const App = () => {
           <Tooltip title="点击开始节点，修改用例名">
             <b style={{ marginRight: 30 }}>用例名：{caseName}</b>
           </Tooltip>
-          {/* {isDebug && <b style={{ marginRight: 30 }}>执行环境：{envName}</b>} */}
-          <b style={{ marginRight: 30 }}>执行环境：{envName}</b>
+          {isDebug && <b style={{ marginRight: 30 }}>执行环境：{envName}</b>}
 
           <Tooltip title="执行记录">
             <Button
@@ -160,7 +160,7 @@ const App = () => {
             <Button
               type="primary"
               onClick={() => {
-                window.open('/mulTestCase/detail?id=' + caseId, '_self');
+                history.push('/case/proces/detail?id=' + caseId, '_self');
               }}
             >
               编辑
