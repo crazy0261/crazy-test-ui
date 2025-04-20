@@ -19,7 +19,7 @@ import './index.scss';
 import ConditionNodeResult from './ProcessCaseResult/ConditionNodeResult';
 import NodeResult from './ProcessCaseResult/NodeResult';
 import PreStepNodeResult from './ProcessCaseResult/PreStepNodeResult';
-import MulCaseResult from './ProcessCaseResult/ProcessCaseResult';
+import ProcessCaseResult from './ProcessCaseResult/ProcessCaseResult';
 import SubProcessResult from './ProcessCaseResult/SubProcessResult';
 import Sidebar from './Sidebar';
 
@@ -61,6 +61,7 @@ const ProcessCaseDetail = (props) => {
   const [outputParams, setOutputParams] = useState({});
   const [inputParams, setInputParams] = useState({});
   const [caseStatus, setCaseStatus] = useState('INIT');
+  const [account, setAccountId] = useState();
 
   // 添加连接线
   const onConnect = useCallback((params) => {
@@ -241,6 +242,8 @@ const ProcessCaseDetail = (props) => {
         setInputParams={setInputParams}
         setCaseStatus={setCaseStatus}
         align={props.align}
+        testAccount={account}
+        setAccountId={setAccountId}
       />
       <EditCaseNode
         open={editCaseNodeOpen}
@@ -262,7 +265,7 @@ const ProcessCaseDetail = (props) => {
         curNodeId={curNodeId}
         nodes={props.nodes}
       />
-      <MulCaseResult
+      <ProcessCaseResult
         open={mulcaseResultOpen}
         setOpen={setMulcaseResultOpen}
         curNodeId={curNodeId}
@@ -271,6 +274,8 @@ const ProcessCaseDetail = (props) => {
         caseStatus={caseStatus}
         nodes={props.nodes}
         curNodeType={curNodeType}
+        testAccount={account}
+        setAccountId={setAccountId}
       />
       <EditSubProcess
         open={subProcessOpen}

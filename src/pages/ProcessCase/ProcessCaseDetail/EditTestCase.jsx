@@ -83,7 +83,6 @@ const EditTestCase = (props) => {
   useEffect(() => {
     appData();
     if (!isDebug) {
-      console.log('进入编辑页-->', isDebug);
       queryCaseDetail();
     }
   }, []);
@@ -101,15 +100,14 @@ const EditTestCase = (props) => {
   // 用例结果页详情-
   function queryResult() {
     if (isDebug) {
-      console.log('进入编辑页-->', resStatus);
       querResultById({ resultId: id }).then((res) => {
         if (res.code === 200 && res.data !== null) {
           props.setCaseStatus(res.data.status);
           resStatus = res.data.status;
-          console.log(res.data.status);
           props.setCaseName(res.data.caseName);
           props.setEnvName(res.data.envName);
           props.setCaseId(res.data.resultId);
+          props.setAccountId(res.data.accountId);
           props.setInputParams(
             res.data.inputParams && JSONbig.parse(res.data.inputParams)?.[res.data.envSort],
           );

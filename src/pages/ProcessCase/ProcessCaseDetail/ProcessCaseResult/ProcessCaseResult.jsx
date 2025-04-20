@@ -1,11 +1,10 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 23:53:14
- * @LastEditTime: 2025-04-10 22:30:24
+ * @LastEditTime: 2025-04-20 17:30:01
  * @Description:
  */
-// import EnvVarComponent from '@/pages/ApiTestCaseDetail/EnvVarComponent';
-// import { listAll as listAllTestAccount } from '@/services/config/testAccount';
+import DebugEnvVarComponen from '@/pages/ProcessCase/ProcessCaseDetail/DebugEnvVarComponen';
 import { ProCard } from '@ant-design/pro-components';
 import { Drawer, Typography } from 'antd';
 import { useEffect, useState } from 'react';
@@ -14,23 +13,7 @@ import { useEffect, useState } from 'react';
 const ProcessCaseResult = (props) => {
   const [color, setColor] = useState('black');
   const { Paragraph } = Typography;
-  const [testAccountList, setTestAccountList] = useState([]);
-
-  // 查询测试账号列表
-  const queryTestAccountList = () => {
-    // listAllTestAccount().then((result) => {
-    //   if (result.code === 200) {
-    //     setTestAccountList(result.data.map((item) => ({ value: item.id, label: item.name })));
-    //   } else {
-    //     message.error('查询测试账号列表失败');
-    //   }
-    // });
-  };
-
-  // 首次进入页面
-  useEffect(() => {
-    queryTestAccountList();
-  }, []);
+  const [env, setEnv] = useState([]);
 
   useEffect(() => {
     if (props.caseStatus === 'FAILE' || props.caseStatus === 'TIMEOUT') {
@@ -75,12 +58,13 @@ const ProcessCaseResult = (props) => {
           style={{ marginTop: 10, height: 500 }}
         >
           <ProCard.TabPane key="tab1" tab="用例入参">
-            {/* <EnvVarComponent
-              dataSource={props.inputParams?.['envVariables']}
-              testAccount={props.inputParams?.['testaccountID']}
+            <DebugEnvVarComponen
+              dataSource={env}
+              setDataSource={setEnv}
+              testAccount={props.testAccount}
               isEdit={false}
               needTestAccount={true}
-            /> */}
+            />
           </ProCard.TabPane>
           <ProCard.TabPane key="tab2" tab="用例出参">
             <Paragraph>
