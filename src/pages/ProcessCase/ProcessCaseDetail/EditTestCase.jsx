@@ -15,6 +15,8 @@ const EditTestCase = (props) => {
   const urlParams = new URL(window.location.href).searchParams;
   const isDebug = window.location.href.indexOf('/debug') !== -1;
   const id = urlParams.get('id');
+  const resultId = urlParams.get('resultId');
+
   const formRef = useRef();
   const [isEdit, setIsEdit] = useState(false);
   const [name, setName] = useState();
@@ -25,8 +27,7 @@ const EditTestCase = (props) => {
   const [appEnum, setAppEnum] = useState([]);
   const [envData, setEnvData] = useState({}); // 所有环境的数据
   const [appIdCurrent, setAppIdCurrent] = useState(null);
-
-  let resStatus = 'INIT';
+  const [resStatus, setResStatus] = useState('INIT');
 
   // 更新环境参数
   const updateEnvParams = (envId, newParams) => {
@@ -98,20 +99,20 @@ const EditTestCase = (props) => {
   // 每隔1秒执行一次;
   useEffect(() => {
     const interval = setInterval(() => {
-      if (isDebug && (resStatus === 'INIT' || resStatus === 'RUNNING')) {
+      if ((isDebug && resStatus === 'INIT') || resStatus === 'RUNNING') {
         queryResult(resStatus);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [resStatus, isDebug]);
 
   // 用例结果页详情-
   function queryResult() {
     if (isDebug) {
-      querResultById({ resultId: id }).then((res) => {
+      querResultById({ resultId: resultId }).then((res) => {
         if (res.code === 200 && res.data !== null) {
           props.setCaseStatus(res.data.status);
-          resStatus = res.data.status;
+          setResStatus(res.data.status);
           props.setCaseName(res.data.caseName);
           props.setEnvName(res.data.envSortId);
           props.setCaseId(res.data.caseId);

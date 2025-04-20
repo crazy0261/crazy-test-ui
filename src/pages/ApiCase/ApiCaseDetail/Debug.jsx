@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-16 02:07:27
- * @LastEditTime: 2025-04-20 22:45:55
+ * @LastEditTime: 2025-04-21 00:17:44
  * @Description:
  */
 
@@ -110,7 +110,7 @@ const Debug = (props) => {
         setIsModalExecButtonLoading(false);
         if (res.code === 200) {
           message.success('开始执行用例');
-          history.push('/case/proces/detail/debug?id=' + res.data);
+          history.push(`/case/proces/detail/debug?id=${testcaseId}&resultId=${res.data}`);
           setIsExecModalOpen(false);
         }
       });
@@ -130,16 +130,17 @@ const Debug = (props) => {
     if (isExecModalOpen) {
       if (props.caseType === 'processCase') {
         setIsModelExecButtonDisable(true);
-        detail({ id: props.caseId }).then((res) => {
-          const data = res.data.inputParamsJson;
-          setInputParams(data);
+        detail({ id: testcaseId }).then((res) => {
+          const data = res?.data?.inputParamsJson;
 
-          const firstKey = Object.keys(data)[0];
-          const firstValue = data[firstKey];
-          setCurEnv(firstKey);
-          setTestAccount(firstValue?.testAccount);
-          setDataSource(data[firstKey]?.params);
-
+          if (data !== undefined && data !== null) {
+            setInputParams(data);
+            const firstKey = Object.keys(data)[0];
+            const firstValue = data[firstKey];
+            setCurEnv(firstKey);
+            setTestAccount(firstValue?.testAccount);
+            setDataSource(data[firstKey]?.params);
+          }
           setIsModelExecButtonDisable(false);
         });
       } else if (props.caseType === 'apiTestcase') {
@@ -163,6 +164,7 @@ const Debug = (props) => {
       .validateFields()
       .then((res) => {
         if (props.caseType === 'processCase') {
+          console.log('processCase--->', props.caseId);
           //   queryMulCaseById({ id: props.caseId }).then((res) => {
           //     setTempReqParams(genEnvVarArray(res.data.inputParams, curEnvId));
           //     setTempTestAccount(getTestAccount(res.data.inputParams, curEnvId));
