@@ -1,65 +1,18 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-19 17:08:06
+ * @LastEditTime: 2025-04-22 01:20:22
  * @Description: 数据大盘
  */
 
-import { caseDetail, coreIndicatorsDetail } from '@/services/charts';
+import { caseDetail, coreIndicatorsDetail, queryStatisticsDetail } from '@/services/charts';
 import { Area, Bar, Column, DualAxes, Funnel, Gauge, Pie } from '@ant-design/charts';
 import { PageContainer, ProCard, ProTable, StatisticCard } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Button, Col, Collapse, DatePicker, Row, Space, Tag, Tooltip } from 'antd';
+import { Button, Col, Collapse, DatePicker, Row, Space, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 const { RangePicker } = DatePicker;
-
-// 模拟数据
-const mockData = {
-  // 未断言用例
-  unassertedCases: [
-    { user: '张三', count: 150 },
-    { user: '李四', count: 80 },
-    { user: '王五', count: 50 },
-    { user: '王五1', count: 25 },
-    { user: '王五2', count: 10 },
-  ],
-  unassertedDetails: [
-    { id: 'C001', name: '登录接口测试', service: '用户服务', creator: '张三' },
-    { id: 'C002', name: '支付接口测试', service: '支付服务', creator: '李四' },
-  ],
-
-  // 未加入定时任务
-  unscheduledCases: [
-    { type: '分类一', value: 27 },
-    { type: '分类二', value: 25 },
-    { type: '分类三', value: 18 },
-    { type: '分类四', value: 15 },
-    { type: '分类五', value: 10 },
-    { type: '其他', value: 5 },
-  ],
-  unscheduledDetails: [
-    { id: 'T001', name: '订单查询测试', type: '接口用例', owner: '张三' },
-    { id: 'T002', name: '购物车场景', type: '场景用例', owner: '李四' },
-  ],
-
-  // 失败用例
-  failedCases: [
-    { user: '张三', 个数: 1200 },
-    { user: '李四', 个数: 800 },
-    { user: '张三1', 个数: 120 },
-    { user: '李四2', 个数: 80 },
-  ],
-  failedDetails: [
-    {
-      id: 'F001',
-      name: '库存检查',
-      error: '断言失败: 期望库存=100 实际=95',
-      time: '2023-06-03 14:30',
-    },
-    { id: 'F002', name: '支付流程', error: '接口超时: 5000ms未响应', time: '2023-06-03 15:12' },
-  ],
-};
 
 const Charts = () => {
   const [range, setRange] = useState([dayjs().subtract(7, 'd'), dayjs()]);
@@ -69,6 +22,12 @@ const Charts = () => {
   const [trendData, setTrendData] = useState([]);
   const [caseSuccessRate, setCaseSuccessRate] = useState({});
   const [caseSuccessRatetrendData, setCaseSuccessRatetrendData] = useState([]);
+  const [assetsCount, setAssetsCount] = useState([]);
+  const [assetsList, setAssetsList] = useState([]);
+  const [notTaskCount, setNotTaskCount] = useState([]);
+  const [notTaskList, setNotTaskList] = useState([]);
+  const [failCaseCount, setFailCaseCount] = useState([]);
+  const [failCaseList, setFailCaseList] = useState([]);
 
   const dateRange = [
     { label: '最近7天', value: [dayjs().subtract(7, 'd'), dayjs()] },
@@ -139,7 +98,98 @@ const Charts = () => {
 
   useEffect(() => {
     caseTrend();
+    chartData();
   }, []);
+
+  const assetsCountMap = (value) => {
+    const data = value.map((item) => ({
+      ...item,
+      count: item.count || 0,
+    }));
+    setAssetsCount(data);
+  };
+
+  // 未有断言数据
+  const assetsListMap = (value) => {
+    const assetsListData = value.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        type: item.type === 'API_CASE' ? '接口用例' : '场景用例',
+        nodeName: item.nodeName === null ? '-' : item.nodeName,
+        ownerName: item.ownerName,
+      };
+    });
+    setAssetsList(assetsListData);
+  };
+
+  // 未加入定时任务
+  const notTaskCountMap = (value) => {
+    const notTaskCountData = value.map((item) => {
+      return {
+        type: item.appName,
+        value: item.count || 0,
+      };
+    });
+    setNotTaskCount(notTaskCountData);
+  };
+
+  const notTaskListMap = (value) => {
+    const notTaskListData = value.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        type: item.type === 'API_CASE' ? '接口用例' : '场景用例',
+        ownerName: item.ownerName,
+      };
+    });
+    setNotTaskList(notTaskListData);
+  };
+
+  // 失败用例数据
+  const failCaseCountMap = (value) => {
+    const failCaseCountData = value.map((item) => {
+      return {
+        name: item.name,
+        总数: item.count || 0,
+      };
+    });
+    setFailCaseCount(failCaseCountData);
+  };
+  const failCaseListMap = (value) => {
+    const failCaseListData = value.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        type: item.type === 'API_CASE' ? '接口用例' : '场景用例',
+        ownerName: item.ownerName,
+      };
+    });
+    setFailCaseList(failCaseListData);
+  };
+
+  const chartData = () => {
+    queryStatisticsDetail().then((res) => {
+      const data = res.data;
+
+      assetsCountMap(data.assetsCount);
+      assetsListMap(data.assetsList);
+
+      notTaskCountMap(data.notTaskCount);
+      notTaskListMap(data.notTaskList);
+
+      failCaseCountMap(data.failCaseCount);
+      failCaseListMap(data.failCaseList);
+    });
+  };
+
+  const handleDetailClick = (record) => {
+    if (record.type === '接口用例') {
+      history.push(`/case/api/detail?id=${record.id}`);
+    } else {
+      history.push(`/case/proces/detail?id=${record.id}`);
+    }
+  };
 
   useEffect(() => {
     coreIndicatorsDetail().then((res) => {
@@ -392,7 +442,7 @@ const Charts = () => {
               <Row gutter={16}>
                 <Col span={8}>
                   <Pie
-                    data={mockData.unscheduledCases}
+                    data={notTaskCount}
                     angleField="value"
                     colorField="type"
                     radius={0.8}
@@ -425,10 +475,8 @@ const Charts = () => {
                       },
                       content: {
                         style: { color: 'rgba(7, 7, 7, 0.85)', fontSize: 20 },
-                        content: `${mockData.unscheduledCases.reduce(
-                          (sum, item) => sum + item.value,
-                          0,
-                        )}`,
+                        content: `${notTaskCount.reduce((sum, item) => sum + item.value, 0)}`,
+                        // content: `${100}`,
                       },
                     }}
                     interactions={[{ type: 'element-selected' }, { type: 'element-active' }]}
@@ -440,19 +488,21 @@ const Charts = () => {
                       { title: '用例ID', dataIndex: 'id' },
                       { title: '用例名称', dataIndex: 'name' },
                       {
-                        title: '类型',
+                        title: '用例类型',
                         dataIndex: 'type',
                         render: (type) => (
-                          <Tag color={type === '接口用例' ? '#096DD9' : '#1890FF'}>{type}</Tag>
+                          <Tag color={type === '接口用例' ? '#4CAF50' : '#1890FF'}>{type}</Tag>
                         ),
                       },
-                      { title: '负责人', dataIndex: 'owner' },
+                      { title: '负责人', dataIndex: 'ownerName' },
                       {
                         title: '操作',
-                        render: () => <a>设置定时</a>,
+                        render: (text, record) => (
+                          <a onClick={() => handleDetailClick(record)}>详情</a>
+                        ),
                       },
                     ]}
-                    dataSource={mockData.unscheduledDetails}
+                    dataSource={notTaskList}
                     rowKey="id"
                     search={false}
                     pagination={false}
@@ -467,29 +517,40 @@ const Charts = () => {
             children: (
               <Row gutter={16}>
                 <Col span={8}>
-                  <Funnel
-                    data={mockData.unassertedCases}
-                    xField="user"
-                    yField="count"
-                    conversionTag={{ formatter: (v) => `${v.count}个` }}
-                    height={300}
-                    dynamicHeight={true}
-                    legend={false}
-                  />
+                  {assetsCount.length > 0 && (
+                    <Funnel
+                      data={assetsCount}
+                      xField="name"
+                      yField="count"
+                      conversionTag={{ formatter: (v) => `${v.count}个` }}
+                      height={300}
+                      dynamicHeight={true}
+                      legend={false}
+                    />
+                  )}
                 </Col>
                 <Col span={16}>
                   <ProTable
                     columns={[
                       { title: '用例ID', dataIndex: 'id' },
+                      {
+                        title: '用例类型',
+                        dataIndex: 'type',
+                        render: (type) => (
+                          <Tag color={type === '接口用例' ? '#4CAF50' : '#1890FF'}>{type}</Tag>
+                        ),
+                      },
                       { title: '用例名称', dataIndex: 'name' },
-                      { title: '所属服务', dataIndex: 'service' },
-                      { title: '创建人', dataIndex: 'creator' },
+                      { title: '节点名称', dataIndex: 'nodeName' },
+                      { title: '负责人', dataIndex: 'ownerName' },
                       {
                         title: '操作',
-                        render: () => <a>添加断言</a>,
+                        render: (text, record) => (
+                          <a onClick={() => handleDetailClick(record)}>详情</a>
+                        ),
                       },
                     ]}
-                    dataSource={mockData.unassertedDetails}
+                    dataSource={assetsList}
                     rowKey="id"
                     search={false}
                     pagination={false}
@@ -504,39 +565,39 @@ const Charts = () => {
             children: (
               <Row gutter={16}>
                 <Col span={8}>
-                  <Bar
-                    data={mockData.failedCases}
-                    xField="个数"
-                    yField="user"
-                    color="#FF4D4F"
-                    height={300}
-                    minBarWidth={20}
-                    maxBarWidth={20}
-                  />
+                  {failCaseCount.length > 0 && (
+                    <Bar
+                      data={failCaseCount}
+                      xField="总数"
+                      yField="name"
+                      color="#FF4D4F"
+                      height={300}
+                      minBarWidth={20}
+                      maxBarWidth={20}
+                    />
+                  )}
                 </Col>
                 <Col span={16}>
                   <ProTable
                     columns={[
                       { title: '用例ID', dataIndex: 'id' },
-                      { title: '用例名称', dataIndex: 'name' },
                       {
-                        title: '错误信息',
-                        dataIndex: 'error',
-                        render: (error) => (
-                          <Tooltip title={error}>
-                            <span style={{ color: '#FF4D4F' }}>
-                              {error.length > 20 ? `${error.substring(0, 20)}...` : error}
-                            </span>
-                          </Tooltip>
+                        title: '用例类型',
+                        dataIndex: 'type',
+                        render: (type) => (
+                          <Tag color={type === '接口用例' ? '#4CAF50' : '#1890FF'}>{type}</Tag>
                         ),
                       },
-                      { title: '失败时间', dataIndex: 'time' },
+                      { title: '用例名称', dataIndex: 'name' },
+                      { title: '负责人', dataIndex: 'ownerName' },
                       {
                         title: '操作',
-                        render: () => <a>立即重跑</a>,
+                        render: (text, record) => (
+                          <a onClick={() => handleDetailClick(record)}>详情</a>
+                        ),
                       },
                     ]}
-                    dataSource={mockData.failedDetails}
+                    dataSource={failCaseList}
                     rowKey="id"
                     search={false}
                     pagination={false}
