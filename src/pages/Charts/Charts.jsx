@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-17 20:39:14
- * @LastEditTime: 2025-04-22 01:20:22
+ * @LastEditTime: 2025-04-22 01:48:17
  * @Description: 数据大盘
  */
 
@@ -38,12 +38,11 @@ const Charts = () => {
   const renderUserDistribution = (value) => {
     const dataTime = value.map((item) => dayjs(item));
     setRange(dataTime);
-    renderTrendData();
+    caseTrend(value);
   };
 
   const renderTrendData = () => {
-    const dataTime = range.map((item) => dayjs(item).format('YYYY-MM-DD'));
-    caseDetail({ startTime: dataTime[0], endTime: dataTime[1] });
+    caseTrend();
   };
 
   // 点击事件处理函数
@@ -68,8 +67,11 @@ const Charts = () => {
         break;
     }
   };
-  const caseTrend = () => {
-    const dataTime = range.map((item) => dayjs(item).format('YYYY-MM-DD'));
+  const caseTrend = (value) => {
+    let dataTime = range.map((item) => dayjs(item).format('YYYY-MM-DD'));
+    if (value !== undefined && value !== null) {
+      dataTime = value;
+    }
     caseDetail({ startTime: dataTime[0], endTime: dataTime[1] }).then((res) => {
       if (res.code === 200) {
         const data = res.data.trendData.flatMap((item) => {
