@@ -1,3 +1,10 @@
+/*
+ * @Author: Menghui
+ * @Date: 2025-04-17 20:39:14
+ * @LastEditTime: 2025-04-22 21:22:15
+ * @Description: 错误跟踪
+ */
+
 import { queryStatisticsDetail } from '@/services/charts';
 import { Bar, Funnel, Pie } from '@ant-design/charts';
 import { ProTable } from '@ant-design/pro-components';

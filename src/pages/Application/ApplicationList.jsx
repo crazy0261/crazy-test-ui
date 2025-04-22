@@ -5,7 +5,6 @@ import {
   EditTwoTone,
   ExclamationCircleFilled,
   FileSearchOutlined,
-  PlayCircleTwoTone,
   PlusOutlined,
 } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
@@ -241,18 +240,6 @@ const ApplicationList = () => {
             />
           </Tooltip>
         </div>,
-        <div key="exec">
-          <Tooltip title="执行应用下全部接口用例">
-            <Button
-              icon={<PlayCircleTwoTone />}
-              onClick={() => {
-                setRecord(record);
-                setIsDebugModalOpen(true);
-              }}
-              size={'small'}
-            />
-          </Tooltip>
-        </div>,
         <div key="delete">
           <Tooltip title="删除">
             <Button
@@ -267,7 +254,7 @@ const ApplicationList = () => {
   ];
   const actionRef = useRef();
   const handleClickDetail = (record) => {
-    history.push('/application/apimanage', { applicationId: record.id });
+    history.push(`/application/api?current=1&pageSize=10&applicationId=${record.id}`);
   };
   const showDeleteConfirm = (id) => {
     model.confirm({

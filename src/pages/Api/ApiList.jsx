@@ -13,7 +13,6 @@ import {
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { priorityList } from '../../common';
 import BatchDeleteApi from './BatchDeleteApi';
 import DeleteApi from './DeleteApi';
@@ -29,15 +28,13 @@ import MoveApi from './MoveApi';
  * 接口列表页
  */
 const ApiList = () => {
+  const urlParams = new URL(window.location.href).searchParams;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isRelateCaseModalOpen, setIsRelateCaseModalOpen] = useState(false);
   const [record, setRecord] = useState(null);
-  const location = useLocation();
-  const applicationId = location.state?.applicationId;
-  const urlParams = new URL(window.location.href).searchParams;
-  const apiId = urlParams.get('id');
+  const applicationId = urlParams.get('applicationId');
   const [appEnum, setAppEnum] = useState([]);
   const [ownerEnum, setOwnerEnum] = useState([]);
   const [selectedCaseIds, setSelectedCaseIds] = useState([]);
@@ -381,7 +378,7 @@ const ApiList = () => {
               size={'small'}
               onClick={() => {
                 window.open(
-                  '/apiTestCase/detail?appId=' +
+                  '/apiCase/detail?appId=' +
                     record.applicationId +
                     '&apiId=' +
                     record.id +
@@ -468,6 +465,7 @@ const ApiList = () => {
           setting: {
             listsHeight: 400,
           },
+          request: false,
         }}
         form={{
           // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
