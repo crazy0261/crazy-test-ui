@@ -1,4 +1,3 @@
-import { queryRecord, updateScheduleStatus } from '@/services/task';
 import { FileSearchOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
@@ -106,10 +105,9 @@ const RecordList = () => {
         dateFormatter="string"
         headerTitle="执行记录"
         request={async (params = {}, sort, filter) => {
-          updateScheduleStatus();
-          if (scheduleId) {
-            return queryRecord({ ...params, scheduleId: scheduleId });
-          }
+          // if (scheduleId) {
+          //   return queryRecord({ ...params, scheduleId: scheduleId });
+          // }
         }}
         toolBarRender={() => []}
       />
