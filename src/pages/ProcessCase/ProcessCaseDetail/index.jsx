@@ -1,5 +1,5 @@
 import Debug from '@/pages/ApiCase/ApiCaseDetail/Debug';
-import ExecLog from '@/pages/ProcessCase/ExecLog';
+import ExecLog from '@/pages/Common/ExecLog';
 import { detail, save } from '@/services/processCase';
 import { ClockCircleTwoTone } from '@ant-design/icons';
 import { history } from '@umijs/max';

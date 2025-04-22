@@ -1,3 +1,4 @@
+import ExecLog from '@/pages/Common/ExecLog';
 import { copy, list } from '@/services/processCase';
 import { listAll } from '@/services/user';
 import {
@@ -15,7 +16,6 @@ import { priorityEnum } from '../../common';
 import AddProcessCase from './AddProcessCase';
 import DeleteCase from './DeleteCase';
 import DownCase from './DownCase';
-import ExecLog from './ExecLog';
 import ModOwner from './ModOwner';
 import MoveProcessCase from './MoveProcessCase';
 import RelateCase from './RelateCase';
@@ -192,7 +192,7 @@ const ProcessCaseList = (props) => {
           text: '成功',
           status: 'Success',
         },
-        FAILE: {
+        FAILED: {
           text: '失败',
           status: 'Error',
         },
@@ -469,7 +469,7 @@ const ProcessCaseList = (props) => {
         setOpen={setIsExecLogModalOpen}
         caseId={curCaseId}
         caseName={curCaseName}
-        caseType="mulCase"
+        caseType="procesCase"
       />
       <MoveProcessCase
         isModalOpen={isMoveModalOpen}
