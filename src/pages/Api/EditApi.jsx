@@ -1,5 +1,4 @@
 import { save } from '@/services/api';
-import { listAll } from '@/services/application';
 import { Button, Form, Input, InputNumber, message, Modal, Radio, Select } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useState } from 'react';
@@ -12,7 +11,6 @@ const EditApi = (props) => {
   const [form] = Form.useForm();
   const [isloading, setIsloading] = useState(false);
   const [curMethod, setCurMethod] = useState();
-  const [appEnum, setAppEnum] = useState([]);
 
   const method = [
     {
@@ -38,19 +36,6 @@ const EditApi = (props) => {
     props.setRecord(null);
   };
 
-  const applicationList = () => {
-    listAll().then((result) => {
-      if (result.code === 200) {
-        const appEnumData = result.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name,
-          };
-        });
-        setAppEnum(appEnumData);
-      }
-    });
-  };
   const onFinish = () => {
     form.validateFields().then((value) => {
       setIsloading(true);
@@ -71,7 +56,7 @@ const EditApi = (props) => {
     }
   };
   useEffect(() => {
-    applicationList();
+    // applicationList();
   }, []);
 
   useEffect(() => {
@@ -136,7 +121,7 @@ const EditApi = (props) => {
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
-              options={appEnum}
+              options={props.appEnum}
             />
           </Form.Item>
 

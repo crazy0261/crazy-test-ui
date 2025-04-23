@@ -1,7 +1,6 @@
 import { cURLApiImport, swaggerApiImport } from '@/services/api';
-import { listAll } from '@/services/application';
 import { Button, Form, Input, message, Modal, Radio, Select } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 /**
  * 导入接口
@@ -11,27 +10,9 @@ const ImportApi = (props) => {
   const [isloading, setIsloading] = useState(false);
   const [importType, setImportType] = useState('cURL');
   const { TextArea } = Input;
-  const [appEnum, setAppEnum] = useState([]);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
-  };
-  useEffect(() => {
-    applicationList();
-  }, []);
-
-  const applicationList = () => {
-    listAll().then((result) => {
-      if (result.code === 200) {
-        const appEnumData = result.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name,
-          };
-        });
-        setAppEnum(appEnumData);
-      }
-    });
   };
 
   const onFinish = () => {
@@ -103,7 +84,7 @@ const ImportApi = (props) => {
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
-              options={appEnum}
+              options={props.appEnum}
             />
           </Form.Item>
 

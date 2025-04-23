@@ -1,5 +1,4 @@
-import { list as appList } from '@/services/application';
-// import { listAll as listAllDomain } from '@/services/config/domainInfo';
+import { listAll as appList } from '@/services/application';
 import { del, list } from '@/services/envConfig';
 import {
   DeleteTwoTone,
@@ -20,19 +19,8 @@ const EnvConfigList = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [record, setRecord] = useState(null);
   const [appEnum, setAppEnum] = useState([]);
-  const [domainList, setDomainList] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [envList, setEnvList] = useState([]);
-
-  // useEffect(() => {
-  //   listAllEnvName().then((result) => {
-  //     if (result.code === 200) {
-  //       setEnvList(result.data.map((item) => ({ value: item.id, label: item.name })));
-  //     } else {
-  //       message.error('查询环境名称列表失败');
-  //     }
-  //   });
-  // }, []);
 
   const showDeleteConfirm = (id) => {
     model.confirm({
@@ -167,23 +155,13 @@ const EnvConfigList = () => {
   ];
 
   const requestAppEnum = () => {
-    appList({ current: 1, pageSize: 1000 }).then((result) => {
+    appList().then((result) => {
       if (result.code === 200) {
         setAppEnum(result.data.map((item) => ({ value: item.id, label: item.name })));
       } else {
         message.error('查询应用列表失败');
       }
     });
-  };
-
-  const requestDomain = () => {
-    // listAllDomain().then((result) => {
-    //   if (result.code === 200) {
-    //     setDomainList(result.data.map((item) => ({ value: item.id, label: item.name })));
-    //   } else {
-    //     message.error('查询域名列表失败');
-    //   }
-    // });
   };
 
   useEffect(() => {
@@ -256,7 +234,7 @@ const EnvConfigList = () => {
         actionRef={actionRef}
         record={record}
         setRecord={setRecord}
-        domainList={domainList}
+        appEnum={appEnum}
       />
     </div>
   );

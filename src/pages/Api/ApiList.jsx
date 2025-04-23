@@ -1,7 +1,7 @@
 import { priorityEnum } from '@/common';
-import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { batchSetPriority, list, setProdExec } from '@/services/api';
 import { listAll } from '@/services/application';
+import { listAll as listAllUser } from '@/services/user';
 
 import {
   DeleteTwoTone,
@@ -436,8 +436,8 @@ const ApiList = () => {
   };
 
   useEffect(() => {
-    applicationList();
     requestOwnerEnum();
+    // applicationList();
   }, []);
 
   return (
@@ -626,6 +626,7 @@ const ApiList = () => {
         setOpen={setEditOwnerApiOpen}
         apiIds={selectedCaseIds}
         actionRef={actionRef}
+        ownerEnum={ownerEnum}
         clearSelectedCaseIds={clearSelectedCaseIds}
       />
       <DeleteApi

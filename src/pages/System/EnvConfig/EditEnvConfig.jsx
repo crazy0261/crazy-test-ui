@@ -1,5 +1,4 @@
 import SetReqHeader from '@/pages/ApiCase/ApiCaseDetail/ReqHeader';
-import { list } from '@/services/application';
 import { listPage as domainlist } from '@/services/domain';
 import { queryById, save } from '@/services/envConfig';
 import {
@@ -21,7 +20,6 @@ const EditEnvConfig = (props) => {
   const [isloading, setIsloading] = useState(false);
   const [reqHeaderArray, setReqHeaderArray] = useState([]);
   const [envVarArray, setEnvVarArray] = useState([]);
-  const [appList, setAppList] = useState([]);
   const [domainList, setDomainList] = useState([]);
 
   // 去除空key-value
@@ -34,20 +32,6 @@ const EditEnvConfig = (props) => {
     }
     return res;
   }
-
-  const appListData = () => {
-    list({ current: 1, pageSize: 1000 }).then((res) => {
-      if (res.code === 200 && res.data) {
-        const applicationData = res.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name,
-          };
-        });
-        setAppList(applicationData);
-      }
-    });
-  };
 
   const doaminListData = () => {
     domainlist({ current: 1, pageSize: 1000 }).then((res) => {
@@ -64,7 +48,6 @@ const EditEnvConfig = (props) => {
   };
 
   useEffect(() => {
-    appListData();
     doaminListData();
   }, []);
 
@@ -165,7 +148,7 @@ const EditEnvConfig = (props) => {
           <ProForm.Group>
             <ProFormSelect
               showSearch
-              options={appList}
+              options={props.appEnum}
               width={260}
               name="appId"
               label="应用"

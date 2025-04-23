@@ -1,35 +1,15 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-31 11:39:49
- * @LastEditTime: 2025-03-31 12:02:09
+ * @LastEditTime: 2025-04-23 15:25:37
  * @Description:
  */
 import { batchOwner } from '@/services/api';
-import { listAll } from '@/services/user';
 import { Form, message, Modal, Select } from 'antd';
-import { useEffect, useState } from 'react';
 
 const EditOwnerApi = (props) => {
   const [form] = Form.useForm();
-  const [ownerOptions, setOwnerOptions] = useState([]);
 
-  useEffect(() => {
-    ownerData();
-  }, []);
-
-  const ownerData = () => {
-    listAll().then((result) => {
-      if (result.code === 200) {
-        const ownerOptionData = result.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name,
-          };
-        });
-        setOwnerOptions(ownerOptionData);
-      }
-    });
-  };
   const handleOk = (values) => {
     form.validateFields().then((values) => {
       // form.resetFields();
@@ -57,7 +37,7 @@ const EditOwnerApi = (props) => {
     >
       <Form form={form}>
         <Form.Item name="ownerId" label="负责人" rules={[{ required: true }]}>
-          <Select placeholder="请选择负责人" options={ownerOptions}></Select>
+          <Select placeholder="请选择负责人" options={props.ownerEnum}></Select>
         </Form.Item>
       </Form>
     </Modal>
