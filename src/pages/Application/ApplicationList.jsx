@@ -254,7 +254,7 @@ const ApplicationList = () => {
   ];
   const actionRef = useRef();
   const handleClickDetail = (record) => {
-    history.push(`/application/api?current=1&pageSize=10&applicationId=${record.id}`);
+    history.push('/application/api', { applicationId: record.id });
   };
   const showDeleteConfirm = (id) => {
     model.confirm({

@@ -255,7 +255,7 @@ const TaskResult = () => {
         INIT: { text: '初始化', status: 'Default' },
         RUNNING: { text: '执行中', status: 'Processing' },
         SUCCESS: { text: '执行成功', status: 'Success' },
-        FAILE: { text: '执行失败', status: 'Error' },
+        FAILED: { text: '执行失败', status: 'Error' },
         IGNORE: { text: '忽略', status: 'Success' },
         TIMEOUT: { text: '超时', status: 'Error' },
       },

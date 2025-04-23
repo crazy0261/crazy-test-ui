@@ -13,6 +13,7 @@ import {
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'umi';
 import { priorityList } from '../../common';
 import BatchDeleteApi from './BatchDeleteApi';
 import DeleteApi from './DeleteApi';
@@ -34,7 +35,6 @@ const ApiList = () => {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isRelateCaseModalOpen, setIsRelateCaseModalOpen] = useState(false);
   const [record, setRecord] = useState(null);
-  const applicationId = urlParams.get('applicationId');
   const [appEnum, setAppEnum] = useState([]);
   const [ownerEnum, setOwnerEnum] = useState([]);
   const [selectedCaseIds, setSelectedCaseIds] = useState([]);
@@ -49,6 +49,8 @@ const ApiList = () => {
   const [moveOrCopy, setMoveOrCopy] = useState(); // 用于标记是移动，还是复制
   const [addApiOperType, setAddApiOperType] = useState(''); // 新增接口操作类型：add、edit
   let cancleRowKeys = []; // 取消选择的项目
+  const location = useLocation();
+  const { applicationId } = location.state || {};
 
   const applicationList = () => {
     listAll().then((result) => {
@@ -421,7 +423,6 @@ const ApiList = () => {
       ],
     },
   ];
-
   const actionRef = useRef();
 
   const requestOwnerEnum = () => {
