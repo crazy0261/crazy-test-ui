@@ -27,7 +27,7 @@ const ApplicationList = () => {
 
   const requestOwnerEnum = () => {
     listAllUser().then((result) => {
-      if (result.code === 200) {
+      if (result?.code === 200) {
         let owners = [];
         owners.push({ value: 0, label: '-空-' });
         result.data.map((item) => owners.push({ value: item.id, label: item.name }));
