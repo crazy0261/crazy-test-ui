@@ -1,3 +1,4 @@
+import { taskQueryList } from '@/services/TaskRecord';
 import { FileSearchOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
@@ -6,8 +7,8 @@ import { useRef, useState } from 'react';
 
 // 定时任务执行记录列表
 const RecordList = () => {
-  const path = new URL(window.location.href).pathname;
-  const scheduleId = Number.parseInt(path.split('/').pop());
+  const urlParams = new URL(window.location.href).searchParams;
+  const scheduleId = urlParams.get('id');
   const actionRef = useRef();
   const [pageSize, setPageSize] = useState(5);
 
@@ -105,9 +106,9 @@ const RecordList = () => {
         dateFormatter="string"
         headerTitle="执行记录"
         request={async (params = {}, sort, filter) => {
-          // if (scheduleId) {
-          //   return queryRecord({ ...params, scheduleId: scheduleId });
-          // }
+          if (scheduleId) {
+            return taskQueryList({ ...params, scheduleId: Number(scheduleId) });
+          }
         }}
         toolBarRender={() => []}
       />
