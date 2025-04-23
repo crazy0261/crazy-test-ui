@@ -1,6 +1,6 @@
 import EditTask from '@/pages/Task/EditTask';
-import { listAll as listAllUser } from '@/services/ant-design-pro/api';
 import { deleteTask, execOnce, list } from '@/services/task';
+import { listAll as listAllUser } from '@/services/user';
 import {
   DeleteTwoTone,
   EditOutlined,
