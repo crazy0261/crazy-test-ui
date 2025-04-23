@@ -62,8 +62,8 @@ export default [
     component: './Task/TaskDetail',
   },
   {
-    path: '/task/result/*',
-    // component: './Schedule/ScheduleResult',
+    path: '/task/result',
+    component: './Task/TaskResult',
   },
 
   {
@@ -120,26 +120,9 @@ export default [
       },
     ],
   },
-  // {
-  //   path: '/dataPool',
-  //   name: '数据池',
-  //   icon: 'CloudOutlined',
-  //   routes: [
-  //     {
-  //       path: '/dataPool/rule',
-  //       name: '数据库池',
-  //       // component: './DataPool/Rule',
-  //     },
-  //     {
-  //       path: '/dataPool/myData',
-  //       name: '我的数据',
-  //       // component: './DataPool/MyData',
-  //     },
-  //   ],
-  // },
   {
     path: '/charts',
-    name: '数据大盘',
+    name: '测试大盘',
     icon: 'LineChartOutlined',
     component: './Charts',
   },

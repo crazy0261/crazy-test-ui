@@ -32,7 +32,9 @@ const RecordList = () => {
       render: (text, record) => (
         <a
           onClick={() => {
-            history.push('/schedule/result/' + scheduleId + '/' + record.scheduleBatchId);
+            history.push(
+              `/task/result?scheduleId=${scheduleId}&scheduleBatchId=${record.scheduleBatchId}`,
+            );
           }}
         >
           {record.scheduleBatchId}
@@ -82,7 +84,9 @@ const RecordList = () => {
             type="primary"
             style={{ marginRight: 10 }}
             onClick={() => {
-              history.push('/schedule/result/' + scheduleId + '/' + record.scheduleBatchId);
+              history.push(
+                `/task/result?scheduleId=${scheduleId}& scheduleBatchId=${record.scheduleBatchId}`,
+              );
             }}
           />
         </div>,

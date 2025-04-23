@@ -1,31 +1,19 @@
-import CaseResult from '@/pages/ApiCase/ApiTestCaseDetail/CaseResult';
-import { listAll as listAllUser } from '@/services/ant-design-pro/api';
-import { execRetry, queryRecordDetail, queryRecordStatistics } from '@/services/task';
-import { FileSearchOutlined, RedoOutlined, SearchOutlined } from '@ant-design/icons';
+import CaseResult from '@/pages/ApiCase/ApiCaseDetail/CaseResult';
+import { queryHeaderRecordDetail, queryScheduleBatchList } from '@/services/TaskRecord';
+import { listAll as listAllUser } from '@/services/user';
+import { FileSearchOutlined, RedoOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
-import {
-  Badge,
-  Breadcrumb,
-  Button,
-  Descriptions,
-  Input,
-  message,
-  Modal,
-  Select,
-  Space,
-  Tooltip,
-} from 'antd';
+import { Badge, Breadcrumb, Button, Descriptions, message, Modal, Select, Tooltip } from 'antd';
 import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
-import Highlighter from 'react-highlight-words';
 
 const TaskResult = () => {
   const actionRef = useRef();
-  const [scheduleName, setScheduleName] = useState();
-  const path = new URL(window.location.href).pathname;
-  const scheduleBatchId = Number.parseInt(path.split('/').at(-1));
-  const scheduleId = Number.parseInt(path.split('/').at(-2));
+  const urlParams = new URL(window.location.href).searchParams;
+  const scheduleBatchId = urlParams.get('scheduleBatchId');
+  const scheduleId = Number(urlParams.get('scheduleId'));
   const scheduleDetailHref = '/schedule/detail/' + scheduleId;
+  const [scheduleName, setScheduleName] = useState();
   const [envName, setEnvName] = useState();
   const [statusText, setStatusText] = useState();
   const [statusIcon, setStatusIcon] = useState();
@@ -62,92 +50,33 @@ const TaskResult = () => {
     });
   };
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
-
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1677ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
+  const fetchTableData = async (params) => {
+    const response = await queryScheduleBatchList({
+      ...params,
+      scheduleId: scheduleId,
+      scheduleBatchId: scheduleBatchId,
+    });
+    const data = response?.data;
+    if (data) {
+      if (data.apiResultDetail !== null) {
+        return {
+          data: data.apiResultDetail.records,
+          total: data.apiResultDetail.total,
+        };
       }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
+      if (data.processCaseResultDetail !== null) {
+        return {
+          data: data.processCaseResultDetail.records,
+          total: data.processCaseResultDetail.total,
+        };
+      }
+    }
+    return null;
+  };
 
   const initData = () => {
     if (scheduleBatchId) {
-      queryRecordStatistics({ scheduleId: scheduleId, scheduleBatchId: scheduleBatchId }).then(
+      queryHeaderRecordDetail({ scheduleId: scheduleId, scheduleBatchId: scheduleBatchId }).then(
         (res) => {
           if (res.code === 200) {
             setScheduleName(res.data.scheduleName);
@@ -178,7 +107,7 @@ const TaskResult = () => {
                   setStatusIcon('success');
                 }
                 break;
-              case 'FAILE':
+              case 'FAILED':
                 {
                   setStatusText('执行失败');
                   setStatusIcon('error');
@@ -199,7 +128,7 @@ const TaskResult = () => {
   const columns = [
     {
       title: '用例名称',
-      dataIndex: 'testcaseName',
+      dataIndex: 'caseName',
       hideInTable: false,
       search: true,
       render: (text, record) => (
@@ -225,18 +154,10 @@ const TaskResult = () => {
     },
     {
       title: '负责人',
-      dataIndex: 'caseOwnerName',
+      dataIndex: 'ownerName',
       hideInTable: false,
       width: 100,
       search: false,
-    },
-    {
-      title: '作者',
-      dataIndex: 'caseAuthorName',
-      hideInTable: false,
-      width: 100,
-      search: false,
-      ...getColumnSearchProps('caseAuthorName'),
     },
     {
       title: '执行次数',
@@ -262,27 +183,7 @@ const TaskResult = () => {
     },
     {
       title: '负责人',
-      dataIndex: 'caseOwnerId',
-      search: true,
-      hideInTable: true,
-      renderFormItem: () => {
-        return (
-          <Select
-            key="searchSelcet"
-            showSearch
-            allowClear
-            placeholder="请输入关键字搜索"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={userList}
-          ></Select>
-        );
-      },
-    },
-    {
-      title: '作者',
-      dataIndex: 'caseCreatorId',
+      dataIndex: 'ownerName',
       search: true,
       hideInTable: true,
       renderFormItem: () => {
@@ -400,11 +301,7 @@ const TaskResult = () => {
         request={async (params = {}, sort, filter) => {
           if (scheduleBatchId) {
             initData();
-            return queryRecordDetail({
-              ...params,
-              scheduleId: scheduleId,
-              scheduleBatchId: scheduleBatchId,
-            });
+            return fetchTableData(params);
           }
           return null;
         }}
@@ -446,13 +343,14 @@ const TaskResult = () => {
         toolBarRender={() => [
           <Button
             onClick={() => {
-              execRetry({ id: scheduleId, scheduleBatchId: scheduleBatchId }).then((res) => {
-                if (res.code === 200) {
-                  message.success('已发起重试');
-                  setStatusText('执行中');
-                  setStatusIcon('processing');
-                }
-              });
+              message.success('待补充');
+              // execRetry({ id: scheduleId, scheduleBatchId: scheduleBatchId }).then((res) => {
+              //   if (res.code === 200) {
+              //     message.success('已发起重试');
+              //     setStatusText('执行中');
+              //     setStatusIcon('processing');
+              //   }
+              // });
             }}
             key="button"
             type="primary"

@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-04-05 21:39:16
+ * @LastEditTime: 2025-04-23 22:32:50
  * @Description: 接口用例列表
  */
 import { priorityEnum } from '@/common';
@@ -164,7 +164,7 @@ const ApiCaseList = () => {
           text: '成功',
           status: 'Success',
         },
-        FAILE: {
+        FAILED: {
           text: '失败',
           status: 'Error',
         },
@@ -320,7 +320,7 @@ const ApiCaseList = () => {
 
   const requestOwnerEnum = () => {
     listAllUser().then((result) => {
-      if (result.code === 200) {
+      if (result?.code === 200) {
         setOwnerEnum(result.data.map((item) => ({ value: item.id, label: item.name })));
       }
     });

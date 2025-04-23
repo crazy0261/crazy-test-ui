@@ -32,11 +32,6 @@ const TaskList = () => {
       dataIndex: 'name',
       ellipsis: true,
       search: true,
-      render: (text, record) => (
-        <a href={'/schedule/detail/' + record.id} target={'_blank'} rel={'noreferrer'}>
-          {record.name}
-        </a>
-      ),
     },
     {
       title: '用例类型',
