@@ -1,14 +1,12 @@
-// @ts-ignore
-/* eslint-disable */
 import { request } from '@umijs/max';
 
 /** 获取当前的用户 GET /api/currentUser */
-export async function currentUser(options?: { [key: string]: any }) {
+export async function currentUser(account: any) {
   return request<{
     data: API.CurrentUser;
-  }>('/api/currentUser', {
+  }>('/crazy/user/currentUser', {
     method: 'GET',
-    ...(options || {}),
+    params: { account },
   });
 }
 
@@ -21,14 +19,15 @@ export async function outLogin(options?: { [key: string]: any }) {
 }
 
 /** 登录接口 POST /api/login/account */
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/api/login/account', {
+export async function login(body: API.LoginParams) {
+  const md5 = require('md5');
+
+  return request<API.LoginResult>('/crazy/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    data: body,
-    ...(options || {}),
+    data: { account: body.account, password: md5(body.password) },
   });
 }
 
@@ -64,10 +63,10 @@ export async function rule(
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'update',
       ...(options || {}),
-    }
+    },
   });
 }
 
@@ -75,10 +74,10 @@ export async function updateRule(options?: { [key: string]: any }) {
 export async function addRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'post',
       ...(options || {}),
-    }
+    },
   });
 }
 
@@ -86,9 +85,85 @@ export async function addRule(options?: { [key: string]: any }) {
 export async function removeRule(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'delete',
       ...(options || {}),
-    }
+    },
+  });
+}
+
+const domain = '';
+
+/** 注册账号接口 */
+export async function register(options: any) {
+  return request(domain + '/api/user/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 更新选择的项目id */
+export async function updateSelectProjectId(options: any) {
+  return request('/crazy/user/update/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: options,
+  });
+}
+
+/** 更新选择的环境id */
+export async function updateSelectEnvId(options: any) {
+  return request(domain + '/api/user/updateSelectEnvId', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 查询当前租户下的所有用户 */
+export async function listAll() {
+  // return request('/crazy/user/list/all', {
+  //   method: 'GET',
+  // });
+}
+
+/** 修改用户信息 */
+export async function modify(body: any, options: any) {
+  return request('/api/user/modify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改密码 */
+export async function modifyPassword(options: any) {
+  return request(domain + '/api/user/modifyPassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
+  });
+}
+
+/** 重置密码：将密码重置为123456 */
+export async function resetPassword(options: any) {
+  return request(domain + '/api/user/resetPassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: options,
   });
 }

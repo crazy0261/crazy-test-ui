@@ -23,37 +23,123 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
+    path: '/case',
+    name: '用例管理',
+    icon: 'ProfileOutlined',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
+        name: '接口用例',
+        path: '/case/api',
+        component: './ApiCase',
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        path: '/case/api/bathExec',
+        // component: './ApiTestCase/BathExecTestCase.jsx',
+      },
+      {
+        path: '/case/api/detail',
+        component: './ApiCase/ApiCaseDetail',
+      },
+      {
+        name: '场景用例',
+        path: '/case/proces',
+        component: './ProcessCase',
+      },
+      {
+        path: '/case/proces/detail/*',
+        component: './ProcessCase/ProcessCaseDetail',
       },
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: '/task',
+    name: '任务管理',
+    icon: 'FieldTimeOutlined',
+    component: './Task',
+  },
+  {
+    path: '/task/detail',
+    component: './Task/TaskDetail',
+  },
+  {
+    path: '/task/result',
+    component: './Task/TaskResult',
+  },
+
+  {
+    path: '/application',
+    name: '应用管理',
+    icon: 'AppstoreOutlined',
+    routes: [
+      {
+        path: '/application/list',
+        name: '应用列表',
+        component: './Application',
+      },
+      {
+        path: '/application/api',
+        name: '接口管理',
+        component: './Api',
+      },
+    ],
+  },
+  {
+    path: '/system',
+    name: '系统管理',
+    icon: 'ToolOutlined',
+    routes: [
+      {
+        path: '/system/datasource',
+        name: '数据源设置',
+        component: './System/DataSource',
+      },
+      {
+        path: '/system/envinfo',
+        name: '环境设置',
+        component: './System/EnvConfig',
+      },
+      {
+        path: '/system/domain',
+        name: '域名设置',
+        component: './System/Domain',
+      },
+      {
+        path: '/system/testAccount',
+        name: '账号设置',
+        component: './System/TestAccount',
+      },
+      {
+        path: '/system/encrypt',
+        name: '加密设置',
+        component: './System/Encrypt',
+      },
+      {
+        path: '/system/project',
+        name: '项目设置',
+        component: './System/Project',
+      },
+    ],
+  },
+  {
+    path: '/charts',
+    name: '测试大盘',
+    icon: 'LineChartOutlined',
+    component: './Charts',
+  },
+  {
+    path: '/userAccount',
+    name: '用户管理',
+    icon: 'UserOutlined',
+    routes: [
+      {
+        path: '/userAccount',
+        component: './UserAccount',
+      },
+    ],
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/case/api',
   },
   {
     path: '*',

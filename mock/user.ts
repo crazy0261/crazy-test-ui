@@ -45,7 +45,7 @@ export default {
       success: true,
       data: {
         name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        avatar: '/user.png',
         userid: '00000001',
         email: 'antdesign@alipay.com',
         signature: '海纳百川，有容乃大',
@@ -120,7 +120,7 @@ export default {
   'POST /api/login/account': async (req: Request, res: Response) => {
     const { password, username, type } = req.body;
     await waitTime(2000);
-    if (password === 'ant.design' && username === 'admin') {
+    if (password === 'admin' && username === 'admin') {
       res.send({
         status: 'ok',
         type,

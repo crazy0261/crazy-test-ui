@@ -1,5 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+import { history } from '@umijs/max';
 import { message, notification } from 'antd';
 
 // 错误处理方案： 错误类型
@@ -89,8 +90,16 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
-      return { ...config, url };
+      let headers = config?.headers;
+      if (localStorage.getItem('Authorization') !== null) {
+        headers = {
+          ...headers,
+          Authorization: localStorage.getItem('Authorization') as string,
+        };
+      }
+
+      const url = config?.url;
+      return { ...config, url, headers };
     },
   ],
 
@@ -99,9 +108,15 @@ export const errorConfig: RequestConfig = {
     (response) => {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
-
       if (data?.success === false) {
         message.error('请求失败！');
+      } else if (data?.success === true && data?.code === 400) {
+        message.error(data.message);
+      } else if (data?.success === true && data?.code === 401) {
+        message.error('验证已过期，请重新登录！');
+        history.push('/user/login');
+      } else if (data?.code === 500) {
+        message.error('请求异常！');
       }
       return response;
     },

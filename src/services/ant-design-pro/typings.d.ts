@@ -21,10 +21,13 @@ declare namespace API {
     };
     address?: string;
     phone?: string;
+    projectId?: number;
+    selectEnvId?: number;
   };
 
   type LoginResult = {
-    status?: string;
+    code?: number;
+    data?: string;
     type?: string;
     currentAuthority?: string;
   };
@@ -62,7 +65,7 @@ declare namespace API {
   };
 
   type LoginParams = {
-    username?: string;
+    account?: string;
     password?: string;
     autoLogin?: boolean;
     type?: string;
