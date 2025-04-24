@@ -85,7 +85,7 @@ const RecordList = () => {
             style={{ marginRight: 10 }}
             onClick={() => {
               history.push(
-                `/task/result?scheduleId=${scheduleId}& scheduleBatchId=${record.scheduleBatchId}`,
+                `/task/result?scheduleId=${scheduleId}&scheduleBatchId=${record.scheduleBatchId}`,
               );
             }}
           />

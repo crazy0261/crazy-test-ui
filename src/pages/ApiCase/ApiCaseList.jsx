@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-03-22 20:03:28
- * @LastEditTime: 2025-04-23 22:32:50
+ * @LastEditTime: 2025-04-24 22:56:22
  * @Description: 接口用例列表
  */
 import { priorityEnum } from '@/common';
@@ -20,7 +20,7 @@ import { Button, message, Select, Space, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
 
-import ExecLog from '../Common/ExecLog';
+import ExecLog from '@/pages/Common/ExecLog';
 import DeleteCase from './DeleteCase';
 import DisableCase from './DisableCase';
 import EnableCase from './EnableCase';

@@ -8,8 +8,8 @@ Crazy Test 是一个开源的测试平台，可以快速搭建测试平台支持
 
 ## 代码地址
 
-- [前端,点击查看](https://github.com/crazy0261/crazy-test-ui.git)
-- [后端，点击查看](https://github.com/crazy0261/crazy-test.git)
+- [前端：点击查看](https://github.com/crazy0261/crazy-test-ui.git)
+- [后端：点击查看](https://github.com/crazy0261/crazy-test.git)
 
 ## 环境
 
@@ -93,6 +93,7 @@ server {
 - 安装依赖
 -     npm run i
 - 运行地址 http://localhost:8000/
+- 账号/密码 admin/admin
 
 ## 页面
 
