@@ -186,14 +186,6 @@ const CaseResult = (props) => {
           </ProCard.TabPane>
         </ProCard>
       </Form>
-      {/* <CreateBug
-        isCreateBugOpen={isCreateBugOpen}
-        setIsCreateBugOpen={setIsCreateBugOpen}
-        failReason={failReason}
-        requestParams={requestParams}
-        responseBody={responseBody}
-        requestHeaders={requestHeaders}
-      /> */}
     </div>
   );
 };

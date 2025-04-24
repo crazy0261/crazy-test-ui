@@ -14,7 +14,7 @@ const TaskResult = () => {
   const scheduleId = Number(urlParams.get('scheduleId'));
   const scheduleDetailHref = '/schedule/detail/' + scheduleId;
   const [scheduleName, setScheduleName] = useState();
-  const [envName, setEnvName] = useState();
+  const [envSortId, setEnvSortId] = useState();
   const [statusText, setStatusText] = useState();
   const [statusIcon, setStatusIcon] = useState();
   const [totalCount, setTotalCount] = useState();
@@ -80,7 +80,7 @@ const TaskResult = () => {
         (res) => {
           if (res.code === 200) {
             setScheduleName(res.data.scheduleName);
-            setEnvName(res.data.envName);
+            setEnvSortId(res.data.envSortId);
             setTotalCount(res.data.totalCount);
             setSuccessCount(res.data.successCount);
             setFailCount(res.data.failCount);
@@ -135,8 +135,8 @@ const TaskResult = () => {
         <a
           href={
             record.nodes !== undefined && record.nodes !== null
-              ? '/mulTestCase/detail?id=' + record.testcaseId
-              : '/apiTestCase/detail?id=' + record.apiTestcaseId
+              ? '/case/proces/detail?id=' + record.testcaseId
+              : '/case/api/detail?id=' + record.apiTestcaseId
           }
           target={'_blank'}
           rel={'noreferrer'}
@@ -224,7 +224,7 @@ const TaskResult = () => {
               onClick={() => {
                 try {
                   if (record.nodes !== undefined && record.nodes !== null) {
-                    window.open('/mulTestCase/detail/debug?id=' + record.id);
+                    window.open(`/case/proces/detail/debug?resultId=${record.id}`);
                   } else {
                     setDebugResult(JSONbig.parse(record.debugResult));
                     showModal();
@@ -281,7 +281,7 @@ const TaskResult = () => {
       <Descriptions column={6} title="定时任务执行结果">
         <Descriptions.Item label="任务名">{scheduleName}</Descriptions.Item>
         <Descriptions.Item label="批次号">{scheduleBatchId}</Descriptions.Item>
-        <Descriptions.Item label="执行环境">{envName}</Descriptions.Item>
+        <Descriptions.Item label="环境顺序">{envSortId}</Descriptions.Item>
         <Descriptions.Item label="状态">
           <Badge status={statusIcon} text={statusText} />
         </Descriptions.Item>
@@ -369,7 +369,7 @@ const TaskResult = () => {
           top: 10,
         }}
       >
-        <CaseResult debugResult={debugResult} envName={envName} />
+        <CaseResult debugResult={debugResult} envName={envSortId} />
       </Modal>
     </div>
   );

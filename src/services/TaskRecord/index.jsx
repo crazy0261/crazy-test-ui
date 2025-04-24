@@ -1,7 +1,7 @@
 /*
  * @Author: Menghui
  * @Date: 2025-04-23 16:16:27
- * @LastEditTime: 2025-04-23 23:16:52
+ * @LastEditTime: 2025-04-24 23:45:23
  * @Description:任务详情
  */
 import { get } from '../../utils/requestUtil';
@@ -24,9 +24,9 @@ export async function queryScheduleBatchList(params) {
 }
 
 /**
- * 执行统计
+ * 执行统计 header
  */
 
 export async function queryHeaderRecordDetail(params) {
-  return get('/crazy/task/schedule/record/case/detail/list', params);
+  return get('/crazy/task/schedule/record/batch/converge', params);
 }

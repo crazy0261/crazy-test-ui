@@ -4,7 +4,6 @@ import { queryApiCaseExecLog } from '@/services/apiCase';
 import { querResultLogs } from '@/services/processCaseRecord';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Modal } from 'antd';
-import JSONbig from 'json-bigint';
 import { useEffect, useRef, useState } from 'react';
 
 // 用例执行记录
@@ -110,8 +109,8 @@ const ExecLog = (props) => {
             type="primary"
             size={'small'}
             onClick={() => {
-              if (props.caseType === 'mulCase') {
-                window.open('/mulTestCase/detail/debug?id=' + record.id);
+              if (props.caseType === 'procesCase') {
+                window.open('/case/proces/detail/debug?resultId=' + record.id);
               } else {
                 setIsApiCaseResModalOpen(true);
                 setDebugResult(JSONbig.parse(record.debugResult));
